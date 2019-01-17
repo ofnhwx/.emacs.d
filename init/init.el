@@ -527,6 +527,15 @@ before packages are loaded."
      :map evil-emacs-state-map))
 
   ;; ================================================================
+  ;; 【layer:git】
+  (use-package magit
+    :config
+    (setq magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
+    (setq magit-diff-refine-hunk 'all)
+    (setq smerge-refine-ignore-whitespace nil)
+    (magit-define-popup-switch 'magit-log-popup ?l "Always sort by date" "--date-order"))
+
+  ;; ================================================================
   ;; 【layer:japanese】
   (use-package skk
     :config

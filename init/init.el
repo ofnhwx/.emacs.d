@@ -448,6 +448,62 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; ================================================================
+  ;; 【keybind】
+  (bind-keys
+   :map global-map
+   ("C-^" . ace-window))
+
+  ;; ================================================================
+  ;; 【evil:customize】
+  (use-package evil
+    :config
+    (setq evil-cross-lines t)
+    (setq evil-insert-state-map (make-sparse-keymap))
+    (setq evil-move-cursor-back nil)
+    (defun evil-save-and-normal-state ()
+      "Save and force normal state."
+      (interactive)
+      (save-buffer)
+      (evil-force-normal-state))
+    (defun evil-keyboard-quit ()
+      "Keyboard quit and force normal state."
+      (interactive)
+      (evil-force-normal-state)
+      (keyboard-quit)))
+
+  ;; ================================================================
+  ;; 【evil:keybind】
+  (use-package evil
+    :config
+    (setq evil-insert-state-map (make-sparse-keymap))
+    (bind-keys
+     ;; モーションモード(motion -> normal -> visual)
+     :map evil-motion-state-map
+     ("C-^" . nil) ;; evil-buffer
+     ("C-g" . evil-keyboard-quit)
+     ;; 通常モード
+     :map evil-normal-state-map
+     ("<down>" . evil-next-visual-line)
+     ("<up>" . evil-previous-visual-line)
+     ("j" . evil-next-visual-line)
+     ("k" . evil-previous-visual-line)
+     ("gj" . evil-next-line)
+     ("gk" . evil-previous-line)
+     ;; ビジュアルモード
+     :map evil-visual-state-map
+     ;; 挿入モード
+     :map evil-insert-state-map
+     ("C-g" . evil-keyboard-quit)
+     ("C-x C-s" . evil-save-and-normal-state)
+     ("<escape>" . evil-force-normal-state)
+     ;; オペレーターモード
+     :map evil-operator-state-map
+     ;; 置き換えモード
+     :map evil-replace-state-map
+     ;; Emacsモード
+     :map evil-emacs-state-map))
+
+  ;; ================================================================
   ;; 【layer:japanese】
   (use-package skk
     :config

@@ -448,6 +448,29 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; ================================================================
+  ;; 【行番号の表示】
+  (cond
+   ((fboundp 'display-line-numbers-mode)
+    (defun display-line-numbers-mode-on ()
+      "`display-line-numbers-mode'を有効化."
+      (interactive)
+      (display-line-numbers-mode 1))
+    (defun display-line-numbers-mode-off ()
+      "`display-line-numbers-mode'を無効化."
+      (interactive)
+      (display-line-numbers-mode 0))
+    (add-hook 'prog-mode-hook 'display-line-numbers-mode-on)
+    (add-hook 'find-file-hook 'display-line-numbers-mode-on)
+    (add-hook 'html-mode-hook 'display-line-numbers-mode-on)
+    (setq-default display-line-numbers-width 4))
+   (t
+    (add-hook 'prog-mode-hook 'linum-mode)
+    (set-variable 'linum-format "%4d")
+    (set-variable 'linum-delay t)
+    (defadvice linum-schedule (around linum-schedule--delay () activate)
+      (run-with-idle-timer 0.3 nil #'linum-update-current))))
+
+  ;; ================================================================
   ;; 【keybind】
   (bind-keys
    :map global-map

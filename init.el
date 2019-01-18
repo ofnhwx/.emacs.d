@@ -12,8 +12,11 @@
 ;;; パス設定
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(let ((emacs-dir (file-name-directory (or load-file-name buffer-file-name))))
-  (setq user-emacs-directory (abbreviate-file-name emacs-dir)))
+(progn
+  (let ((emacs-dir (file-name-directory (or load-file-name buffer-file-name))))
+    (setq user-emacs-directory (abbreviate-file-name emacs-dir)))
+  (defvar e:lisp-directory   (expand-file-name "lisp/"   user-emacs-directory))
+  (defvar e:custom-directory (expand-file-name "custom/" user-emacs-directory)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Spacemacs
@@ -21,9 +24,9 @@
 
 (progn
   (defvar spacemacs-start-directory
-    (expand-file-name "lisp/spacemacs/" user-emacs-directory)
+    (expand-file-name "spacemacs/" e:lisp-directory)
     "Spacemacs start directory.")
-  (setenv "SPACEMACSDIR" (expand-file-name "custom/" user-emacs-directory))
+  (setenv "SPACEMACSDIR" e:custom-directory)
   (load-file (expand-file-name "init.el" spacemacs-start-directory)))
 
 (provide 'init)

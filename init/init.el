@@ -450,6 +450,36 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
   ;; ================================================================
+  ;; 【言語環境・フォント】
+  (set-language-environment "Japanese")
+  (let ((coding-system 'utf-8))
+    (prefer-coding-system          coding-system)
+    (set-default-coding-systems    coding-system)
+    (set-buffer-file-coding-system coding-system)
+    (set-terminal-coding-system    coding-system)
+    (set-keyboard-coding-system    coding-system))
+  (let* ((fontname "Ricty Diminished Discord")
+         (size 14)
+         (font (font-spec :family fontname :size size))
+         (height (* size 10)))
+    (set-fontset-font t 'japanese-jisx0208 font)
+    (set-fontset-font t 'katakana-jisx0201 font)
+    (set-face-attribute 'default nil :family fontname :height height))
+
+  ;; ================================================================
+  ;; 【モードラインにエンコーディングを表示】
+  (spaceline-define-segment buffer-encoding-abbrev
+    "The line ending convention used in the buffer."
+    (let ((buf-coding (format "%s" buffer-file-coding-system)))
+      (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
+            (concat (and (string-match "with-signature" buf-coding) "ⓑ")
+                    (and (string-match "unix"           buf-coding) "ⓤ")
+                    (and (string-match "dos"            buf-coding) "ⓓ")
+                    (and (string-match "mac"            buf-coding) "ⓜ")
+                    )))
+    :separator " ")
+
+  ;; ================================================================
   ;; 【行番号の表示】
   (cond
    ((fboundp 'display-line-numbers-mode)
@@ -546,6 +576,10 @@ before packages are loaded."
   (use-package pangu-spacing
     :config
     (setq pangu-spacing-real-insert-separtor nil))
+
+  ;; ================================================================
+  ;; 【最大化】
+  (spacemacs/toggle-maximize-frame-on)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

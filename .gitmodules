@@ -1,3 +1,6 @@
 [submodule "spacemacs"]
 	path = spacemacs
 	url = ssh://git@github.com/syl20bnr/spacemacs.git
+[submodule "lisp/locale-eaw"]
+	path = lisp/locale-eaw
+	url = ssh://git@github.com/hamano/locale-eaw.git

@@ -14,7 +14,8 @@
 !/README.md
 !/init.el
 !/init/
-!/layers/
+!/init/layers/
+!/lisp/locale-eaw
 !/spacemacs
 
 # 上記で指定したファイルで無視したいものを指定する

@@ -16,23 +16,14 @@
   (setq user-emacs-directory (abbreviate-file-name emacs-dir)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; East Asian Ambiguous Widthと絵文字の為の修正ロケール
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(progn
-  (add-to-list 'load-path (expand-file-name "lisp/locale-eaw" user-emacs-directory))
-  (when (require 'eaw nil t)
-    (eaw-fullwidth)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Spacemacs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (progn
   (defvar spacemacs-start-directory
-    (expand-file-name "spacemacs/" user-emacs-directory)
+    (expand-file-name "lisp/spacemacs/" user-emacs-directory)
     "Spacemacs start directory.")
-  (setenv "SPACEMACSDIR" (expand-file-name "init/" user-emacs-directory))
+  (setenv "SPACEMACSDIR" (expand-file-name "custom/" user-emacs-directory))
   (load-file (expand-file-name "init.el" spacemacs-start-directory)))
 
 (provide 'init)

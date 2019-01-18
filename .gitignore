@@ -12,14 +12,12 @@
 !/.gitconfig
 !/.gitignore
 !/README.md
+!/custom/
 !/init.el
-!/init/
-!/init/layers/
-!/lisp/locale-eaw
-!/spacemacs
+!/lisp/
 
 # 上記で指定したファイルで無視したいものを指定する
 ##### Gitで無視するファイル #####
-/init/.spacemacs.env
+/custom/.spacemacs.env
 *.elc
 .DS_Store

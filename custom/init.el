@@ -42,8 +42,10 @@ This function should only modify configuration layer settings."
      helm
      notmuch
      syntax-checking
+     vagrant
      ;; Languages
      emacs-lisp
+     markdown
      php
      ruby
      )
@@ -273,7 +275,7 @@ It should only modify the values of Spacemacs settings."
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
    ;; right; if there is insufficient space it displays it at the bottom.
    ;; (default 'bottom)
-   dotspacemacs-which-key-position 'bottom
+   dotspacemacs-which-key-position 'right-then-bottom
 
    ;; Control where `switch-to-buffer' displays the buffer. If nil,
    ;; `switch-to-buffer' displays the buffer in the current window even if
@@ -298,7 +300,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   dotspacemacs-maximized-at-startup t
 
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
@@ -361,7 +363,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server nil
+   dotspacemacs-enable-server t
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -448,15 +450,19 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
 
-  ;; ================================================================
-  ;; 【言語環境・フォント】
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;;; 言語環境・フォント
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (set-language-environment "Japanese")
+
   (let ((coding-system 'utf-8))
     (prefer-coding-system          coding-system)
     (set-default-coding-systems    coding-system)
     (set-buffer-file-coding-system coding-system)
     (set-terminal-coding-system    coding-system)
     (set-keyboard-coding-system    coding-system))
+
   (let* ((fontname "Ricty Diminished Discord")
          (size 14)
          (font (font-spec :family fontname :size size))
@@ -465,8 +471,19 @@ before packages are loaded."
     (set-fontset-font t 'katakana-jisx0201 font)
     (set-face-attribute 'default nil :family fontname :height height))
 
-  ;; ================================================================
-  ;; 【モードラインにエンコーディングを表示】
+  (progn
+    (add-to-list 'load-path (expand-file-name "lisp/locale-eaw" user-emacs-directory))
+    (when (require 'eaw nil t)
+      (defun eaw-fullwidth-interactive ()
+        (interactive)
+        (eaw-fullwidth)
+        t)
+      (eaw-fullwidth-interactive)))
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; モードラインにエンコーディングを表示
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (spaceline-define-segment buffer-encoding-abbrev
     "The line ending convention used in the buffer."
     (let ((buf-coding (format "%s" buffer-file-coding-system)))
@@ -478,10 +495,11 @@ before packages are loaded."
                     )))
     :separator " ")
 
-  ;; ================================================================
-  ;; 【行番号の表示】
-  (cond
-   ((fboundp 'display-line-numbers-mode)
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; 行番号の表示
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+  (progn
     (defun display-line-numbers-mode-on ()
       "`display-line-numbers-mode'を有効化."
       (interactive)
@@ -494,21 +512,19 @@ before packages are loaded."
     (add-hook 'find-file-hook 'display-line-numbers-mode-on)
     (add-hook 'html-mode-hook 'display-line-numbers-mode-on)
     (setq-default display-line-numbers-width 4))
-   (t
-    (add-hook 'prog-mode-hook 'linum-mode)
-    (set-variable 'linum-format "%4d")
-    (set-variable 'linum-delay t)
-    (defadvice linum-schedule (around linum-schedule--delay () activate)
-      (run-with-idle-timer 0.3 nil #'linum-update-current))))
 
-  ;; ================================================================
-  ;; 【keybind】
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; keybind
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (bind-keys
    :map global-map
    ("C-^" . ace-window))
 
-  ;; ================================================================
-  ;; 【evil:customize】
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; evil:customize
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (use-package evil
     :config
     (setq evil-cross-lines t)
@@ -525,8 +541,10 @@ before packages are loaded."
       (evil-force-normal-state)
       (keyboard-quit)))
 
-  ;; ================================================================
-  ;; 【evil:keybind】
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; evil:keybind
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (use-package evil
     :config
     (setq evil-insert-state-map (make-sparse-keymap))
@@ -557,8 +575,10 @@ before packages are loaded."
      ;; Emacsモード
      :map evil-emacs-state-map))
 
-  ;; ================================================================
-  ;; 【layer:git】
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; layer:git
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (use-package magit
     :config
     (setq magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
@@ -566,19 +586,19 @@ before packages are loaded."
     (setq smerge-refine-ignore-whitespace nil)
     (magit-define-popup-switch 'magit-log-popup ?l "Always sort by date" "--date-order"))
 
-  ;; ================================================================
-  ;; 【layer:japanese】
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; layer:japanese
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
   (use-package skk
     :config
     (add-hook 'evil-insert-state-entry-hook 'skk-latin-mode-on)
     (add-hook 'evil-insert-state-exit-hook  'skk-mode-exit))
+
   (use-package pangu-spacing
     :config
     (setq pangu-spacing-real-insert-separtor nil))
 
-  ;; ================================================================
-  ;; 【最大化】
-  (spacemacs/toggle-maximize-frame-on)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will

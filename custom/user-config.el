@@ -1,36 +1,31 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; 言語環境・フォント
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(set-language-environment "Japanese")
-
-(let ((coding-system 'utf-8))
-  (prefer-coding-system          coding-system)
-  (set-default-coding-systems    coding-system)
-  (set-buffer-file-coding-system coding-system)
-  (set-terminal-coding-system    coding-system)
-  (set-keyboard-coding-system    coding-system))
-
-(let* ((fontname "Ricty Diminished Discord")
-       (size 14)
-       (font (font-spec :family fontname :size size))
-       (height (* size 10)))
-  (set-fontset-font t 'japanese-jisx0208 font)
-  (set-fontset-font t 'katakana-jisx0201 font)
-  (set-face-attribute 'default nil :family fontname :height height))
 
 (progn
-  (add-to-list 'load-path (expand-file-name "locale-eaw" e:lisp-directory))
-  (when (require 'eaw nil t)
-    (defun eaw-fullwidth-interactive ()
-      (interactive)
-      (eaw-fullwidth)
-      t)
-    (eaw-fullwidth-interactive)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; モードラインにエンコーディングを表示
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  (defun e:setup-font ()
+    (interactive)
+    ;; エンコーディング設定
+    (set-language-environment "Japanese")
+    (let ((coding-system 'utf-8))
+      (prefer-coding-system          coding-system)
+      (set-default-coding-systems    coding-system)
+      (set-buffer-file-coding-system coding-system)
+      (set-terminal-coding-system    coding-system)
+      (set-keyboard-coding-system    coding-system))
+    ;; フォント設定
+    (let* ((fontname "Ricty Diminished Discord")
+           (size 14)
+           (font (font-spec :family fontname :size size))
+           (height (* size 10)))
+      (set-fontset-font t 'japanese-jisx0208 font)
+      (set-fontset-font t 'katakana-jisx0201 font)
+      (set-face-attribute 'default nil :family fontname :height height))
+    ;; 対策: East Asian Ambiguous Width
+    (add-to-list 'load-path (expand-file-name "locale-eaw" e:lisp-directory))
+    (when (require 'eaw nil t)
+      (eaw-fullwidth))
+    ;;
+    t)
+  ;; いろいろあったのでこんな感じで
+  (add-hook 'window-setup-hook 'e:setup-font))
 
 (spaceline-define-segment buffer-encoding-abbrev
   "The line ending convention used in the buffer."
@@ -43,11 +38,7 @@
                   )))
   :separator " ")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 行番号の表示
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(progn
+(when (fboundp 'display-line-numbers-mode)
   (defun display-line-numbers-mode-on ()
     "`display-line-numbers-mode'を有効化."
     (interactive)
@@ -61,46 +52,31 @@
   (add-hook 'html-mode-hook 'display-line-numbers-mode-on)
   (setq-default display-line-numbers-width 4))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; keybind
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (bind-keys
  :map global-map
  ("C-^" . ace-window))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; evil:customize
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (use-package evil
+  :defer t
   :config
-  (setq evil-cross-lines t)
-  (setq evil-insert-state-map (make-sparse-keymap))
-  (setq evil-move-cursor-back nil)
-  (defun evil-save-and-normal-state ()
-    "Save and force normal state."
-    (interactive)
-    (save-buffer)
-    (evil-force-normal-state))
-  (defun evil-keyboard-quit ()
-    "Keyboard quit and force normal state."
-    (interactive)
-    (evil-force-normal-state)
-    (keyboard-quit)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; evil:keybind
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package evil
-  :config
-  (setq evil-insert-state-map (make-sparse-keymap))
+  ;; variables
+  (progn
+    (setq evil-cross-lines t)
+    (setq evil-insert-state-map (make-sparse-keymap))
+    (setq evil-move-cursor-back nil))
+  ;; advices
+  (progn
+    (defun e:save-buffer:after (&rest args)
+      (evil-force-normal-state))
+    (defun e:keyboard-quit:before (&rest args)
+      (evil-force-normal-state))
+    (advice-add 'save-buffer :after 'e:save-buffer:after)
+    (advice-add 'keyboard-quit :before 'e:keyboard-quit:before))
+  ;; keybindings
   (bind-keys
    ;; モーションモード(motion -> normal -> visual)
    :map evil-motion-state-map
    ("C-^" . nil) ;; evil-buffer
-   ("C-g" . evil-keyboard-quit)
    ;; 通常モード
    :map evil-normal-state-map
    ("<down>" . evil-next-visual-line)
@@ -113,9 +89,6 @@
    :map evil-visual-state-map
    ;; 挿入モード
    :map evil-insert-state-map
-   ("C-g" . evil-keyboard-quit)
-   ("C-x C-s" . evil-save-and-normal-state)
-   ("<escape>" . evil-force-normal-state)
    ;; オペレーターモード
    :map evil-operator-state-map
    ;; 置き換えモード
@@ -123,26 +96,21 @@
    ;; Emacsモード
    :map evil-emacs-state-map))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; layer:git
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (use-package magit
+  :defer t
   :config
   (setq magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
   (setq magit-diff-refine-hunk 'all)
   (setq smerge-refine-ignore-whitespace nil)
   (magit-define-popup-switch 'magit-log-popup ?l "Always sort by date" "--date-order"))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; layer:japanese
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (use-package skk
+  :defer t
   :config
-  (add-hook 'evil-insert-state-entry-hook 'skk-latin-mode-on)
-  (add-hook 'evil-insert-state-exit-hook  'skk-mode-exit))
+  (add-hook 'evil-hybrid-state-entry-hook 'skk-latin-mode-on)
+  (add-hook 'evil-hybrid-state-exit-hook  'skk-mode-exit))
 
 (use-package pangu-spacing
+  :defer t
   :config
   (setq pangu-spacing-real-insert-separtor nil))

@@ -27,38 +27,46 @@
   ;; いろいろあったのでこんな感じで
   (add-hook 'window-setup-hook 'e:setup-font))
 
-(spaceline-define-segment buffer-encoding-abbrev
-  "The line ending convention used in the buffer."
-  (let ((buf-coding (format "%s" buffer-file-coding-system)))
-    (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
-          (concat (and (string-match "with-signature" buf-coding) "ⓑ")
-                  (and (string-match "unix"           buf-coding) "ⓤ")
-                  (and (string-match "dos"            buf-coding) "ⓓ")
-                  (and (string-match "mac"            buf-coding) "ⓜ")
-                  )))
-  :separator " ")
+(use-package core-dotspacemacs
+  :config
+  (spaceline-define-segment buffer-encoding-abbrev
+    "The line ending convention used in the buffer."
+    (let ((buf-coding (format "%s" buffer-file-coding-system)))
+      (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
+            (concat (and (string-match "with-signature" buf-coding) "ⓑ")
+                    (and (string-match "unix"           buf-coding) "ⓤ")
+                    (and (string-match "dos"            buf-coding) "ⓓ")
+                    (and (string-match "mac"            buf-coding) "ⓜ")
+                    )))
+    :separator " "))
 
-(when (fboundp 'display-line-numbers-mode)
-  (defun display-line-numbers-mode-on ()
-    "`display-line-numbers-mode'を有効化."
-    (interactive)
-    (display-line-numbers-mode 1))
-  (defun display-line-numbers-mode-off ()
-    "`display-line-numbers-mode'を無効化."
-    (interactive)
-    (display-line-numbers-mode 0))
-  (add-hook 'prog-mode-hook 'display-line-numbers-mode-on)
-  (add-hook 'find-file-hook 'display-line-numbers-mode-on)
-  (add-hook 'html-mode-hook 'display-line-numbers-mode-on)
-  (setq-default display-line-numbers-width 4))
+(use-package ace-window
+  :defer t
+  :init
+  (bind-keys
+   :map global-map
+   ("C-^" . ace-window)))
 
-(progn
-  (setq url-cache-directory (f-expand "url/cache" spacemacs-cache-directory))
-  (setq url-cookie-file (f-expand "url/cookies")))
+(use-package display-line-numbers
+  :config
+  (when (fboundp 'display-line-numbers-mode)
+    (defun display-line-numbers-mode-on ()
+      "`display-line-numbers-mode'を有効化."
+      (interactive)
+      (display-line-numbers-mode 1))
+    (defun display-line-numbers-mode-off ()
+      "`display-line-numbers-mode'を無効化."
+      (interactive)
+      (display-line-numbers-mode 0))
+    (add-hook 'prog-mode-hook 'display-line-numbers-mode-on)
+    (add-hook 'find-file-hook 'display-line-numbers-mode-on)
+    (add-hook 'html-mode-hook 'display-line-numbers-mode-on)
+    (setq-default display-line-numbers-width 4)))
 
-(bind-keys
- :map global-map
- ("C-^" . ace-window))
+(use-package eshell
+  :defer t
+  :init
+  (setq eshell-directory-name (f-expand "eshell" spacemacs-cache-directory)))
 
 (use-package evil
   :defer t
@@ -100,10 +108,11 @@
    ;; Emacsモード
    :map evil-emacs-state-map))
 
-(use-package eshell
-  :defer t
-  :init
-  (setq eshell-directory-name (f-expand "eshell" spacemacs-cache-directory)))
+(use-package flycheck
+  :defer 1
+  :config
+  (setq flycheck-idle-buffer-switch-delay 3.0)
+  (setq flycheck-idle-change-delay 3.0))
 
 (use-package magit
   :defer t
@@ -113,25 +122,18 @@
   (setq smerge-refine-ignore-whitespace nil)
   (magit-define-popup-switch 'magit-log-popup ?l "Always sort by date" "--date-order"))
 
-(use-package flycheck
-  :defer 1
+(use-package pangu-spacing
+  :defer t
   :config
-  (setq flycheck-idle-buffer-switch-delay 3.0)
-  (setq flycheck-idle-change-delay 3.0))
+  (setq pangu-spacing-real-insert-separtor nil))
+
+(use-package skk
+  :config
+  (add-hook 'evil-hybrid-state-entry-hook 'skk-latin-mode-on)
+  (add-hook 'evil-hybrid-state-exit-hook  'skk-mode-exit))
 
 (use-package which-key
   :defer t
   :config
   (setq which-key-idle-delay 1.0)
   (setq which-key-idle-secondary-delay 0.1))
-
-(use-package skk
-  :defer t
-  :config
-  (add-hook 'evil-hybrid-state-entry-hook 'skk-latin-mode-on)
-  (add-hook 'evil-hybrid-state-exit-hook  'skk-mode-exit))
-
-(use-package pangu-spacing
-  :defer t
-  :config
-  (setq pangu-spacing-real-insert-separtor nil))

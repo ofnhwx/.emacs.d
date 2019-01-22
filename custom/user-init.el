@@ -1,3 +1,5 @@
 (setq custom-file (expand-file-name "custom.el" e:custom-directory))
-(setq eyebrowse-keymap-prefix (kbd "C-z"))
 (setq evil-toggle-key "C-z z")
+(setq eyebrowse-keymap-prefix (kbd "C-z"))
+(setq url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory))
+(setq url-cookie-file (expand-file-name "url/cookies"))

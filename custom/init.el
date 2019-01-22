@@ -44,6 +44,7 @@ This function should only modify configuration layer settings."
      syntax-checking
      vagrant
      ;; Languages
+     csv
      emacs-lisp
      javascript
      markdown

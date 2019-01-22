@@ -45,6 +45,7 @@ This function should only modify configuration layer settings."
      vagrant
      ;; Languages
      emacs-lisp
+     javascript
      markdown
      php
      ruby

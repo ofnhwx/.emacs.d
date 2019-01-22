@@ -113,6 +113,18 @@
   (setq smerge-refine-ignore-whitespace nil)
   (magit-define-popup-switch 'magit-log-popup ?l "Always sort by date" "--date-order"))
 
+(use-package flycheck
+  :defer 1
+  :config
+  (setq flycheck-idle-buffer-switch-delay 3.0)
+  (setq flycheck-idle-change-delay 3.0))
+
+(use-package which-key
+  :defer t
+  :config
+  (setq which-key-idle-delay 1.0)
+  (setq which-key-idle-secondary-delay 0.1))
+
 (use-package skk
   :defer t
   :config

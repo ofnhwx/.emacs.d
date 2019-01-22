@@ -52,6 +52,10 @@
   (add-hook 'html-mode-hook 'display-line-numbers-mode-on)
   (setq-default display-line-numbers-width 4))
 
+(progn
+  (setq url-cache-directory (f-expand "url/cache" spacemacs-cache-directory))
+  (setq url-cookie-file (f-expand "url/cookies")))
+
 (bind-keys
  :map global-map
  ("C-^" . ace-window))
@@ -95,6 +99,11 @@
    :map evil-replace-state-map
    ;; Emacsモード
    :map evil-emacs-state-map))
+
+(use-package eshell
+  :defer t
+  :init
+  (setq eshell-directory-name (f-expand "eshell" spacemacs-cache-directory)))
 
 (use-package magit
   :defer t

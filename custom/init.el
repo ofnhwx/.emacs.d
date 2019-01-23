@@ -42,6 +42,8 @@ This function should only modify configuration layer settings."
      helm
      notmuch
      prodigy
+     (shell :variables
+            shell-default-shell 'eshell)
      syntax-checking
      vagrant
      ;; Languages

@@ -41,6 +41,7 @@ This function should only modify configuration layer settings."
      git
      helm
      notmuch
+     prodigy
      syntax-checking
      vagrant
      ;; Languages

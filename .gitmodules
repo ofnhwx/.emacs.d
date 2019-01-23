@@ -4,3 +4,9 @@
 [submodule "lisp/locale-eaw"]
 	path = lisp/locale-eaw
 	url = ssh://git@github.com/hamano/locale-eaw.git
+[submodule "lisp/navi2ch"]
+	path = lisp/navi2ch
+	url = git://navi2ch.git.sourceforge.net/gitroot/navi2ch/navi2ch
+[submodule "util/2chproxy.pl"]
+	path = util/2chproxy.pl
+	url = ssh://git@github.com/yama-natuki/2chproxy.pl

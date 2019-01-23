@@ -131,10 +131,40 @@
   (setq smerge-refine-ignore-whitespace nil)
   (magit-define-popup-switch 'magit-log-popup ?l "Always sort by date" "--date-order"))
 
+(use-package navi2ch
+  :load-path "lisp/navi2ch"
+  :defer t
+  :commands (navi2ch)
+  :init
+  (setq navi2ch-net-http-proxy "127.0.0.1:9080")
+  :config
+  (when (require 'prodigy nil t)
+    (let ((cmd (expand-file-name "2chproxy.pl/2chproxy.pl" e:util-directory))
+          (yml (expand-file-name "2chproxy.yml" e:custom-directory)))
+      (when (and (executable-find cmd)
+                 (file-exists-p yml))
+        (prodigy-define-service
+          :name "2chproxy.pl"
+          :command (format "%s --config %s" cmd yml)
+          :tags '(general)
+          :kill-signal 'sigkill)))
+    (defun e:prodigy:2chproxy.pl ()
+      (interactive)
+      (e:prodigy-start-service "2chproxy.pl"))
+    (e:prodigy:2chproxy.pl)))
+
 (use-package pangu-spacing
   :defer t
   :config
   (setq pangu-spacing-real-insert-separtor nil))
+
+(use-package prodigy
+  :defer t
+  :config
+  (defun e:prodigy-start-service (name)
+    (let ((service (prodigy-find-service name)))
+      (when service
+        (prodigy-start-service service)))))
 
 (use-package skk
   :defer t

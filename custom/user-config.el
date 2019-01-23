@@ -27,6 +27,8 @@
   ;; いろいろあったのでこんな感じで
   (add-hook 'window-setup-hook 'e:setup-font))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (use-package core-dotspacemacs
   :config
   (spaceline-define-segment buffer-encoding-abbrev
@@ -41,8 +43,7 @@
     :separator " "))
 
 (use-package ace-window
-  :defer t
-  :init
+  :config
   (bind-keys
    :map global-map
    ("C-^" . ace-window)))
@@ -63,13 +64,7 @@
     (add-hook 'html-mode-hook 'display-line-numbers-mode-on)
     (setq-default display-line-numbers-width 4)))
 
-(use-package eshell
-  :defer t
-  :init
-  (setq eshell-directory-name (f-expand "eshell" spacemacs-cache-directory)))
-
 (use-package evil
-  :defer t
   :config
   ;; variables
   (progn
@@ -108,8 +103,22 @@
    ;; Emacsモード
    :map evil-emacs-state-map))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package dired
+  :defer t
+  :config
+  (when (require 'ls-lisp nil t)
+    (setq ls-lisp-use-insert-directory-program nil)
+    (setq ls-lisp-dirs-first t))
+  (setq dired-use-ls-dired t)
+  (setq dired-listing-switches "-ahl")
+  (setq dired-dwim-target t)
+  (setq dired-recursive-copies 'always)
+  (setq dired-recursive-deletes 'top))
+
 (use-package flycheck
-  :defer 1
+  :defer t
   :config
   (setq flycheck-idle-buffer-switch-delay 3.0)
   (setq flycheck-idle-change-delay 3.0))
@@ -128,7 +137,12 @@
   (setq pangu-spacing-real-insert-separtor nil))
 
 (use-package skk
+  :defer t
   :config
+  (defun e:skk-latin-mode-on:before (&rest args)
+    (unless skk-mode-invoked
+      (skk-mode-invoke)))
+  (advice-add 'skk-latin-mode-on :before 'e:skk-latin-mode-on:before)
   (add-hook 'evil-hybrid-state-entry-hook 'skk-latin-mode-on)
   (add-hook 'evil-hybrid-state-exit-hook  'skk-mode-exit))
 

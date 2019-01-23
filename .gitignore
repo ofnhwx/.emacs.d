@@ -3,9 +3,6 @@
 /*
 /.*
 
-# 除外するディレクトリ内の特定のファイルだけ有効にしたい
-/util/ddskk/*
-
 # 無視したくないファイルを以下に'![ファイル名]'で指定する
 ##### Gitで管理するファイル #####
 !/.editorconfig
@@ -13,9 +10,10 @@
 !/.gitconfig
 !/.gitignore
 !/README.md
-!/custom/
 !/init.el
+!/custom/
 !/lisp/
+!/private/
 !/util/
 
 # 上記で指定したファイルで無視したいものを指定する

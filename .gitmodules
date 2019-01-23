@@ -10,3 +10,6 @@
 [submodule "util/2chproxy.pl"]
 	path = util/2chproxy.pl
 	url = ssh://git@github.com/yama-natuki/2chproxy.pl
+[submodule "util/dic-mirror"]
+	path = util/dic-mirror
+	url = ssh://git@github.com/skk-users-jp/dic-mirror.git

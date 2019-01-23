@@ -1,9 +1,11 @@
 
 ;; ファイルを移動
-(setq custom-file (expand-file-name "custom.el" e:custom-directory))
-(setq eshell-directory-name (expand-file-name "eshell" spacemacs-cache-directory))
-(setq url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory))
-(setq url-cookie-file (expand-file-name "url/cookies"))
+(progn
+  (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
+  (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
+  (set-variable 'eshell-directory-name (expand-file-name "eshell" e:private-directory))
+  (set-variable 'url-cache-directory (expand-file-name "url/cache" e:private-directory))
+  (set-variable 'url-cookie-file (expand-file-name "url/cookies" e:private-directory)))
 
 ;; キーバインドの調整
 (setq evil-toggle-key "C-z z")
@@ -13,8 +15,8 @@
 (progn
   (set-variable 'default-input-method "japanese-skk")
   ;; パス
-  (set-variable 'skk-user-directory (expand-file-name "ddskk" e:util-directory))
-  (set-variable 'skk-large-jisyo (expand-file-name "SKK-JISYO.L" skk-user-directory))
+  (set-variable 'skk-user-directory (expand-file-name "ddskk" e:private-directory))
+  (set-variable 'skk-large-jisyo (expand-file-name "dic-mirror/SKK-JISYO.L" e:util-directory))
   ;; 各種設定
   (set-variable 'skk-preload t)
   (set-variable 'skk-egg-like-newline t)

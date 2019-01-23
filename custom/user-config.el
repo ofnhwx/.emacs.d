@@ -169,9 +169,21 @@
 (use-package skk
   :defer t
   :config
+  (when (and (executable-find "google-ime-skk")
+             (require 'prodigy nil t))
+    (prodigy-define-service
+      :name "google-ime-skk"
+      :command "google-ime-skk"
+      :tags '(general)
+      :kill-signal 'sigkill)
+    (defun e:prodigy:google-ime-skk ()
+      (interactive)
+      (e:prodigy-start-service "google-ime-skk"))
+    (e:prodigy:google-ime-skk))
   (defun e:skk-latin-mode-on:before (&rest args)
     (unless skk-mode-invoked
       (skk-mode-invoke)))
+  (require 'skk-study nil t)
   (advice-add 'skk-latin-mode-on :before 'e:skk-latin-mode-on:before)
   (add-hook 'evil-hybrid-state-entry-hook 'skk-latin-mode-on)
   (add-hook 'evil-hybrid-state-exit-hook  'skk-mode-exit))

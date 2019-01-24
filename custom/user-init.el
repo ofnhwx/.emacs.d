@@ -7,10 +7,6 @@
   (set-variable 'url-cache-directory (expand-file-name "url/cache" e:private-directory))
   (set-variable 'url-cookie-file (expand-file-name "url/cookies" e:private-directory)))
 
-;; キーバインドの調整
-(setq evil-toggle-key "C-z z")
-(setq eyebrowse-keymap-prefix (kbd "C-z"))
-
 ;; SKK
 (progn
   (set-variable 'default-input-method "japanese-skk")

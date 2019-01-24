@@ -39,6 +39,7 @@ This function should only modify configuration layer settings."
      ;; Utilities
      auto-completion
      git
+     github
      helm
      notmuch
      prodigy
@@ -46,6 +47,8 @@ This function should only modify configuration layer settings."
             shell-default-shell 'eshell)
      syntax-checking
      vagrant
+     ;; Language Server Protocol
+     lsp
      ;; Languages
      csv
      emacs-lisp

@@ -159,7 +159,7 @@
 (use-package notmuch
   :defer t
   :config
-  (setq notmuch-archive-tags '("-inbox -unread"))
+  (setq notmuch-archive-tags '("-inbox" "-unread"))
   (setq notmuch-column-control 1.0)
   (setq notmuch-hello-thousands-separator ",")
   (setq notmuch-search-oldest-first nil)

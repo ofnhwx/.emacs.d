@@ -156,6 +156,27 @@
       (e:prodigy-start-service "2chproxy.pl"))
     (e:prodigy:2chproxy.pl)))
 
+(use-package notmuch
+  :defer t
+  :config
+  (setq notmuch-archive-tags '("-inbox -unread"))
+  (setq notmuch-column-control 1.0)
+  (setq notmuch-hello-thousands-separator ",")
+  (setq notmuch-search-oldest-first nil)
+  (setq notmuch-show-empty-saved-searches t)
+  (setq notmuch-show-logo nil)
+  (setq notmuch-hello-hide-tags
+        '("encrypted" "drafts" "flagged" "inbox" "sent" "signed" "spam" "unread"))
+  (setq notmuch-saved-searches
+        '((:name "受信トレイ" :query "tag:inbox"   :key "i")
+          (:name "未読　　　" :query "tag:unread"  :key "u")
+          (:name "スター付き" :query "tag:flagged" :key "f")
+          (:name "送信済み　" :query "tag:sent"    :key "t")
+          (:name "下書き　　" :query "tag:draft"   :key "d")
+          (:name "すべて　　" :query "*"           :key "a")
+          (:name "迷惑メール" :query "tag:spam"    :key "s")))
+  (setenv "XAPIAN_CJK_NGRAM" "1"))
+
 (use-package pangu-spacing
   :defer t
   :config

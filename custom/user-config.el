@@ -73,10 +73,13 @@
     (setq evil-move-cursor-back nil))
   ;; advices
   (progn
+    (defun e:evil-force-normal-state ()
+      (when (member evil-state '(insert hybrid visual))
+        (evil-force-normal-state)))
     (defun e:save-buffer:after (&rest args)
-      (evil-force-normal-state))
+      (e:evil-force-normal-state))
     (defun e:keyboard-quit:before (&rest args)
-      (evil-force-normal-state))
+      (e:evil-force-normal-state))
     (advice-add 'save-buffer :after 'e:save-buffer:after)
     (advice-add 'keyboard-quit :before 'e:keyboard-quit:before))
   ;; keybindings

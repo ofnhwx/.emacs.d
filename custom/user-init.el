@@ -29,15 +29,17 @@
     (set-variable 'skk-server-portnum 55100)))
 
 ;; 折り返さない
-(setq-default truncate-lines t)
-(setq truncate-partial-width-windows nil)
+(progn
+  (setq-default truncate-lines t)
+  (set-variable 'truncate-partial-width-windows nil))
 
 ;; 最終行の改行は`EditorConfig'で管理
-(setq mode-require-final-newline nil)
-(setq require-final-newline nil)
+(progn
+  (set-variable 'mode-require-final-newline nil)
+  (set-variable 'require-final-newline nil))
 
 ;; ロックファイルを作成しない
-(setq create-lockfiles nil)
+(set-variable 'create-lockfiles nil)
 
 ;; 右から左に読む言語に対応しない
 (setq-default bidi-display-reordering nil)

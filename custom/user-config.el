@@ -120,6 +120,24 @@
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'top))
 
+(use-package eww
+  :defer t
+  :config
+  (defvar e:eww-enable-colorize nil)
+  (defun e:eww-colorize-region:around (&rest args)
+    (when e:eww-enable-colorize
+      (apply (car args) (cdr args))))
+  (defun e:eww-colorize-on ()
+    (interactive)
+    (setq-local e:eww-enable-colorize t)
+    (eww-reload))
+  (defun e:eww-colorize-off ()
+    (interactive)
+    (setq-local e:eww-enable-colorize nil)
+    (eww-reload))
+  (advice-add 'eww-colorize-region :around 'e:eww-colorize-region:around)
+  (advice-add 'shr-colorize-region :around 'e:eww-colorize-region:around))
+
 (use-package flycheck
   :defer t
   :config

@@ -48,6 +48,10 @@
    :map global-map
    ("C-^" . ace-window)))
 
+(use-package atomic-chrome
+  :config
+  (atomic-chrome-start-server))
+
 (use-package display-line-numbers
   :config
   (when (fboundp 'display-line-numbers-mode)

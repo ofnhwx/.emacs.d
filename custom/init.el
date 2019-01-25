@@ -40,6 +40,7 @@ This function should only modify configuration layer settings."
      auto-completion
      git
      github
+     gtags
      helm
      notmuch
      prodigy

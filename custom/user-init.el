@@ -2,10 +2,16 @@
 ;; ファイルを移動
 (progn
   (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
+  (set-variable 'auth-sources `(,(expand-file-name "authinfo.plist" e:private-directory)))
   (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
   (set-variable 'eshell-directory-name (expand-file-name "eshell" e:private-directory))
   (set-variable 'url-cache-directory (expand-file-name "url/cache" e:private-directory))
   (set-variable 'url-cookie-file (expand-file-name "url/cookies" e:private-directory)))
+
+;; パスワード関連
+(progn
+  (set-variable 'password-cache-expiry 3600)
+  (set-variable 'plstore-encoded t))
 
 ;; SKK
 (progn

@@ -33,33 +33,38 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(;; Configurations
-     better-defaults
-     japanese
-     ;; Utilities
-     auto-completion
-     git
-     github
-     gtags
-     helm
-     notmuch
-     prodigy
-     (shell
-      :variables
-      shell-default-shell 'eshell)
+   '(;; +checkers
      (syntax-checking
       :variables
       syntax-checking-enable-tooltips nil)
-     vagrant
-     ;; Language Server Protocol
-     lsp
-     ;; Languages
+     ;; +completion
+     auto-completion
+     helm
+     ;; +emacs
+     better-defaults
+     ;; +email
+     notmuch
+     ;; +intl
+     japanese
+     ;; +lang
      csv
      emacs-lisp
      javascript
      markdown
      php
      ruby
+     ;; +source-control
+     git
+     github
+     ;; +tags
+     gtags
+     ;; +tools
+     lsp
+     prodigy
+     (shell
+      :variables
+      shell-default-shell 'eshell)
+     vagrant
      )
 
    ;; List of additional packages that will be installed without being

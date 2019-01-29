@@ -199,6 +199,14 @@
           (:name "迷惑メール" :query "tag:spam"    :key "s")))
   (setenv "XAPIAN_CJK_NGRAM" "1"))
 
+(use-package org
+  :defer t
+  :config
+  (setq org-directory (expand-file-name "org" e:private-directory))
+  (let ((org-agenda-directory (expand-file-name "agenda" org-directory)))
+    (when (file-directory-p org-agenda-directory)
+      (setq org-agenda-files (cl-remove-if 'file-directory-p (directory-files org-agenda-directory t))))))
+
 (use-package pangu-spacing
   :defer t
   :config

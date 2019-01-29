@@ -42,6 +42,7 @@ This function should only modify configuration layer settings."
      helm
      ;; +emacs
      better-defaults
+     org
      ;; +email
      notmuch
      ;; +intl

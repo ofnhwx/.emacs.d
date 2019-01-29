@@ -8,6 +8,12 @@
   (set-variable 'url-cache-directory (expand-file-name "url/cache" e:private-directory))
   (set-variable 'url-cookie-file (expand-file-name "url/cookies" e:private-directory)))
 
+;; shellの設定
+(set-variable 'shell-file-name
+              (or (executable-find "zsh")
+                  (executable-find "bash")
+                  (executable-find "sh")))
+
 ;; パスワード関連
 (progn
   (set-variable 'password-cache-expiry 3600)

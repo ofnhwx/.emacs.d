@@ -48,6 +48,22 @@
    :map global-map
    ("C-^" . ace-window)))
 
+(use-package auto-shell-command
+  :config
+  (defun e:ascmd:add-rsync (local server &optional options excludes)
+    (let ((cmd (format "rsync -C --filter=\":- .gitignore\" %s %s %s %s"
+                       (s-join " " options)
+                       (s-join " " (--map (format "--exclude \"%s\"" it) excludes))
+                       local server)))
+      (ascmd:add `(,local ,cmd))))
+  (progn
+    (defun e:ascmd:toggle:after ()
+      (message "ascmd: %s." (if ascmd:active "enabled" "disabled")))
+    (advice-add 'ascmd:toggle :after 'e:ascmd:toggle:after))
+  (let ((private-file (expand-file-name "ascmd.el" e:private-directory)))
+    (when (file-exists-p private-file)
+      (load-file private-file))))
+
 (use-package atomic-chrome
   :config
   (atomic-chrome-start-server))

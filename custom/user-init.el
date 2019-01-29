@@ -34,6 +34,12 @@
     (set-variable 'skk-server-host "127.0.0.1")
     (set-variable 'skk-server-portnum 55100)))
 
+;; 履歴関連
+(progn
+  (set-variable 'recentf-max-menu-items 20)
+  (set-variable 'recentf-max-saved-items 3000)
+  (set-variable 'recentf-filename-handlers '(abbreviate-file-name)))
+
 ;; 折り返さない
 (progn
   (setq-default truncate-lines t)

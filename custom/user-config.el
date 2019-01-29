@@ -144,6 +144,13 @@
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'top))
 
+(use-package wdired
+  :after (dired)
+  :config
+  (bind-keys
+   :map dired-mode-map
+   ("e" . wdired-change-to-wdired-mode)))
+
 (use-package dired-filter
   :after (dired)
   :config
@@ -152,7 +159,10 @@
 (use-package dired-quick-sort
   :after (dired)
   :config
-  (dired-quick-sort-setup))
+  (bind-keys
+   :map dired-mode-map
+   ("s" . hydra-dired-quick-sort/body))
+  (add-hook 'dired-mode-hook 'dired-quick-sort))
 
 (use-package eww
   :defer t

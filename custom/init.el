@@ -78,6 +78,8 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(;; Utilities
      atomic-chrome
+     dired-filter
+     dired-quick-sort
      )
 
    ;; A list of packages that cannot be updated.

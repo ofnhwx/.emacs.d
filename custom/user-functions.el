@@ -5,3 +5,7 @@
         (pkey (intern (format ":%s" property))))
     (when plist
       (plist-get plist pkey))))
+
+(defun e:system-type-darwin-p ()
+  "OS が Mac かを取得する."
+  (eq system-type 'darwin))

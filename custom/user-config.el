@@ -115,14 +115,28 @@
 (use-package dired
   :defer t
   :config
-  (when (require 'ls-lisp nil t)
-    (setq ls-lisp-use-insert-directory-program nil)
-    (setq ls-lisp-dirs-first t))
+  (when (e:system-type-darwin-p)
+    (cond
+     ((executable-find "gls")
+      (setq insert-directory-program "gls"))
+     ((require 'ls-lisp nil t)
+      (setq ls-lisp-use-insert-directory-program nil)
+      (setq ls-lisp-dirs-first t))))
   (setq dired-use-ls-dired t)
   (setq dired-listing-switches "-ahl")
   (setq dired-dwim-target t)
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'top))
+
+(use-package dired-filter
+  :after (dired)
+  :config
+  (add-hook 'dired-mode-hook 'dired-filter-mode))
+
+(use-package dired-quick-sort
+  :after (dired)
+  :config
+  (dired-quick-sort-setup))
 
 (use-package eww
   :defer t

@@ -9,3 +9,12 @@
 (defun e:system-type-darwin-p ()
   "OS が Mac かを取得する."
   (eq system-type 'darwin))
+
+(defun e:remove-nth (n list)
+  "N 番目の要素を LIST から取り除いて返す."
+  (declare
+   (type (integer 0) n)
+   (type list list))
+  (if (or (zerop n) (null list))
+      (cdr list)
+    (cons (car list) (remove-nth (1- n) (cdr list)))))

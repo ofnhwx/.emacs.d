@@ -18,3 +18,17 @@
                  (vm-attrs '(id name provider state dir)))
             (--map (-zip vm-attrs it) status-groups)))
       (spacemacs-buffer/warning "`vagrant-tramp' was updated."))))
+
+(use-package avy-migemo
+  :defer t
+  :config
+  (let ((version (pkg-info-package-version "avy-migemo"))
+        (target '(20180716 1455)))
+    (if (equal version target)
+        (progn
+          (defun e:avy--generic-jump:filter-args (args)
+            (if (= (length args) 4)
+                args
+              (e:remove-nth 2 args)))
+          (advice-add 'avy--generic-jump :filter-args 'e:avy--generic-jump:filter-args))
+      (spacemacs-buffer/warning "`avy-migemo' was updated."))))

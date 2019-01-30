@@ -17,4 +17,4 @@
    (type list list))
   (if (or (zerop n) (null list))
       (cdr list)
-    (cons (car list) (remove-nth (1- n) (cdr list)))))
+    (cons (car list) (e:remove-nth (1- n) (cdr list)))))

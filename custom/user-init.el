@@ -40,6 +40,12 @@
     (set-variable 'skk-server-host "127.0.0.1")
     (set-variable 'skk-server-portnum 55100)))
 
+;; Google翻訳
+(spacemacs|use-package-add-hook google-translate
+  :post-init
+  (set-variable 'google-translate-default-source-language nil)
+  (set-variable 'google-translate-default-target-language "ja"))
+
 ;; 履歴関連
 (progn
   (set-variable 'recentf-max-menu-items 20)

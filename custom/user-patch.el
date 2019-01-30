@@ -3,7 +3,7 @@
   :defer t
   :config
   (let ((version (pkg-info-package-version "vagrant-tramp"))
-        (target '(20160427 2332)))
+        (target '(20190125 1859)))
     (if (equal version target)
         (defun vagrant-tramp--all-boxes ()
           "List of VMs per `vagrant global-status` as alists."

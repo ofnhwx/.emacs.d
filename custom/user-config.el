@@ -42,12 +42,6 @@
                     )))
     :separator " "))
 
-(use-package ace-window
-  :config
-  (bind-keys
-   :map global-map
-   ("C-^" . ace-window)))
-
 (use-package auto-shell-command
   :config
   (defun e:ascmd:add-rsync (local server &optional options excludes)
@@ -57,7 +51,7 @@
                        local server)))
       (ascmd:add `(,local ,cmd))))
   (progn
-    (defun e:ascmd:toggle:after ()
+    (defun e:ascmd:toggle:after (&rest args)
       (message "ascmd: %s." (if ascmd:active "enabled" "disabled")))
     (advice-add 'ascmd:toggle :after 'e:ascmd:toggle:after))
   (let ((private-file (expand-file-name "ascmd.el" e:private-directory)))
@@ -127,6 +121,13 @@
    :map evil-emacs-state-map))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package ace-window
+  :defer t
+  :init
+  (bind-keys
+   :map global-map
+   ("C-^" . ace-window)))
 
 (use-package dired
   :defer t

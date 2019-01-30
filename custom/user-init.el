@@ -65,6 +65,11 @@
   (set-variable 'google-translate-default-source-language nil)
   (set-variable 'google-translate-default-target-language "ja"))
 
+(spacemacs|use-package-add-hook lsp
+  :post-config
+  (let ((cmd (expand-file-name "lsp/php/vendor/felixfbecker/language-server/bin/php-language-server.php" e:private-directory)))
+    (setq lsp-clients-php-server-command `("php" ,cmd))))
+
 (spacemacs|use-package-add-hook recentf
   :post-init
   (set-variable 'recentf-max-menu-items 20)

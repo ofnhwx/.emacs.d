@@ -36,6 +36,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(spacemacs|use-package-add-hook ace-window
+  :post-init
+  (bind-keys
+   :map global-map
+   ("C-^" . ace-window)))
+
 (spacemacs|use-package-add-hook eshell
   :post-init
   (set-variable 'eshell-directory-name (expand-file-name "eshell" e:private-directory)))
@@ -60,6 +66,11 @@
     (set-variable 'skk-server-host "127.0.0.1")
     (set-variable 'skk-server-portnum 55100)))
 
+(spacemacs|use-package-add-hook flycheck
+  :post-init
+  (set-variable 'flycheck-idle-buffer-switch-delay 3.0)
+  (set-variable 'flycheck-idle-change-delay 3.0))
+
 (spacemacs|use-package-add-hook google-translate
   :post-init
   (set-variable 'google-translate-default-source-language nil)
@@ -69,6 +80,52 @@
   :post-config
   (let ((cmd (expand-file-name "lsp/php/vendor/felixfbecker/language-server/bin/php-language-server.php" e:private-directory)))
     (setq lsp-clients-php-server-command `("php" ,cmd))))
+
+(spacemacs|use-package-add-hook magit
+  :post-init
+  (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
+  (set-variable 'magit-diff-refine-hunk 'all)
+  (set-variable 'smerge-refine-ignore-whitespace nil)
+  :post-config
+  (magit-define-popup-switch 'magit-log-popup ?l "Always sort by date" "--date-order"))
+
+(spacemacs|use-package-add-hook notmuch
+  :post-init
+  (set-variable 'notmuch-archive-tags '("-inbox" "-unread"))
+  (set-variable 'notmuch-column-control 1.0)
+  (set-variable 'notmuch-hello-thousands-separator ",")
+  (set-variable 'notmuch-search-oldest-first nil)
+  (set-variable 'notmuch-show-empty-saved-searches t)
+  (set-variable 'notmuch-show-logo nil)
+  (set-variable 'notmuch-hello-hide-tags
+                '("encrypted" "drafts" "flagged" "inbox" "sent" "signed" "spam" "unread"))
+  (set-variable 'notmuch-saved-searches
+                '((:name "受信トレイ" :query "tag:inbox"   :key "i")
+                  (:name "未読　　　" :query "tag:unread"  :key "u")
+                  (:name "スター付き" :query "tag:flagged" :key "f")
+                  (:name "送信済み　" :query "tag:sent"    :key "t")
+                  (:name "下書き　　" :query "tag:draft"   :key "d")
+                  (:name "すべて　　" :query "*"           :key "a")
+                  (:name "迷惑メール" :query "tag:spam"    :key "s")))
+  (setenv "XAPIAN_CJK_NGRAM" "1"))
+
+(spacemacs|use-package-add-hook org
+  :post-init
+  (set-variable 'org-directory (expand-file-name "org" e:private-directory))
+  (let ((org-agenda-directory (expand-file-name "agenda" org-directory)))
+    (when (file-directory-p org-agenda-directory)
+      (set-variable 'org-agenda-files (cl-remove-if 'file-directory-p (directory-files org-agenda-directory t))))))
+
+(spacemacs|use-package-add-hook pangu-spacing
+  :post-init
+  (set-variable 'pangu-spacing-real-insert-separtor nil))
+
+(spacemacs|use-package-add-hook prodigy
+  :post-init
+  (defun e:prodigy-start-service (name)
+    (let ((service (prodigy-find-service name)))
+      (when service
+        (prodigy-start-service service)))))
 
 (spacemacs|use-package-add-hook recentf
   :post-init

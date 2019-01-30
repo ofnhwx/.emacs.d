@@ -122,13 +122,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package ace-window
-  :defer t
-  :init
-  (bind-keys
-   :map global-map
-   ("C-^" . ace-window)))
-
 (use-package dired
   :defer t
   :config
@@ -143,27 +136,22 @@
   (setq dired-listing-switches "-ahl")
   (setq dired-dwim-target t)
   (setq dired-recursive-copies 'always)
-  (setq dired-recursive-deletes 'top))
+  (setq dired-recursive-deletes 'top)
+  (use-package wdired
+    :config
+    (bind-keys
+     :map dired-mode-map
+     ("e" . wdired-change-to-wdired-mode)))
+  (use-package dired-filter
+    :config
+    (add-hook 'dired-mode-hook 'dired-filter-mode))
 
-(use-package wdired
-  :after (dired)
-  :config
-  (bind-keys
-   :map dired-mode-map
-   ("e" . wdired-change-to-wdired-mode)))
-
-(use-package dired-filter
-  :after (dired)
-  :config
-  (add-hook 'dired-mode-hook 'dired-filter-mode))
-
-(use-package dired-quick-sort
-  :after (dired)
-  :config
-  (bind-keys
-   :map dired-mode-map
-   ("s" . hydra-dired-quick-sort/body))
-  (add-hook 'dired-mode-hook 'dired-quick-sort))
+  (use-package dired-quick-sort
+    :config
+    (bind-keys
+     :map dired-mode-map
+     ("s" . hydra-dired-quick-sort/body))
+    (add-hook 'dired-mode-hook 'dired-quick-sort)))
 
 (use-package eww
   :defer t
@@ -182,20 +170,6 @@
     (eww-reload))
   (advice-add 'eww-colorize-region :around 'e:eww-colorize-region:around)
   (advice-add 'shr-colorize-region :around 'e:eww-colorize-region:around))
-
-(use-package flycheck
-  :defer t
-  :config
-  (setq flycheck-idle-buffer-switch-delay 3.0)
-  (setq flycheck-idle-change-delay 3.0))
-
-(use-package magit
-  :defer t
-  :config
-  (setq magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
-  (setq magit-diff-refine-hunk 'all)
-  (setq smerge-refine-ignore-whitespace nil)
-  (magit-define-popup-switch 'magit-log-popup ?l "Always sort by date" "--date-order"))
 
 (use-package navi2ch
   :load-path "lisp/navi2ch"
@@ -218,48 +192,6 @@
       (interactive)
       (e:prodigy-start-service "2chproxy.pl"))
     (e:prodigy:2chproxy.pl)))
-
-(use-package notmuch
-  :defer t
-  :config
-  (setq notmuch-archive-tags '("-inbox" "-unread"))
-  (setq notmuch-column-control 1.0)
-  (setq notmuch-hello-thousands-separator ",")
-  (setq notmuch-search-oldest-first nil)
-  (setq notmuch-show-empty-saved-searches t)
-  (setq notmuch-show-logo nil)
-  (setq notmuch-hello-hide-tags
-        '("encrypted" "drafts" "flagged" "inbox" "sent" "signed" "spam" "unread"))
-  (setq notmuch-saved-searches
-        '((:name "受信トレイ" :query "tag:inbox"   :key "i")
-          (:name "未読　　　" :query "tag:unread"  :key "u")
-          (:name "スター付き" :query "tag:flagged" :key "f")
-          (:name "送信済み　" :query "tag:sent"    :key "t")
-          (:name "下書き　　" :query "tag:draft"   :key "d")
-          (:name "すべて　　" :query "*"           :key "a")
-          (:name "迷惑メール" :query "tag:spam"    :key "s")))
-  (setenv "XAPIAN_CJK_NGRAM" "1"))
-
-(use-package org
-  :defer t
-  :config
-  (setq org-directory (expand-file-name "org" e:private-directory))
-  (let ((org-agenda-directory (expand-file-name "agenda" org-directory)))
-    (when (file-directory-p org-agenda-directory)
-      (setq org-agenda-files (cl-remove-if 'file-directory-p (directory-files org-agenda-directory t))))))
-
-(use-package pangu-spacing
-  :defer t
-  :config
-  (setq pangu-spacing-real-insert-separtor nil))
-
-(use-package prodigy
-  :defer t
-  :config
-  (defun e:prodigy-start-service (name)
-    (let ((service (prodigy-find-service name)))
-      (when service
-        (prodigy-start-service service)))))
 
 (use-package skk
   :defer t

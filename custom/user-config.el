@@ -11,13 +11,23 @@
       (set-terminal-coding-system    coding-system)
       (set-keyboard-coding-system    coding-system))
     ;; フォント設定
-    (let* ((fontname "Ricty Diminished Discord")
-           (size 14)
-           (font (font-spec :family fontname :size size))
-           (height (* size 10)))
-      (set-fontset-font t 'japanese-jisx0208 font)
-      (set-fontset-font t 'katakana-jisx0201 font)
-      (set-face-attribute 'default nil :family fontname :height height))
+    (let* ((charsets '(japanese-jisx0208
+                       japanese-jisx0208-1978
+                       japanese-jisx0212
+                       japanese-jisx0213-1
+                       japanese-jisx0213-2
+                       japanese-jisx0213.2004-1
+                       japanese-jisx0213-a
+                       katakana-jisx0201
+                       katakana-sjis))
+           (height 140)
+           (rescale 1.00)
+           (fontname "Ricty Diminished Discord")
+           (fontspec (font-spec :family fontname)))
+      (setq face-font-rescale-alist `((,fontname . ,rescale)))
+      (set-face-attribute 'default nil :family fontname :height height)
+      (dolist (charset charsets)
+        (set-fontset-font t charset fontspec)))
     ;; 対策: East Asian Ambiguous Width
     (add-to-list 'load-path (expand-file-name "locale-eaw" e:lisp-directory))
     (when (require 'eaw nil t)

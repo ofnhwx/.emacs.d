@@ -76,6 +76,12 @@
   (set-variable 'google-translate-default-source-language nil)
   (set-variable 'google-translate-default-target-language "ja"))
 
+(spacemacs|use-package-add-hook helm
+  :post-init
+  (bind-key [remap eval-expression] 'helm-eval-expression)
+  (with-eval-after-load 'eldoc-eval
+    (bind-key [remap eldoc-eval-expression] 'helm-eval-expression eldoc-in-minibuffer-mode-map)))
+
 (spacemacs|use-package-add-hook lsp
   :post-config
   (let ((cmd (expand-file-name "lsp/php/vendor/felixfbecker/language-server/bin/php-language-server.php" e:private-directory)))

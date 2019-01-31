@@ -12,9 +12,6 @@
 
 (defun e:remove-nth (n list)
   "N 番目の要素を LIST から取り除いて返す."
-  (declare
-   (type (integer 0) n)
-   (type list list))
   (if (or (zerop n) (null list))
       (cdr list)
     (cons (car list) (e:remove-nth (1- n) (cdr list)))))

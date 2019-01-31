@@ -54,16 +54,44 @@
 
 (use-package auto-shell-command
   :config
-  (defun e:ascmd:add-rsync (local server &optional options excludes)
-    (let ((cmd (format "rsync -C --filter=\":- .gitignore\" %s %s %s %s"
-                       (s-join " " options)
-                       (s-join " " (--map (format "--exclude \"%s\"" it) excludes))
-                       local server)))
-      (ascmd:add `(,local ,cmd))))
   (progn
     (defun e:ascmd:toggle:after (&rest args)
       (message "ascmd: %s." (if ascmd:active "enabled" "disabled")))
     (advice-add 'ascmd:toggle :after 'e:ascmd:toggle:after))
+  (defvar e:ascmd:additional nil)
+  (defun e:ascmd:rsync-command (&rest args)
+    (let ((result '("rsync"))
+          (srcs nil)
+          (dest nil)
+          (arg nil))
+      (while args
+        (setq arg (pop args))
+        (case arg
+          (:src  (push (pop args) srcs))
+          (:dest (setq dest (pop args)))
+          (:gitignore  (push "--cvs-exclude --filter=\":- .gitignore\"" result))
+          (:rsh        (push (format "--rsh=\"%s\""        (pop args)) result))
+          (:rsync-path (push (format "--rsync-path=\"%s\"" (pop args)) result))
+          (:filter     (push (format "--filter=\"%s\""     (pop args)) result))
+          (:include    (push (format "--include=\"%s\""    (pop args)) result))
+          (:exclude    (push (format "--exclude=\"%s\""    (pop args)) result))
+          (t (push arg result))))
+      (format "%s %s %s"
+              (s-join " " (reverse result))
+              (s-join " " (reverse srcs))
+              dest)))
+  (defun e:ascmd:exec (command)
+    (let ((process-exec-p (ascmd:process-exec-p)))
+      (ascmd:add-command-queue command)
+      (unless process-exec-p
+        (ascmd:shell-deferred command)) t))
+  (defun e:helm:ascmd:exec ()
+    (interactive)
+    (let ((candidates (-concat (-map 'cadr ascmd:setting)
+                               e:ascmd:additional)))
+      (helm :sources '((name . "ascmd")
+                       (candidates . candidates)
+                       (action . e:ascmd:exec)))))
   (let ((private-file (expand-file-name "ascmd.el" e:private-directory)))
     (when (file-exists-p private-file)
       (load-file private-file))))

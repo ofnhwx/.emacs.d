@@ -1,15 +1,15 @@
 [submodule "lisp/spacemacs"]
 	path = lisp/spacemacs
-	url = ssh://git@github.com/syl20bnr/spacemacs.git
+	url = https://github.com/syl20bnr/spacemacs.git
 [submodule "lisp/locale-eaw"]
 	path = lisp/locale-eaw
-	url = ssh://git@github.com/hamano/locale-eaw.git
+	url = https://github.com/hamano/locale-eaw.git
 [submodule "lisp/navi2ch"]
 	path = lisp/navi2ch
-	url = git://navi2ch.git.sourceforge.net/gitroot/navi2ch/navi2ch
+	url = https://github.com/naota/navi2ch.git
 [submodule "util/2chproxy.pl"]
 	path = util/2chproxy.pl
-	url = ssh://git@github.com/yama-natuki/2chproxy.pl
+	url = https://github.com/yama-natuki/2chproxy.pl.git
 [submodule "util/dic-mirror"]
 	path = util/dic-mirror
-	url = ssh://git@github.com/skk-users-jp/dic-mirror.git
+	url = https://github.com/skk-users-jp/dic-mirror.git

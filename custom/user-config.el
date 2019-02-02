@@ -20,12 +20,9 @@
                        japanese-jisx0213-a
                        katakana-jisx0201
                        katakana-sjis))
-           (height 140)
-           (rescale 1.00)
-           (fontname "Ricty Diminished Discord")
-           (fontspec (font-spec :family fontname)))
-      (setq face-font-rescale-alist `((,fontname . ,rescale)))
-      (set-face-attribute 'default nil :family fontname :height height)
+           (fontspec (font-spec :family e:font-name)))
+      (setq face-font-rescale-alist `((,e:font-name . ,e:font-rescale)))
+      (set-face-attribute 'default nil :family e:font-name :height e:font-height)
       (dolist (charset charsets)
         (set-fontset-font t charset fontspec)))
     ;; 対策: East Asian Ambiguous Width

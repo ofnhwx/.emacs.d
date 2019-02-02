@@ -9,16 +9,25 @@
 ;;(package-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; パス設定
+;;; 各種設定
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
+(progn ;; パス設定
   (let ((emacs-dir (file-name-directory (or load-file-name buffer-file-name))))
     (setq user-emacs-directory (abbreviate-file-name emacs-dir)))
   (defvar e:custom-directory  (expand-file-name "custom/"  user-emacs-directory))
   (defvar e:lisp-directory    (expand-file-name "lisp/"    user-emacs-directory))
   (defvar e:private-directory (expand-file-name "private/" user-emacs-directory))
   (defvar e:util-directory    (expand-file-name "util/"    user-emacs-directory)))
+
+(progn ;; フォント設定
+  (defvar e:font-name "Ricty Diminished Discord")
+  (defvar e:font-height 140)
+  (defvar e:font-rescale 1.00))
+
+(let ((private-config (expand-file-name "config.el" e:private-directory)))
+  (when (file-exists-p private-config)
+    (load-file private-config)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Spacemacs

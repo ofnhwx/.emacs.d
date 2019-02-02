@@ -15,10 +15,9 @@
 (progn ;; パス設定
   (let ((emacs-dir (file-name-directory (or load-file-name buffer-file-name))))
     (setq user-emacs-directory (abbreviate-file-name emacs-dir)))
-  (defvar e:custom-directory  (expand-file-name "custom/"  user-emacs-directory))
-  (defvar e:lisp-directory    (expand-file-name "lisp/"    user-emacs-directory))
-  (defvar e:private-directory (expand-file-name "private/" user-emacs-directory))
-  (defvar e:util-directory    (expand-file-name "util/"    user-emacs-directory)))
+  (defvar e:custom-directory   (expand-file-name "custom/"   user-emacs-directory))
+  (defvar e:external-directory (expand-file-name "external/" user-emacs-directory))
+  (defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory)))
 
 (progn ;; フォント設定
   (defvar e:font-name "Ricty Diminished Discord")
@@ -35,7 +34,7 @@
 
 (progn
   (defvar spacemacs-start-directory
-    (expand-file-name "spacemacs/" e:lisp-directory)
+    (expand-file-name "spacemacs/" e:external-directory)
     "Spacemacs start directory.")
   (setenv "SPACEMACSDIR" e:custom-directory)
   (load-file (expand-file-name "init.el" spacemacs-start-directory)))

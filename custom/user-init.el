@@ -51,7 +51,7 @@
   (set-variable 'default-input-method "japanese-skk")
   (progn
     (set-variable 'skk-user-directory (expand-file-name "ddskk" e:private-directory))
-    (set-variable 'skk-large-jisyo (expand-file-name "dic-mirror/SKK-JISYO.L" e:util-directory)))
+    (set-variable 'skk-large-jisyo (expand-file-name "dic-mirror/SKK-JISYO.L" e:external-directory)))
   (progn
     (set-variable 'skk-preload t)
     (set-variable 'skk-egg-like-newline t)

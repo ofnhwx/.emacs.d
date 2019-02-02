@@ -26,7 +26,7 @@
       (dolist (charset charsets)
         (set-fontset-font t charset fontspec)))
     ;; 対策: East Asian Ambiguous Width
-    (add-to-list 'load-path (expand-file-name "locale-eaw" e:lisp-directory))
+    (add-to-list 'load-path (expand-file-name "locale-eaw" e:external-directory))
     (when (require 'eaw nil t)
       (eaw-fullwidth))
     ;;
@@ -214,7 +214,7 @@
   (setq navi2ch-net-http-proxy "127.0.0.1:9080")
   :config
   (when (require 'prodigy nil t)
-    (let ((cmd (expand-file-name "2chproxy.pl/2chproxy.pl" e:util-directory))
+    (let ((cmd (expand-file-name "2chproxy.pl/2chproxy.pl" e:external-directory))
           (yml (expand-file-name "2chproxy.yml" e:custom-directory)))
       (when (and (executable-find cmd)
                  (file-exists-p yml))

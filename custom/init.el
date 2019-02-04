@@ -54,6 +54,7 @@ This function should only modify configuration layer settings."
      markdown
      php
      ruby
+     yaml
      ;; +source-control
      git
      github

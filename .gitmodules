@@ -1,15 +1,18 @@
-[submodule "lisp/spacemacs"]
-	path = external/spacemacs
-	url = https://github.com/syl20bnr/spacemacs.git
-[submodule "lisp/locale-eaw"]
-	path = external/locale-eaw
-	url = https://github.com/hamano/locale-eaw.git
-[submodule "lisp/navi2ch"]
-	path = external/navi2ch
-	url = https://github.com/naota/navi2ch.git
-[submodule "util/2chproxy.pl"]
+[submodule "external/2chproxy.pl"]
 	path = external/2chproxy.pl
 	url = https://github.com/yama-natuki/2chproxy.pl.git
-[submodule "util/dic-mirror"]
+[submodule "external/dic-mirror"]
 	path = external/dic-mirror
 	url = https://github.com/skk-users-jp/dic-mirror.git
+[submodule "external/dmacro"]
+	path = external/dmacro
+	url = https://github.com/zonuexe/dmacro.git
+[submodule "external/locale-eaw"]
+	path = external/locale-eaw
+	url = https://github.com/hamano/locale-eaw.git
+[submodule "external/navi2ch"]
+	path = external/navi2ch
+	url = https://github.com/naota/navi2ch.git
+[submodule "external/spacemacs"]
+	path = external/spacemacs
+	url = https://github.com/syl20bnr/spacemacs.git

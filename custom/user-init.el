@@ -12,6 +12,9 @@
   (set-variable 'url-cookie-file (expand-file-name "url/cookies" spacemacs-cache-directory))
   )
 
+;; 「Viperize?」の確認は不要(ddskk)
+(set-variable 'viper-mode nil)
+
 ;; shellの設定
 (set-variable 'shell-file-name
               (or (executable-find "zsh")

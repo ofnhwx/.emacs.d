@@ -1,11 +1,16 @@
 
 ;; ファイルを移動
 (progn
+  ;; private
   (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
   (set-variable 'auth-sources `(,(expand-file-name "authinfo.plist" e:private-directory)))
   (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
-  (set-variable 'url-cache-directory (expand-file-name "url/cache" e:private-directory))
-  (set-variable 'url-cookie-file (expand-file-name "url/cookies" e:private-directory)))
+  ;; cache
+  (set-variable 'forge-database-file (expand-file-name "forge-database.sqlite" spacemacs-cache-directory))
+  (set-variable 'magithub-dir (expand-file-name "magithub" spacemacs-cache-directory))
+  (set-variable 'url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory))
+  (set-variable 'url-cookie-file (expand-file-name "url/cookies" spacemacs-cache-directory))
+  )
 
 ;; shellの設定
 (set-variable 'shell-file-name
@@ -41,10 +46,6 @@
   (bind-keys
    :map global-map
    ("C-^" . ace-window)))
-
-(spacemacs|use-package-add-hook eshell
-  :post-init
-  (set-variable 'eshell-directory-name (expand-file-name "eshell" e:private-directory)))
 
 (spacemacs|use-package-add-hook ddskk
   :post-init

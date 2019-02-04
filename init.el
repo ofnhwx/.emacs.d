@@ -32,12 +32,9 @@
 ;;; Spacemacs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn
-  (defvar spacemacs-start-directory
-    (expand-file-name "spacemacs/" e:external-directory)
-    "Spacemacs start directory.")
+(let ((user-emacs-directory (expand-file-name "spacemacs/" e:external-directory)))
   (setenv "SPACEMACSDIR" e:custom-directory)
-  (load-file (expand-file-name "init.el" spacemacs-start-directory)))
+  (load-file (expand-file-name "init.el" user-emacs-directory)))
 
 (provide 'init)
 ;;; init.el ends here

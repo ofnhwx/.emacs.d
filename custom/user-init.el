@@ -86,8 +86,8 @@
   (with-eval-after-load 'eldoc-eval
     (bind-key [remap eldoc-eval-expression] 'helm-eval-expression eldoc-in-minibuffer-mode-map)))
 
-(spacemacs|use-package-add-hook lsp
-  :post-config
+(spacemacs|use-package-add-hook lsp-mode
+  :post-init
   (let ((cmd (expand-file-name "lsp/php/vendor/felixfbecker/language-server/bin/php-language-server.php" e:private-directory)))
     (setq lsp-clients-php-server-command `("php" ,cmd))))
 

@@ -82,6 +82,7 @@ This function should only modify configuration layer settings."
      auto-shell-command
      dired-filter
      dired-quick-sort
+     helm-tramp
      )
 
    ;; A list of packages that cannot be updated.

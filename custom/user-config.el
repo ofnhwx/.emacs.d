@@ -251,15 +251,28 @@
   (add-hook 'evil-hybrid-state-exit-hook  'skk-mode-exit))
 
 (use-package tramp
-  :defer t
   :init
   (set-variable 'tramp-default-host "localhost")
-  (let* ((files (--filter (not (file-directory-p it))
-                          (-map 'abbreviate-file-name (directory-files "~/.ssh/conf.d/hosts" t))))
-         (functions (--map (list 'tramp-parse-sconfig it) files)))
-    (dolist (method '("ssh" "scp"))
-      (let ((functions (append (tramp-get-completion-function method) functions)))
-        (tramp-set-completion-function method functions)))))
+  :config
+  (use-package tramp-sh
+    :config
+    (let* ((files (--filter (not (file-directory-p it))
+                            (-map 'abbreviate-file-name (directory-files "~/.ssh/conf.d/hosts" t))))
+           (functions (--map (list 'tramp-parse-sconfig it) files)))
+      (dolist (method '("ssh" "scp"))
+        (let ((functions (append (tramp-get-completion-function method) functions)))
+          (tramp-set-completion-function method functions)))))
+  (use-package helm-tramp
+    :defer t
+    :config
+    (progn
+      (defun e:helm-tramp--candidates:filter-return (result)
+        (dolist (host (--filter (not (string-equal it tramp-default-host))
+                                (-distinct (-flatten (-map 'eval (tramp-get-completion-function "ssh"))))))
+          (push (format "/%s:%s:" tramp-default-method host) result)
+          (push (format "/ssh:%s|sudo:%s:/" host host) result))
+        (-distinct (reverse result)))
+      (advice-add 'helm-tramp--candidates :filter-return 'e:helm-tramp--candidates:filter-return))))
 
 (use-package which-key
   :defer t

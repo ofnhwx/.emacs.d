@@ -1,40 +1,6 @@
 
-(progn
-  (defun e:setup-font ()
-    (interactive)
-    ;; エンコーディング設定
-    (set-language-environment "Japanese")
-    (let ((coding-system 'utf-8))
-      (prefer-coding-system          coding-system)
-      (set-default-coding-systems    coding-system)
-      (set-buffer-file-coding-system coding-system)
-      (set-terminal-coding-system    coding-system)
-      (set-keyboard-coding-system    coding-system))
-    ;; フォント設定
-    (let* ((charsets '(japanese-jisx0208
-                       japanese-jisx0208-1978
-                       japanese-jisx0212
-                       japanese-jisx0213-1
-                       japanese-jisx0213-2
-                       japanese-jisx0213.2004-1
-                       japanese-jisx0213-a
-                       katakana-jisx0201
-                       katakana-sjis))
-           (fontspec (font-spec :family e:font-name)))
-      (setq face-font-rescale-alist `((,e:font-name . ,e:font-rescale)))
-      (set-face-attribute 'default nil :family e:font-name :height e:font-height)
-      (dolist (charset charsets)
-        (set-fontset-font t charset fontspec)))
-    ;; 対策: East Asian Ambiguous Width
-    (add-to-list 'load-path (expand-file-name "locale-eaw" e:external-directory))
-    (when (require 'eaw nil t)
-      (eaw-fullwidth))
-    ;;
-    t)
-  ;; いろいろあったのでこんな感じで
-  (add-hook 'window-setup-hook 'e:setup-font))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; フォントの設定は後から実行させる
+(add-hook 'window-setup-hook 'e:setup-font)
 
 (use-package core-dotspacemacs
   :config
@@ -97,6 +63,37 @@
   :config
   (atomic-chrome-start-server))
 
+(use-package dired
+  :defer t
+  :config
+  (when (e:system-type-darwin-p)
+    (cond
+     ((executable-find "gls")
+      (setq insert-directory-program "gls"))
+     ((require 'ls-lisp nil t)
+      (setq ls-lisp-use-insert-directory-program nil)
+      (setq ls-lisp-dirs-first t))))
+  (setq dired-use-ls-dired t)
+  (setq dired-listing-switches "-ahl")
+  (setq dired-dwim-target t)
+  (setq dired-recursive-copies 'always)
+  (setq dired-recursive-deletes 'top)
+  (use-package wdired
+    :config
+    (bind-keys
+     :map dired-mode-map
+     ("e" . wdired-change-to-wdired-mode)))
+  (use-package dired-filter
+    :config
+    (add-hook 'dired-mode-hook 'dired-filter-mode))
+
+  (use-package dired-quick-sort
+    :config
+    (bind-keys
+     :map dired-mode-map
+     ("s" . hydra-dired-quick-sort/body))
+    (add-hook 'dired-mode-hook 'dired-quick-sort)))
+
 (use-package display-line-numbers
   :config
   (when (fboundp 'display-line-numbers-mode)
@@ -154,39 +151,6 @@
    :map evil-replace-state-map
    ;; Emacsモード
    :map evil-emacs-state-map))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package dired
-  :defer t
-  :config
-  (when (e:system-type-darwin-p)
-    (cond
-     ((executable-find "gls")
-      (setq insert-directory-program "gls"))
-     ((require 'ls-lisp nil t)
-      (setq ls-lisp-use-insert-directory-program nil)
-      (setq ls-lisp-dirs-first t))))
-  (setq dired-use-ls-dired t)
-  (setq dired-listing-switches "-ahl")
-  (setq dired-dwim-target t)
-  (setq dired-recursive-copies 'always)
-  (setq dired-recursive-deletes 'top)
-  (use-package wdired
-    :config
-    (bind-keys
-     :map dired-mode-map
-     ("e" . wdired-change-to-wdired-mode)))
-  (use-package dired-filter
-    :config
-    (add-hook 'dired-mode-hook 'dired-filter-mode))
-
-  (use-package dired-quick-sort
-    :config
-    (bind-keys
-     :map dired-mode-map
-     ("s" . hydra-dired-quick-sort/body))
-    (add-hook 'dired-mode-hook 'dired-quick-sort)))
 
 (use-package eww
   :defer t

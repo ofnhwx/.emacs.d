@@ -250,6 +250,17 @@
   (add-hook 'evil-hybrid-state-entry-hook 'skk-latin-mode-on)
   (add-hook 'evil-hybrid-state-exit-hook  'skk-mode-exit))
 
+(use-package tramp
+  :defer t
+  :init
+  (set-variable 'tramp-default-host "localhost")
+  (let* ((files (--filter (not (file-directory-p it))
+                          (-map 'abbreviate-file-name (directory-files "~/.ssh/conf.d/hosts" t))))
+         (functions (--map (list 'tramp-parse-sconfig it) files)))
+    (dolist (method '("ssh" "scp"))
+      (let ((functions (append (tramp-get-completion-function method) functions)))
+        (tramp-set-completion-function method functions)))))
+
 (use-package which-key
   :defer t
   :config

@@ -1,0 +1,16 @@
+#+TITLE: core-dotspacemacs.org
+#+STARTUP: overview
+
+* 現在のファイルの文字/改行コードを分かりやすく表示
+  #+BEGIN_SRC emacs-lisp
+    (spaceline-define-segment buffer-encoding-abbrev
+      "The line ending convention used in the buffer."
+      (let ((buf-coding (format "%s" buffer-file-coding-system)))
+        (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
+              (concat (and (string-match "with-signature" buf-coding) "ⓑ")
+                      (and (string-match "unix"           buf-coding) "ⓤ")
+                      (and (string-match "dos"            buf-coding) "ⓓ")
+                      (and (string-match "mac"            buf-coding) "ⓜ")
+                      )))
+      :separator " ")
+  #+END_SRC

@@ -1,0 +1,24 @@
+#+TITLE: display-line-numbers.org
+#+STARTUP: overview
+
+* 標準で4桁表示
+  #+BEGIN_SRC emacs-lisp
+    (setq-default display-line-numbers-width 4)
+  #+END_SRC
+
+* 特定のモードで有効にする
+  #+BEGIN_SRC emacs-lisp
+    (defun display-line-numbers-mode-on ()
+      "`display-line-numbers-mode'を有効化."
+      (interactive)
+      (display-line-numbers-mode 1))
+
+    (defun display-line-numbers-mode-off ()
+      "`display-line-numbers-mode'を無効化."
+      (interactive)
+      (display-line-numbers-mode 0))
+
+    (add-hook 'prog-mode-hook 'display-line-numbers-mode-on)
+    (add-hook 'find-file-hook 'display-line-numbers-mode-on)
+    (add-hook 'html-mode-hook 'display-line-numbers-mode-on)
+  #+END_SRC

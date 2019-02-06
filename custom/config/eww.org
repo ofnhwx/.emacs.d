@@ -1,0 +1,24 @@
+#+TITLE: eww.org
+#+STARTUP: overview
+
+* ewwでの色の有効/無効を切替え
+  #+BEGIN_SRC emacs-lisp
+    (defvar e:eww-enable-colorize nil)
+
+    (defun e:eww-colorize-region:around (&rest args)
+      (when e:eww-enable-colorize
+        (apply (car args) (cdr args))))
+
+    (defun e:eww-colorize-on ()
+      (interactive)
+      (setq-local e:eww-enable-colorize t)
+      (eww-reload))
+
+    (defun e:eww-colorize-off ()
+      (interactive)
+      (setq-local e:eww-enable-colorize nil)
+      (eww-reload))
+
+    (advice-add 'eww-colorize-region :around 'e:eww-colorize-region:around)
+    (advice-add 'shr-colorize-region :around 'e:eww-colorize-region:around)
+  #+END_SRC

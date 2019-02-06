@@ -1,0 +1,28 @@
+#+TITLE: tramp.org
+#+STARTUP: overview
+
+* tramp-sh
+  #+BEGIN_SRC emacs-lisp
+    (use-package tramp-sh
+      :config
+      (let* ((files (--filter (not (file-directory-p it))
+                              (-map 'abbreviate-file-name (directory-files "~/.ssh/conf.d/hosts" t))))
+             (functions (--map (list 'tramp-parse-sconfig it) files)))
+        (dolist (method '("ssh" "scp"))
+          (let ((functions (append (tramp-get-completion-function method) functions)))
+            (tramp-set-completion-function method functions)))))
+  #+END_SRC
+
+* helm-tramp
+  #+BEGIN_SRC emacs-lisp
+    (use-package helm-tramp
+      :defer t
+      :config
+      (defun e:helm-tramp--candidates:filter-return (result)
+        (dolist (host (--filter (not (string-equal it tramp-default-host))
+                                (-distinct (-flatten (-map 'eval (tramp-get-completion-function "ssh"))))))
+          (push (format "/%s:%s:" tramp-default-method host) result)
+          (push (format "/ssh:%s|sudo:%s:/" host host) result))
+        (-distinct (reverse result)))
+      (advice-add 'helm-tramp--candidates :filter-return 'e:helm-tramp--candidates:filter-return))
+  #+END_SRC

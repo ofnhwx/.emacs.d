@@ -1,0 +1,51 @@
+#+TITLE: evil.org
+#+STARTUP: overview
+
+* 設定
+  #+BEGIN_SRC emacs-lisp
+    (setq evil-cross-lines t)
+    (setq evil-move-cursor-back nil)
+  #+END_SRC
+
+* キーバインド
+  #+BEGIN_SRC emacs-lisp
+    (setq evil-insert-state-map (make-sparse-keymap))
+    (bind-keys
+     ;; モーションモード(motion -> normal -> visual)
+     :map evil-motion-state-map
+     ("C-^" . nil) ;; evil-buffer
+     ;; 通常モード
+     :map evil-normal-state-map
+     ("<down>" . evil-next-visual-line)
+     ("<up>" . evil-previous-visual-line)
+     ("j" . evil-next-visual-line)
+     ("k" . evil-previous-visual-line)
+     ("gj" . evil-next-line)
+     ("gk" . evil-previous-line)
+     ;; ビジュアルモード
+     :map evil-visual-state-map
+     ;; 挿入モード
+     :map evil-insert-state-map
+     ;; オペレーターモード
+     :map evil-operator-state-map
+     ;; 置き換えモード
+     :map evil-replace-state-map
+     ;; Emacsモード
+     :map evil-emacs-state-map)
+  #+END_SRC
+
+* normal-stateに戻す設定を追加
+  #+BEGIN_SRC emacs-lisp
+    (defun e:evil-force-normal-state ()
+      (when (member evil-state '(insert hybrid visual))
+        (evil-force-normal-state)))
+
+    (defun e:save-buffer:after (&rest args)
+      (e:evil-force-normal-state))
+
+    (defun e:keyboard-quit:before (&rest args)
+      (e:evil-force-normal-state))
+
+    (advice-add 'save-buffer :after 'e:save-buffer:after)
+    (advice-add 'keyboard-quit :before 'e:keyboard-quit:before)
+  #+END_SRC

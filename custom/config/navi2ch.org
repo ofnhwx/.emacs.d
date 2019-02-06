@@ -1,0 +1,20 @@
+#+TITLE: navi2ch.org
+#+STARTUP: overview
+
+* 2chproxy.plを起動
+  #+BEGIN_SRC emacs-lisp
+    (when (require 'prodigy nil t)
+      (let ((cmd (expand-file-name "2chproxy.pl/2chproxy.pl" e:external-directory))
+            (yml (expand-file-name "2chproxy.yml" e:custom-directory)))
+        (when (and (executable-find cmd)
+                   (file-exists-p yml))
+          (prodigy-define-service
+            :name "2chproxy.pl"
+            :command (format "%s --config %s" cmd yml)
+            :tags '(general)
+            :kill-signal 'sigkill)))
+      (defun e:prodigy:2chproxy.pl ()
+        (interactive)
+        (e:prodigy-start-service "2chproxy.pl"))
+      (e:prodigy:2chproxy.pl))
+  #+END_SRC

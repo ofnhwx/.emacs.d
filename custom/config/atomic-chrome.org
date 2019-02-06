@@ -1,0 +1,7 @@
+#+TITLE: atomic-chrome.org
+#+STARTUP: overview
+
+* サーバーを起動
+  #+BEGIN_SRC emacs-lisp
+    (atomic-chrome-start-server)
+  #+END_SRC

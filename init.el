@@ -24,9 +24,13 @@
   (defvar e:font-height 140)
   (defvar e:font-rescale 1.00))
 
+;; 環境毎の設定値を読込み
 (let ((private-config (expand-file-name "config.el" e:private-directory)))
   (when (file-exists-p private-config)
     (load-file private-config)))
+
+;; 独自の拡張関数
+(load-file (expand-file-name "user-functions.el" e:custom-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Spacemacs

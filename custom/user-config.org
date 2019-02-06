@@ -1,0 +1,134 @@
+#+TITLE: user-config.org
+#+STARTUP: overview
+
+* パッケージ毎の設定
+** core-dotspacemacs
+  #+BEGIN_SRC emacs-lisp
+    (use-package core-dotspacemacs
+      :config
+      (e:load-custom-file "config/core-dotspacemacs.org"))
+  #+END_SRC
+
+** atomic-chrome
+  #+BEGIN_SRC emacs-lisp
+    (use-package atomic-chrome
+      :config
+      (e:load-custom-file "config/atomic-chrome.org"))
+  #+END_SRC
+
+** auto-shell-command
+  #+BEGIN_SRC emacs-lisp
+    (use-package auto-shell-command
+      :config
+      (e:load-custom-file "config/auto-shell-command.org"))
+  #+END_SRC
+
+** display-line-numbers
+  #+BEGIN_SRC emacs-lisp
+    (use-package display-line-numbers
+      :config
+      (e:load-custom-file "config/display-line-numbers.org"))
+  #+END_SRC
+
+** evil
+  #+BEGIN_SRC emacs-lisp
+    (use-package evil
+      :config
+      (e:load-custom-file "config/evil.org"))
+  #+END_SRC
+
+** tramp
+  #+BEGIN_SRC emacs-lisp
+    (use-package tramp
+      :init
+      (set-variable 'tramp-default-host "localhost")
+      :config
+      (e:load-custom-file "config/tramp.org"))
+  #+END_SRC
+
+* パッケージ毎の設定(遅延あり)
+** dired
+  #+BEGIN_SRC emacs-lisp
+    (use-package dired
+      :defer t
+      :config
+      (e:load-custom-file "config/dired.org"))
+  #+END_SRC
+
+** eww
+  #+BEGIN_SRC emacs-lisp
+    (use-package eww
+      :defer t
+      :config
+      (e:load-custom-file "config/eww.org"))
+  #+END_SRC
+
+** navi2ch
+  #+BEGIN_SRC emacs-lisp
+    (use-package navi2ch
+      :load-path "lisp/navi2ch"
+      :defer t
+      :init
+      (setq navi2ch-net-http-proxy "127.0.0.1:9080")
+      :config
+      (e:load-custom-file "config/navi2ch.org"))
+  #+END_SRC
+
+** skk
+  #+BEGIN_SRC emacs-lisp
+    (use-package skk
+      :defer t
+      :config
+      (e:load-custom-file "config/skk.org"))
+  #+END_SRC
+
+** which-key
+  #+BEGIN_SRC emacs-lisp
+    (use-package which-key
+      :defer t
+      :config
+      (e:load-custom-file "config/which-key.org"))
+  #+END_SRC
+
+* パッチ対応
+  #+BEGIN_SRC emacs-lisp
+    (require 'pkg-info)
+  #+END_SRC
+** vagrant-tramp
+   #+BEGIN_SRC emacs-lisp
+     (let ((version (pkg-info-format-version (pkg-info-package-version 'vagrant-tramp)))
+           (target "20190125.1859"))
+       (if (string-equal version target)
+           (use-package vagrant-tramp
+             :defer t
+             :config
+             (defun vagrant-tramp--all-boxes ()
+               "List of VMs per `vagrant global-status` as alists."
+               (let* ((status-cmd "vagrant global-status --machine-readable")
+                      (status-raw (shell-command-to-string status-cmd))
+                      (status-lines (-drop 7 (split-string status-raw "\n")))
+                      (status-data-raw (--map (mapconcat 'identity
+                                                         (-drop 4 (split-string it ",")) ",")
+                                              status-lines))
+                      (status-data (--map (replace-regexp-in-string " " "" it) status-data-raw))
+                      (status-groups (-butlast (-split-on "" status-data)))
+                      (vm-attrs '(id name provider state dir)))
+                 (--map (-zip vm-attrs it) status-groups))))
+         (spacemacs-buffer/warning "`vagrant-tramp' was updated.")))
+   #+END_SRC
+
+** avy-mitemo
+   #+BEGIN_SRC emacs-lisp
+     (let ((version (pkg-info-format-version (pkg-info-package-version 'avy-migemo)))
+           (target "20180716.1455"))
+       (if (string-equal version target)
+           (use-package avy-migemo
+             :defer t
+             :config
+             (defun e:avy--generic-jump:filter-args (args)
+               (if (= (length args) 4)
+                   args
+                 (e:remove-nth 2 args)))
+             (advice-add 'avy--generic-jump :filter-args 'e:avy--generic-jump:filter-args))
+         (spacemacs-buffer/warning "`avy-migemo' was updated.")))
+   #+END_SRC

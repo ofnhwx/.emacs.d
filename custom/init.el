@@ -80,8 +80,11 @@ This function should only modify configuration layer settings."
    '(;; Utilities
      atomic-chrome
      auto-shell-command
+     company-box
      dired-filter
      dired-quick-sort
+     eldoc-box
+     flycheck-posframe
      helm-tramp
      )
 

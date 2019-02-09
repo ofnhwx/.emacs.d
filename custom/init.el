@@ -52,6 +52,7 @@ This function should only modify configuration layer settings."
      emacs-lisp
      java
      javascript
+     kotlin
      markdown
      php
      ruby

@@ -50,6 +50,7 @@ This function should only modify configuration layer settings."
      ;; +lang
      csv
      emacs-lisp
+     java
      javascript
      markdown
      php

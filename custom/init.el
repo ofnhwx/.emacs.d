@@ -69,6 +69,8 @@ This function should only modify configuration layer settings."
       :variables
       shell-default-shell 'eshell)
      vagrant
+     ;; +web-services
+     search-engine
      )
 
    ;; List of additional packages that will be installed without being

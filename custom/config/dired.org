@@ -44,5 +44,6 @@
       (bind-keys
        :map dired-mode-map
        ("s" . hydra-dired-quick-sort/body))
+      (setq dired-quick-sort-group-directories-last ?y)
       (add-hook 'dired-mode-hook 'dired-quick-sort))
   #+END_SRC

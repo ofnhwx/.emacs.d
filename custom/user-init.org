@@ -74,6 +74,14 @@
         ("C-^" . ace-window)))
    #+END_SRC
 
+** avy
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs|use-package-add-hook avy
+       :post-config
+       (setq avy-keys (number-sequence ?a ?z))
+       (setq avy-all-windows t))
+   #+END_SRC
+
 ** ddskk
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook ddskk

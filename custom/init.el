@@ -57,6 +57,9 @@ This function should only modify configuration layer settings."
      php
      ruby
      yaml
+     ;; +misc
+     copy-as-format
+     parinfer
      ;; +source-control
      git
      github

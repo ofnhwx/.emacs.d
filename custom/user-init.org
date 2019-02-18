@@ -21,6 +21,9 @@
       (set-variable 'magithub-dir (expand-file-name "magithub" spacemacs-cache-directory))
       (set-variable 'url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory))
       (set-variable 'url-cookie-file (expand-file-name "url/cookies" spacemacs-cache-directory))
+      (set-variable 'transient-levels-file (expand-file-name "transient/levels.el" spacemacs-cache-directory))
+      (set-variable 'transient-values-file (expand-file-name "transient/values.el" spacemacs-cache-directory))
+      (set-variable 'transient-history-file (expand-file-name "transient/history.el" spacemacs-cache-directory))
     #+END_SRC
 
 ** 「Viperize?」の確認をしない

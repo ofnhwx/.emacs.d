@@ -90,8 +90,6 @@ This function should only modify configuration layer settings."
      company-box
      dired-filter
      dired-quick-sort
-     eldoc-box
-     flycheck-posframe
      helm-tramp
      )
 

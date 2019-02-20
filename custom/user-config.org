@@ -65,30 +65,12 @@
        (e:load-custom-file "config/dired.org"))
    #+END_SRC
 
-** eldoc-box
-   #+BEGIN_SRC emacs-lisp
-     (use-package eldoc-box
-       :defer t
-       :init
-       (spacemacs|diminish eldoc-box-hover-mode)
-       (add-hook 'eldoc-mode-hook 'eldoc-box-hover-mode)
-       (add-hook 'eldoc-box-hover-mode-hook 'eldoc-box-hover-at-point-mode))
-   #+END_SRC
-
 ** eww
    #+BEGIN_SRC emacs-lisp
      (use-package eww
        :defer t
        :config
        (e:load-custom-file "config/eww.org"))
-   #+END_SRC
-
-** flycheck-posframe
-   #+BEGIN_SRC emacs-lisp
-     (use-package flycheck-posframe
-       :defer t
-       :init
-       (add-hook 'flycheck-mode-hook 'flycheck-posframe-mode))
    #+END_SRC
 
 ** navi2ch

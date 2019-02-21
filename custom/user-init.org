@@ -176,13 +176,6 @@
            (set-variable 'org-agenda-files (cl-remove-if 'file-directory-p (directory-files org-agenda-directory t))))))
    #+END_SRC
 
-** pangu-spacing
-   #+BEGIN_SRC emacs-lisp
-     (spacemacs|use-package-add-hook pangu-spacing
-       :post-init
-       (set-variable 'pangu-spacing-real-insert-separtor nil))
-   #+END_SRC
-
 ** prodigy
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook prodigy

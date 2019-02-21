@@ -45,6 +45,8 @@ This function should only modify configuration layer settings."
      org
      ;; +email
      notmuch
+     ;; +filetree
+     treemacs
      ;; +intl
      japanese
      ;; +lang
@@ -59,13 +61,15 @@ This function should only modify configuration layer settings."
      yaml
      ;; +misc
      copy-as-format
-     parinfer
+     ;; +pair-programming
+     floobits
      ;; +source-control
      git
      github
      ;; +tags
      gtags
      ;; +tools
+     docker
      lsp
      prodigy
      (shell
@@ -90,6 +94,7 @@ This function should only modify configuration layer settings."
      company-box
      dired-filter
      dired-quick-sort
+     fish-mode
      helm-tramp
      )
 
@@ -97,7 +102,12 @@ This function should only modify configuration layer settings."
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(company-php)
+   dotspacemacs-excluded-packages
+   '(;; +intl/japanese
+     pangu-spacing
+     ;; +lang/php
+     company-php
+     )
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.

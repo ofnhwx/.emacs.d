@@ -59,3 +59,21 @@
   (if (or (zerop n) (null list))
       (cdr list)
     (cons (car list) (e:remove-nth (1- n) (cdr list)))))
+
+(defun e:shorten (filename &optional max)
+  "指定された FILENAME を MAX 以下の長さに短縮する."
+  (let ((filename (abbreviate-file-name filename))
+        (max (or max (window-width)))
+        (target 3)
+        (break nil))
+    (while (and (> (length filename) max)
+                (not break))
+      (let ((parts (split-string filename "/")))
+        (if (> (length parts) (+ target 2))
+            (progn
+              (if (equal (nth target parts) "...")
+                  (setq parts (remove (nth (+ target 1) parts) parts))
+                (setf (nth target parts) "..."))
+              (setq filename (string-join parts "/")))
+          (setq break t))))
+    filename))

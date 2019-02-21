@@ -68,6 +68,25 @@
      (setq-default bidi-display-reordering nil)
    #+END_SRC
 
+** ヘッダーラインの設定
+   #+BEGIN_SRC emacs-lisp
+     (defun e:setup-headerline-for-files ()
+       "ファイル名をヘッダーラインにいい感じに表示する"
+       (let* ((path (or buffer-file-name "/path/to/filename.test"))
+              (dir  (file-name-directory path))
+              (file (file-name-nondirectory path))
+              (max  (- (window-width) (length file))))
+         (setq-local header-line-format
+                     (concat
+                      (propertize " " 'display '(space :align-to 0))
+                      (propertize (e:shorten dir max))
+                      (propertize file 'face '(:foreground "#ff0000")))))
+       (setq-local spaceline-buffer-id-p nil))
+
+     ;; ファイルを開く際に実行
+     (add-hook 'find-file-hook 'e:setup-headerline-for-files)
+   #+END_SRC
+
 * パッケージ毎の設定
 ** ace-window
    #+BEGIN_SRC emacs-lisp

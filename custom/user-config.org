@@ -93,6 +93,14 @@
        (e:load-custom-file "config/skk.org"))
    #+END_SRC
 
+** vterm
+   #+BEGIN_SRC emacs-lisp
+     (use-package vterm
+       :load-path "external/emacs-libvterm"
+       :defer t
+       :commands (vterm))
+   #+END_SRC
+
 ** which-key
    #+BEGIN_SRC emacs-lisp
      (use-package which-key

@@ -7,6 +7,9 @@
 [submodule "external/dmacro"]
 	path = external/dmacro
 	url = https://github.com/zonuexe/dmacro.git
+[submodule "external/emacs-libvterm"]
+	path = external/emacs-libvterm
+	url = https://github.com/akermu/emacs-libvterm.git
 [submodule "external/locale-eaw"]
 	path = external/locale-eaw
 	url = https://github.com/hamano/locale-eaw.git

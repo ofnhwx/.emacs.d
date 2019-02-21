@@ -93,6 +93,14 @@
        (e:load-custom-file "config/skk.org"))
    #+END_SRC
 
+** visual-regexp
+   #+BEGIN_SRC emacs-lisp
+     (use-package visual-regexp
+       :defer t
+       :init
+       (bind-key [remap query-replace] 'vr/query-replace))
+   #+END_SRC
+
 ** vterm
    #+BEGIN_SRC emacs-lisp
      (use-package vterm

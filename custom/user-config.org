@@ -76,8 +76,9 @@
 ** navi2ch
    #+BEGIN_SRC emacs-lisp
      (use-package navi2ch
-       :load-path "lisp/navi2ch"
+       :load-path "external/navi2ch"
        :defer t
+       :commands (navi2ch)
        :init
        (setq navi2ch-net-http-proxy "127.0.0.1:9080")
        :config

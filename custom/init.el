@@ -96,6 +96,7 @@ This function should only modify configuration layer settings."
      dired-quick-sort
      fish-mode
      helm-tramp
+     helpful
      visual-regexp
      )
 

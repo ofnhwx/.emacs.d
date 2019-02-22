@@ -73,6 +73,23 @@
        (e:load-custom-file "config/eww.org"))
    #+END_SRC
 
+** helpful
+   #+BEGIN_SRC emacs-lisp
+     (use-package helpful
+       :defer t
+       :init
+       (spacemacs/declare-prefix "hdd" "helpful")
+       (spacemacs/set-leader-keys
+         "hddc" 'helpful-callable
+         "hddd" 'helpful-at-point
+         "hddf" 'helpful-function
+         "hddi" 'helpful-command
+         "hddk" 'helpful-key
+         "hddm" 'helpful-macro
+         "hdds" 'helpful-symbol
+         "hddv" 'helpful-variable))
+   #+END_SRC
+
 ** navi2ch
    #+BEGIN_SRC emacs-lisp
      (use-package navi2ch

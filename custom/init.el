@@ -52,6 +52,7 @@ This function should only modify configuration layer settings."
      ;; +lang
      csv
      emacs-lisp
+     html
      java
      javascript
      kotlin

@@ -195,6 +195,14 @@
            (set-variable 'org-agenda-files (cl-remove-if 'file-directory-p (directory-files org-agenda-directory t))))))
    #+END_SRC
 
+** php-mode
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs|use-package-add-hook php-mode
+       :post-init
+       (spacemacs|add-company-backends
+         :modes php-mode))
+   #+END_SRC
+
 ** prodigy
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook prodigy

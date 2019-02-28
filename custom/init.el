@@ -98,6 +98,7 @@ This function should only modify configuration layer settings."
      fish-mode
      helm-tramp
      helpful
+     persistent-scratch
      visual-regexp
      )
 

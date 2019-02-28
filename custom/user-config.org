@@ -37,6 +37,15 @@
        (e:load-custom-file "config/evil.org"))
    #+END_SRC
 
+** persistent-scratch
+   #+BEGIN_SRC emacs-lisp
+     (use-package persistent-scratch
+       :init
+       (set-variable 'persistent-scratch-save-file (expand-file-name "scratch" e:private-directory))
+       :config
+       (e:load-custom-file "config/persistent-scratch.org"))
+   #+END_SRC
+
 ** tramp
    #+BEGIN_SRC emacs-lisp
      (use-package tramp

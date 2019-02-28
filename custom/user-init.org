@@ -94,7 +94,8 @@
        :post-init
        (bind-keys
         :map global-map
-        ("C-^" . ace-window)))
+        ("C-^" . ace-window))
+       (set-variable 'aw-keys (number-sequence ?1 ?9)))
    #+END_SRC
 
 ** avy

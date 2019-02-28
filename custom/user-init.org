@@ -128,6 +128,13 @@
          (set-variable 'skk-server-portnum 55100)))
    #+END_SRC
 
+** eshell
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs|use-package-add-hook eshell
+       :post-init
+       (set-variable 'eshell-history-size 100000))
+   #+END_SRC
+
 ** flycheck
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook flycheck

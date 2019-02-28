@@ -16,13 +16,6 @@
        (e:load-custom-file "config/atomic-chrome.org"))
    #+END_SRC
 
-** auto-shell-command
-   #+BEGIN_SRC emacs-lisp
-     (use-package auto-shell-command
-       :config
-       (e:load-custom-file "config/auto-shell-command.org"))
-   #+END_SRC
-
 ** display-line-numbers
    #+BEGIN_SRC emacs-lisp
      (use-package display-line-numbers

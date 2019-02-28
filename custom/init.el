@@ -91,7 +91,6 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(;; Utilities
      atomic-chrome
-     auto-shell-command
      company-box
      dired-filter
      dired-quick-sort

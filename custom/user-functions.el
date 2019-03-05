@@ -1,15 +1,4 @@
 
-(defun e:load-custom-file (filename)
-  "FILENAME で指定した設定ファイルを読込む."
-  (let ((filename (if (file-name-absolute-p filename)
-                      filename
-                    (expand-file-name filename e:custom-directory)))
-        (extension (file-name-extension filename)))
-    (if (equalp extension "org")
-        (progn (require 'org-install)
-               (org-babel-load-file filename))
-      (load-file filename))))
-
 (defun e:setup-font ()
   "フォント等の設定"
   (interactive)

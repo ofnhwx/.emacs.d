@@ -32,6 +32,9 @@
 ;; 独自の拡張関数
 (load-file (expand-file-name "user-functions.el" e:custom-directory))
 
+;; org-babel の設定ファイルを読込む
+(require 'org-install)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Spacemacs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

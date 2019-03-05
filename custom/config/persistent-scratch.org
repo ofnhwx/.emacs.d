@@ -1,7 +1,0 @@
-#+TITLE: persistent-scratch.org
-#+STARTUP: overview
-
-* 自動設定
-  #+BEGIN_SRC emacs-lisp
-    (persistent-scratch-setup-default)
-  #+END_SRC

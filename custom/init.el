@@ -481,7 +481,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (e:load-custom-file "user-init.org"))
+  (org-babel-load-file (expand-file-name "user-init.org" e:custom-directory)))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -496,7 +496,7 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (e:load-custom-file "user-config.org"))
+  (org-babel-load-file (expand-file-name "user-config.org" e:custom-directory)))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

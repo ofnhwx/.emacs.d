@@ -6,7 +6,6 @@
    #+BEGIN_SRC emacs-lisp
      (add-hook 'window-setup-hook 'e:setup-font)
    #+END_SRC
-
 ** ファイルを移動
 *** プライベート
     #+BEGIN_SRC emacs-lisp
@@ -14,7 +13,6 @@
       (set-variable 'auth-sources `(,(expand-file-name "authinfo.plist" e:private-directory)))
       (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
     #+END_SRC
-
 *** キャッシュ
     #+BEGIN_SRC emacs-lisp
       (set-variable 'forge-database-file (expand-file-name "forge-database.sqlite" spacemacs-cache-directory))
@@ -26,7 +24,6 @@
       (set-variable 'url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory))
       (set-variable 'url-cookie-file (expand-file-name "url/cookies" spacemacs-cache-directory))
     #+END_SRC
-
 ** Mac用のキーボード入力の調整(option, command関連)
    #+BEGIN_SRC emacs-lisp
      (when (e:system-type-darwin-p)
@@ -34,12 +31,10 @@
        (set-variable 'ns-right-command-modifier 'super)
        (set-variable 'ns-alternate-modifier 'none))
    #+END_SRC
-
 ** 「Viperize?」の確認をしない
    #+BEGIN_SRC emacs-lisp
      (set-variable 'viper-mode nil)
    #+END_SRC
-
 ** shellの設定
    #+BEGIN_SRC emacs-lisp
      (set-variable 'shell-file-name
@@ -47,35 +42,29 @@
                        (executable-find "bash")
                        (executable-find "sh")))
    #+END_SRC
-
 ** パスワード関連
    #+BEGIN_SRC emacs-lisp
      (set-variable 'password-cache-expiry 3600)
      (set-variable 'plstore-encoded t)
    #+END_SRC
-
 ** 折り返さない
    #+BEGIN_SRC emacs-lisp
      (setq-default truncate-lines t)
      (set-variable 'truncate-partial-width-windows nil)
    #+END_SRC
-
 ** 最終行の改行は`EditorConfig'で管理
    #+BEGIN_SRC emacs-lisp
      (set-variable 'mode-require-final-newline nil)
      (set-variable 'require-final-newline nil)
    #+END_SRC
-
 ** ロックファイルを作成しない
    #+BEGIN_SRC emacs-lisp
      (set-variable 'create-lockfiles nil)
    #+END_SRC
-
 ** 右から左に読む言語に対応しない
    #+BEGIN_SRC emacs-lisp
      (setq-default bidi-display-reordering nil)
    #+END_SRC
-
 ** ヘッダーラインの設定
    #+BEGIN_SRC emacs-lisp
      (defun e:setup-headerline-for-files ()
@@ -90,11 +79,9 @@
                       (propertize (e:shorten dir max))
                       (propertize file 'face '(:foreground "#ff0000")))))
        (setq-local spaceline-buffer-id-p nil))
-
      ;; ファイルを開く際に実行
      (add-hook 'find-file-hook 'e:setup-headerline-for-files)
    #+END_SRC
-
 * パッケージ毎の設定
 ** ace-window
    #+BEGIN_SRC emacs-lisp
@@ -105,7 +92,6 @@
         ("C-^" . ace-window))
        (set-variable 'aw-keys (number-sequence ?1 ?9)))
    #+END_SRC
-
 ** avy
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook avy
@@ -113,7 +99,6 @@
        (setq avy-keys (number-sequence ?a ?z))
        (setq avy-all-windows t))
    #+END_SRC
-
 ** ddskk
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook ddskk
@@ -136,7 +121,6 @@
          (set-variable 'skk-server-host "127.0.0.1")
          (set-variable 'skk-server-portnum 55100)))
    #+END_SRC
-
 ** emmet-mode
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook emmet-mode
@@ -148,14 +132,12 @@
         ("C-c C-j" . emmet-expand-line)
         ("C-j" . nil)))
    #+END_SRC
-
 ** eshell
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook eshell
        :post-init
        (set-variable 'eshell-history-size 100000))
    #+END_SRC
-
 ** flycheck
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook flycheck
@@ -163,7 +145,6 @@
        (set-variable 'flycheck-idle-buffer-switch-delay 3.0)
        (set-variable 'flycheck-idle-change-delay 3.0))
    #+END_SRC
-
 ** google-translate
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook google-translate
@@ -171,7 +152,6 @@
        (set-variable 'google-translate-default-source-language nil)
        (set-variable 'google-translate-default-target-language "ja"))
    #+END_SRC
-
 ** helm
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook helm
@@ -180,7 +160,6 @@
        (with-eval-after-load 'eldoc-eval
          (bind-key [remap eldoc-eval-expression] 'helm-eval-expression eldoc-in-minibuffer-mode-map)))
    #+END_SRC
-
 ** magit
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook magit
@@ -189,7 +168,6 @@
        (set-variable 'magit-diff-refine-hunk 'all)
        (set-variable 'smerge-refine-ignore-whitespace nil))
    #+END_SRC
-
 ** notmuch
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook notmuch
@@ -212,7 +190,6 @@
                        (:name "迷惑メール" :query "tag:spam"    :key "s")))
        (setenv "XAPIAN_CJK_NGRAM" "1"))
    #+END_SRC
-
 ** org
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook org
@@ -222,7 +199,6 @@
          (when (file-directory-p org-agenda-directory)
            (set-variable 'org-agenda-files (cl-remove-if 'file-directory-p (directory-files org-agenda-directory t))))))
    #+END_SRC
-
 ** php-mode
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook php-mode
@@ -230,7 +206,6 @@
        (spacemacs|add-company-backends
          :modes php-mode))
    #+END_SRC
-
 ** prodigy
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook prodigy
@@ -240,7 +215,6 @@
            (when service
              (prodigy-start-service service)))))
    #+END_SRC
-
 ** recentf
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook recentf

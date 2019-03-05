@@ -1,8 +1,0 @@
-#+TITLE: which-key.org
-#+STARTUP: overview
-
-* ヒントが出るまでの時間を調整
-  #+BEGIN_SRC emacs-lisp
-    (setq which-key-idle-delay 1.0)
-    (setq which-key-idle-secondary-delay 0.1)
-  #+END_SRC

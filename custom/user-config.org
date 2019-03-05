@@ -6,80 +6,223 @@
    #+BEGIN_SRC emacs-lisp
      (use-package core-dotspacemacs
        :config
-       (e:load-custom-file "config/core-dotspacemacs.org"))
+       ;; 現在のファイルの文字/改行コードを分かりやすく表示
+       (spaceline-define-segment buffer-encoding-abbrev
+         "The line ending convention used in the buffer."
+         (let ((buf-coding (format "%s" buffer-file-coding-system)))
+           (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
+                 (concat (and (string-match "with-signature" buf-coding) "ⓑ")
+                         (and (string-match "unix"           buf-coding) "ⓤ")
+                         (and (string-match "dos"            buf-coding) "ⓓ")
+                         (and (string-match "mac"            buf-coding) "ⓜ")
+                         )))
+         :separator " "))
    #+END_SRC
-
 ** atomic-chrome
    #+BEGIN_SRC emacs-lisp
      (use-package atomic-chrome
        :config
-       (e:load-custom-file "config/atomic-chrome.org"))
+       ;; サーバーを起動
+       (atomic-chrome-start-server))
    #+END_SRC
-
 ** display-line-numbers
    #+BEGIN_SRC emacs-lisp
      (use-package display-line-numbers
        :config
-       (e:load-custom-file "config/display-line-numbers.org"))
+       ;; 標準で4桁表示
+       (setq-default display-line-numbers-width 4)
+       ;; 特定のモードで有効化
+       (defun display-line-numbers-mode-on ()
+         "`display-line-numbers-mode'を有効化."
+         (interactive)
+         (display-line-numbers-mode 1))
+       (defun display-line-numbers-mode-off ()
+         "`display-line-numbers-mode'を無効化."
+         (interactive)
+         (display-line-numbers-mode 0))
+       (add-hook 'prog-mode-hook 'display-line-numbers-mode-on)
+       (add-hook 'find-file-hook 'display-line-numbers-mode-on)
+       (add-hook 'html-mode-hook 'display-line-numbers-mode-on))
    #+END_SRC
-
 ** evil
    #+BEGIN_SRC emacs-lisp
      (use-package evil
        :config
-       (e:load-custom-file "config/evil.org"))
+       ;; 設定
+       (setq evil-cross-lines t)
+       (setq evil-move-cursor-back nil)
+       ;; キーバインド
+       (setq evil-insert-state-map (make-sparse-keymap))
+       (bind-keys
+        ;; モーションモード(motion -> normal -> visual)
+        :map evil-motion-state-map
+        ("C-^" . nil) ;; evil-buffer
+        ;; 通常モード
+        :map evil-normal-state-map
+        ("<down>" . evil-next-visual-line)
+        ("<up>" . evil-previous-visual-line)
+        ("j" . evil-next-visual-line)
+        ("k" . evil-previous-visual-line)
+        ("gj" . evil-next-line)
+        ("gk" . evil-previous-line)
+        ;; ビジュアルモード
+        :map evil-visual-state-map
+        ;; 挿入モード
+        :map evil-insert-state-map
+        ;; オペレーターモード
+        :map evil-operator-state-map
+        ;; 置き換えモード
+        :map evil-replace-state-map
+        ;; Emacsモード
+        :map evil-emacs-state-map)
+       ;; normal-state に戻す設定を追加
+       (defun e:evil-force-normal-state ()
+         (when (member evil-state '(insert hybrid visual))
+           (evil-force-normal-state)))
+       (defun e:save-buffer:after (&rest args)
+         (e:evil-force-normal-state))
+       (defun e:keyboard-quit:before (&rest args)
+         (e:evil-force-normal-state))
+       (advice-add 'save-buffer :after 'e:save-buffer:after)
+       (advice-add 'keyboard-quit :before 'e:keyboard-quit:before))
    #+END_SRC
-
 ** persistent-scratch
    #+BEGIN_SRC emacs-lisp
      (use-package persistent-scratch
        :init
+       ;; ファイルを移動
        (set-variable 'persistent-scratch-save-file (expand-file-name "scratch" e:private-directory))
        :config
-       (e:load-custom-file "config/persistent-scratch.org"))
+       ;; 自動設定
+       (persistent-scratch-setup-default))
    #+END_SRC
-
 ** tramp
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :noweb tangle
      (use-package tramp
        :init
+       ;; デフォルトの接続先の名称を変更
        (set-variable 'tramp-default-host "localhost")
        :config
-       (e:load-custom-file "config/tramp.org"))
+       <<tramp-sh>>
+       <<helm-tramp>>)
    #+END_SRC
-
+*** tramp-sh
+    #+NAME: tramp-sh
+    #+BEGIN_SRC emacs-lisp :tangle no
+      (use-package tramp-sh
+        :config
+        ;; ssh/conf.d の内容を接続先に追加
+        (let* ((files (--filter (not (file-directory-p it))
+                                (-map 'abbreviate-file-name (directory-files "~/.ssh/conf.d/hosts" t))))
+               (functions (--map (list 'tramp-parse-sconfig it) files)))
+          (dolist (method '("ssh" "scp"))
+            (let ((functions (append (tramp-get-completion-function method) functions)))
+              (tramp-set-completion-function method functions)))))
+    #+END_SRC
+*** helm-tramp
+    #+NAME: helm-tramp
+    #+BEGIN_SRC emacs-lisp :tangle no
+      (use-package helm-tramp
+        :defer t
+        :config
+        ;; ssh/conf.d の内容を接続先に追加
+        (defun e:helm-tramp--candidates:filter-return (result)
+          (dolist (host (--filter (not (string-equal it tramp-default-host))
+                                  (-distinct (-flatten (-map 'eval (tramp-get-completion-function "ssh"))))))
+            (push (format "/%s:%s:" tramp-default-method host) result)
+            (push (format "/ssh:%s|sudo:%s:/" host host) result))
+          (-distinct (reverse result)))
+        (advice-add 'helm-tramp--candidates :filter-return 'e:helm-tramp--candidates:filter-return))
+    #+END_SRC
 * パッケージ毎の設定(遅延あり)
 ** company-box
    #+BEGIN_SRC emacs-lisp
      (use-package company-box
        :defer t
        :init
+       ;; 有効化
        (spacemacs|diminish company-box-mode)
        (set-variable 'company-box-enable-icon nil)
        (add-hook 'company-mode-hook 'company-box-mode))
    #+END_SRC
-
 ** dired
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :noweb tangle
      (use-package dired
        :defer t
        :config
-       (e:load-custom-file "config/dired.org"))
+       ;; 設定
+       (setq dired-use-ls-dired t)
+       (setq dired-listing-switches "-ahl")
+       (setq dired-dwim-target t)
+       (setq dired-recursive-copies 'always)
+       (setq dired-recursive-deletes 'top)
+       ;; 設定(Mac)
+       (when (e:system-type-darwin-p)
+         (cond
+          ((executable-find "gls")
+           (setq insert-directory-program "gls"))
+          ((require 'ls-lisp nil t)
+           (setq ls-lisp-use-insert-directory-program nil)
+           (setq ls-lisp-dirs-first t))))
+       ;; 関連パッケージ
+       <<wdired>>
+       <<dired-filter>>
+       <<dired-quick-sort>>)
    #+END_SRC
-
+*** wdired
+    #+NAME: wdired
+    #+BEGIN_SRC emacs-lisp :tangle no
+      (use-package wdired
+        :config
+        (bind-keys
+         :map dired-mode-map
+         ("e" . wdired-change-to-wdired-mode)))
+    #+END_SRC
+*** dired-filter
+    #+NAME: dired-filter
+    #+BEGIN_SRC emacs-lisp :tangle no
+      (use-package dired-filter
+        :config
+        (add-hook 'dired-mode-hook 'dired-filter-mode))
+    #+END_SRC
+*** dired-quick-sort
+    #+NAME: dired-quick-sort
+    #+BEGIN_SRC emacs-lisp :tangle no
+      (use-package dired-quick-sort
+        :config
+        (bind-keys
+         :map dired-mode-map
+         ("s" . hydra-dired-quick-sort/body))
+        (setq dired-quick-sort-group-directories-last ?y)
+        (add-hook 'dired-mode-hook 'dired-quick-sort))
+    #+END_SRC
 ** eww
    #+BEGIN_SRC emacs-lisp
      (use-package eww
        :defer t
        :config
-       (e:load-custom-file "config/eww.org"))
+       ;; 色の有効/無効を切替え
+       (defvar e:eww-enable-colorize nil)
+       (defun e:eww-colorize-region:around (&rest args)
+         (when e:eww-enable-colorize
+           (apply (car args) (cdr args))))
+       (defun e:eww-colorize-on ()
+         (interactive)
+         (setq-local e:eww-enable-colorize t)
+         (eww-reload))
+       (defun e:eww-colorize-off ()
+         (interactive)
+         (setq-local e:eww-enable-colorize nil)
+         (eww-reload))
+       (advice-add 'eww-colorize-region :around 'e:eww-colorize-region:around)
+       (advice-add 'shr-colorize-region :around 'e:eww-colorize-region:around))
    #+END_SRC
-
 ** helpful
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :noweb tangle
      (use-package helpful
        :defer t
        :init
+       ;; キーバインド
        (spacemacs/declare-prefix "hdd" "helpful")
        (spacemacs/set-leader-keys
          "hddc" 'helpful-callable
@@ -91,27 +234,59 @@
          "hdds" 'helpful-symbol
          "hddv" 'helpful-variable))
    #+END_SRC
-
 ** navi2ch
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :noweb tangle
      (use-package navi2ch
        :load-path "external/navi2ch"
        :defer t
        :commands (navi2ch)
        :init
+       ;; proxy 設定
        (setq navi2ch-net-http-proxy "127.0.0.1:9080")
        :config
-       (e:load-custom-file "config/navi2ch.org"))
+       ;; 2chproxy.pl を起動
+       (when (require 'prodigy nil t)
+         (let ((cmd (expand-file-name "2chproxy.pl/2chproxy.pl" e:external-directory))
+               (yml (expand-file-name "2chproxy.yml" e:custom-directory)))
+           (when (and (executable-find cmd)
+                      (file-exists-p yml))
+             (prodigy-define-service
+               :name "2chproxy.pl"
+               :command (format "%s --config %s" cmd yml)
+               :tags '(general)
+               :kill-signal 'sigkill)))
+         (defun e:prodigy:2chproxy.pl ()
+           (interactive)
+           (e:prodigy-start-service "2chproxy.pl"))
+         (e:prodigy:2chproxy.pl)))
    #+END_SRC
-
 ** skk
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :noweb tangle
      (use-package skk
        :defer t
        :config
-       (e:load-custom-file "config/skk.org"))
+       ;; skk-study を有効化
+       (require 'skk-study nil t)
+       ;; google-ime-skk を起動
+       (when (and (executable-find "google-ime-skk")
+                  (require 'prodigy nil t))
+         (prodigy-define-service
+           :name "google-ime-skk"
+           :command "google-ime-skk"
+           :tags '(general)
+           :kill-signal 'sigkill)
+         (defun e:prodigy:google-ime-skk ()
+           (interactive)
+           (e:prodigy-start-service "google-ime-skk"))
+         (e:prodigy:google-ime-skk))
+       ;; evil に連動して切替え :tangle no
+       (defun e:skk-latin-mode-on:before (&rest args)
+         (unless skk-mode-invoked
+           (skk-mode-invoke)))
+       (advice-add 'skk-latin-mode-on :before 'e:skk-latin-mode-on:before)
+       (add-hook 'evil-hybrid-state-entry-hook 'skk-latin-mode-on)
+       (add-hook 'evil-hybrid-state-exit-hook  'skk-mode-exit))
    #+END_SRC
-
 ** visual-regexp
    #+BEGIN_SRC emacs-lisp
      (use-package visual-regexp
@@ -119,7 +294,6 @@
        :init
        (bind-key [remap query-replace] 'vr/query-replace))
    #+END_SRC
-
 ** vterm
    #+BEGIN_SRC emacs-lisp
      (use-package vterm
@@ -127,15 +301,15 @@
        :defer t
        :commands (vterm))
    #+END_SRC
-
 ** which-key
-   #+BEGIN_SRC emacs-lisp
+   #+BEGIN_SRC emacs-lisp :noweb tangle
      (use-package which-key
        :defer t
        :config
-       (e:load-custom-file "config/which-key.org"))
+       ;; ヒントが出るまでの時間を調整
+       (setq which-key-idle-delay 1.0)
+       (setq which-key-idle-secondary-delay 0.1))
    #+END_SRC
-
 * パッチ対応
   #+BEGIN_SRC emacs-lisp
     (require 'pkg-info)
@@ -162,7 +336,6 @@
                  (--map (-zip vm-attrs it) status-groups))))
          (spacemacs-buffer/warning "`vagrant-tramp' was updated.")))
    #+END_SRC
-
 ** avy-mitemo
    #+BEGIN_SRC emacs-lisp
      (let ((version (pkg-info-format-version (pkg-info-package-version 'avy-migemo)))

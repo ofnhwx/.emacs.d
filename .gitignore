@@ -17,7 +17,6 @@
 
 # 上記で指定したファイルで無視したいものを指定する
 ##### Gitで無視するファイル #####
-/custom/config/*.el
 /custom/user-config.el
 /custom/user-init.el
 *.elc

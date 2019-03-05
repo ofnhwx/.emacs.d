@@ -47,6 +47,8 @@ This function should only modify configuration layer settings."
      notmuch
      ;; +filetree
      treemacs
+     ;; +fun
+     emoji
      ;; +intl
      japanese
      ;; +lang

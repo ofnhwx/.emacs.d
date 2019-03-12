@@ -145,57 +145,6 @@
        (set-variable 'company-box-enable-icon nil)
        (add-hook 'company-mode-hook 'company-box-mode))
    #+END_SRC
-** dired
-   #+BEGIN_SRC emacs-lisp :noweb tangle
-     (use-package dired
-       :defer t
-       :config
-       ;; 設定
-       (setq dired-use-ls-dired t)
-       (setq dired-listing-switches "-ahl")
-       (setq dired-dwim-target t)
-       (setq dired-recursive-copies 'always)
-       (setq dired-recursive-deletes 'top)
-       ;; 設定(Mac)
-       (when (e:system-type-darwin-p)
-         (cond
-          ((executable-find "gls")
-           (setq insert-directory-program "gls"))
-          ((require 'ls-lisp nil t)
-           (setq ls-lisp-use-insert-directory-program nil)
-           (setq ls-lisp-dirs-first t))))
-       ;; 関連パッケージ
-       <<wdired>>
-       <<dired-filter>>
-       <<dired-quick-sort>>)
-   #+END_SRC
-*** wdired
-    #+NAME: wdired
-    #+BEGIN_SRC emacs-lisp :tangle no
-      (use-package wdired
-        :config
-        (bind-keys
-         :map dired-mode-map
-         ("e" . wdired-change-to-wdired-mode)))
-    #+END_SRC
-*** dired-filter
-    #+NAME: dired-filter
-    #+BEGIN_SRC emacs-lisp :tangle no
-      (use-package dired-filter
-        :config
-        (add-hook 'dired-mode-hook 'dired-filter-mode))
-    #+END_SRC
-*** dired-quick-sort
-    #+NAME: dired-quick-sort
-    #+BEGIN_SRC emacs-lisp :tangle no
-      (use-package dired-quick-sort
-        :config
-        (bind-keys
-         :map dired-mode-map
-         ("s" . hydra-dired-quick-sort/body))
-        (setq dired-quick-sort-group-directories-last ?y)
-        (add-hook 'dired-mode-hook 'dired-quick-sort))
-    #+END_SRC
 ** eww
    #+BEGIN_SRC emacs-lisp
      (use-package eww
@@ -259,6 +208,13 @@
            (interactive)
            (e:prodigy-start-service "2chproxy.pl"))
          (e:prodigy:2chproxy.pl)))
+   #+END_SRC
+** ranger
+   #+BEGIN_SRC emacs-lisp
+     (use-package ranger
+       :defer t
+       :init
+       (add-hook 'dired-mode-hook 'ranger-override-dired-fn))
    #+END_SRC
 ** skk
    #+BEGIN_SRC emacs-lisp :noweb tangle

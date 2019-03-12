@@ -95,8 +95,6 @@ This function should only modify configuration layer settings."
    '(;; Utilities
      atomic-chrome
      company-box
-     dired-filter
-     dired-quick-sort
      fish-mode
      helm-tramp
      helpful

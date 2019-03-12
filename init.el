@@ -19,18 +19,13 @@
   (defvar e:external-directory (expand-file-name "external/" user-emacs-directory))
   (defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory)))
 
-(progn ;; フォント設定
-  (defvar e:font-name "Ricty Diminished Discord")
-  (defvar e:font-height 140)
-  (defvar e:font-rescale 1.00))
+;; 独自の拡張関数
+(load-file (expand-file-name "user-functions.el" e:custom-directory))
 
 ;; 環境毎の設定値を読込み
 (let ((private-config (expand-file-name "config.el" e:private-directory)))
   (when (file-exists-p private-config)
     (load-file private-config)))
-
-;; 独自の拡張関数
-(load-file (expand-file-name "user-functions.el" e:custom-directory))
 
 ;; org-babel の設定ファイルを読込む
 (require 'org-install)

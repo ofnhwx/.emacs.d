@@ -97,7 +97,7 @@
        (persistent-scratch-setup-default))
    #+END_SRC
 ** tramp
-   #+BEGIN_SRC emacs-lisp :noweb tangle
+   #+BEGIN_SRC emacs-lisp :noweb yes
      (use-package tramp
        :init
        ;; デフォルトの接続先の名称を変更
@@ -167,7 +167,7 @@
        (advice-add 'shr-colorize-region :around 'e:eww-colorize-region:around))
    #+END_SRC
 ** helpful
-   #+BEGIN_SRC emacs-lisp :noweb tangle
+   #+BEGIN_SRC emacs-lisp
      (use-package helpful
        :defer t
        :init
@@ -184,7 +184,7 @@
          "hddv" 'helpful-variable))
    #+END_SRC
 ** navi2ch
-   #+BEGIN_SRC emacs-lisp :noweb tangle
+   #+BEGIN_SRC emacs-lisp
      (use-package navi2ch
        :load-path "external/navi2ch"
        :defer t
@@ -217,7 +217,7 @@
        (add-hook 'dired-mode-hook 'ranger-override-dired-fn))
    #+END_SRC
 ** skk
-   #+BEGIN_SRC emacs-lisp :noweb tangle
+   #+BEGIN_SRC emacs-lisp
      (use-package skk
        :defer t
        :config
@@ -263,7 +263,7 @@
        :commands (vterm))
    #+END_SRC
 ** which-key
-   #+BEGIN_SRC emacs-lisp :noweb tangle
+   #+BEGIN_SRC emacs-lisp
      (use-package which-key
        :defer t
        :config

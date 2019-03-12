@@ -68,7 +68,7 @@
 ** ヘッダーラインの設定
    #+BEGIN_SRC emacs-lisp
      (defun e:header-line-for-files-format ()
-       "ヘッダーライン用のフォーマット"
+       "ファイル用のヘッダーラインのフォーマット"
        (let* ((path (or buffer-file-name "/path/to/filename.test"))
               (dir  (file-name-directory path))
               (file (file-name-nondirectory path))
@@ -80,14 +80,21 @@
           (propertize file
                       'face '(:foreground "#ff0000")))))
      (defun e:setup-headerline-for-files ()
-       "ファイル名をヘッダーラインにいい感じに表示する"
+       "ファイル用のヘッダーラインの設定"
        (set-face-attribute 'header-line nil
                            :inherit 'mode-line
                            :background (face-attribute 'mode-line :background))
        (setq-local header-line-format
                    '((:eval (e:header-line-for-files-format)))))
-     ;; ファイルを開く際に実行
-     (add-hook 'find-file-hook 'e:setup-headerline-for-files)
+     (defun e:setup-headerline ()
+       "ヘッダーラインをなるべくいい感じに設定する"
+       (cl-dolist (window (window-list))
+         (with-current-buffer (window-buffer window)
+           (unless header-line-format
+             (cond
+              (buffer-file-name (e:setup-headerline-for-files)))))))
+     ;; 一定時間毎に実行
+     (run-with-idle-timer 0.5 0.5 'e:setup-headerline)
    #+END_SRC
 * パッケージ毎の設定
 ** ace-window

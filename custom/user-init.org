@@ -81,6 +81,7 @@
                       'face '(:foreground "#ff0000")))))
      (defun e:setup-headerline-for-files ()
        "ファイル用のヘッダーラインの設定"
+       (setq-local spaceline-buffer-id-p nil)
        (set-face-attribute 'header-line nil
                            :inherit 'mode-line
                            :background (face-attribute 'mode-line :background))

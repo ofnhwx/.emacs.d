@@ -6,8 +6,6 @@
 # 無視したくないファイルを以下に'![ファイル名]'で指定する
 ##### Gitで管理するファイル #####
 !/.editorconfig
-!/.gitattributes
-!/.gitconfig
 !/.gitignore
 !/README.md
 !/init.el

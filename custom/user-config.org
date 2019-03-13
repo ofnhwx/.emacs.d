@@ -96,6 +96,12 @@
        ;; 自動設定
        (persistent-scratch-setup-default))
    #+END_SRC
+** ranger
+   #+BEGIN_SRC emacs-lisp
+     (use-package ranger
+       :config
+       (ranger-override-dired-mode 1))
+   #+END_SRC
 ** tramp
    #+BEGIN_SRC emacs-lisp :noweb yes
      (use-package tramp
@@ -208,13 +214,6 @@
            (interactive)
            (e:prodigy-start-service "2chproxy.pl"))
          (e:prodigy:2chproxy.pl)))
-   #+END_SRC
-** ranger
-   #+BEGIN_SRC emacs-lisp
-     (use-package ranger
-       :defer t
-       :init
-       (add-hook 'dired-mode-hook 'ranger-override-dired-fn))
    #+END_SRC
 ** skk
    #+BEGIN_SRC emacs-lisp

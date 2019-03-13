@@ -100,6 +100,7 @@ This function should only modify configuration layer settings."
      helpful
      persistent-scratch
      visual-regexp
+     vlf
      )
 
    ;; A list of packages that cannot be updated.

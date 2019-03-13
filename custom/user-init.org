@@ -2,6 +2,24 @@
 #+STARTUP: overview
 
 * 通常の設定
+** ファイルを移動
+*** プライベート
+    #+BEGIN_SRC emacs-lisp
+      (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
+      (set-variable 'auth-sources `(,(expand-file-name "authinfo.plist" e:private-directory)))
+      (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
+    #+END_SRC
+*** キャッシュ
+    #+BEGIN_SRC emacs-lisp
+      (set-variable 'forge-database-file (expand-file-name "forge-database.sqlite" spacemacs-cache-directory))
+      (set-variable 'lsp-session-file (expand-file-name "lsp-session-v1" spacemacs-cache-directory))
+      (set-variable 'magithub-dir (expand-file-name "magithub" spacemacs-cache-directory))
+      (set-variable 'transient-history-file (expand-file-name "transient/history.el" spacemacs-cache-directory))
+      (set-variable 'transient-levels-file (expand-file-name "transient/levels.el" spacemacs-cache-directory))
+      (set-variable 'transient-values-file (expand-file-name "transient/values.el" spacemacs-cache-directory))
+      (set-variable 'url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory))
+      (set-variable 'url-cookie-file (expand-file-name "url/cookies" spacemacs-cache-directory))
+    #+END_SRC
 ** エンコーディングの設定
    #+BEGIN_SRC emacs-lisp
      (set-language-environment "Japanese")
@@ -36,65 +54,6 @@
          (eaw-fullwidth)))
      (advice-add 'spacemacs/set-default-font :after 'e:spacemacs/set-default-font:after)
    #+END_SRC
-** ファイルを移動
-*** プライベート
-    #+BEGIN_SRC emacs-lisp
-      (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
-      (set-variable 'auth-sources `(,(expand-file-name "authinfo.plist" e:private-directory)))
-      (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
-    #+END_SRC
-*** キャッシュ
-    #+BEGIN_SRC emacs-lisp
-      (set-variable 'forge-database-file (expand-file-name "forge-database.sqlite" spacemacs-cache-directory))
-      (set-variable 'lsp-session-file (expand-file-name "lsp-session-v1" spacemacs-cache-directory))
-      (set-variable 'magithub-dir (expand-file-name "magithub" spacemacs-cache-directory))
-      (set-variable 'transient-history-file (expand-file-name "transient/history.el" spacemacs-cache-directory))
-      (set-variable 'transient-levels-file (expand-file-name "transient/levels.el" spacemacs-cache-directory))
-      (set-variable 'transient-values-file (expand-file-name "transient/values.el" spacemacs-cache-directory))
-      (set-variable 'url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory))
-      (set-variable 'url-cookie-file (expand-file-name "url/cookies" spacemacs-cache-directory))
-    #+END_SRC
-** Mac用のキーボード入力の調整(option, command関連)
-   #+BEGIN_SRC emacs-lisp
-     (when (e:system-type-darwin-p)
-       (set-variable 'ns-command-modifier 'meta)
-       (set-variable 'ns-right-command-modifier 'super)
-       (set-variable 'ns-alternate-modifier 'none))
-   #+END_SRC
-** 「Viperize?」の確認をしない
-   #+BEGIN_SRC emacs-lisp
-     (set-variable 'viper-mode nil)
-   #+END_SRC
-** shellの設定
-   #+BEGIN_SRC emacs-lisp
-     (set-variable 'shell-file-name
-                   (or (executable-find "zsh")
-                       (executable-find "bash")
-                       (executable-find "sh")))
-   #+END_SRC
-** パスワード関連
-   #+BEGIN_SRC emacs-lisp
-     (set-variable 'password-cache-expiry 3600)
-     (set-variable 'plstore-encoded t)
-   #+END_SRC
-** 折り返さない
-   #+BEGIN_SRC emacs-lisp
-     (setq-default truncate-lines t)
-     (set-variable 'truncate-partial-width-windows nil)
-   #+END_SRC
-** 最終行の改行は`EditorConfig'で管理
-   #+BEGIN_SRC emacs-lisp
-     (set-variable 'mode-require-final-newline nil)
-     (set-variable 'require-final-newline nil)
-   #+END_SRC
-** ロックファイルを作成しない
-   #+BEGIN_SRC emacs-lisp
-     (set-variable 'create-lockfiles nil)
-   #+END_SRC
-** 右から左に読む言語に対応しない
-   #+BEGIN_SRC emacs-lisp
-     (setq-default bidi-display-reordering nil)
-   #+END_SRC
 ** ヘッダーラインの設定
    #+BEGIN_SRC emacs-lisp
      (defun e:header-line-for-files-format ()
@@ -127,6 +86,48 @@
      ;; 一定時間毎に実行
      (run-with-idle-timer 0.5 0.5 'e:setup-headerline)
    #+END_SRC
+** Mac用のキーボード入力の調整(option, command関連)
+   #+BEGIN_SRC emacs-lisp
+     (when (e:system-type-darwin-p)
+       (set-variable 'ns-command-modifier 'meta)
+       (set-variable 'ns-right-command-modifier 'super)
+       (set-variable 'ns-alternate-modifier 'none))
+   #+END_SRC
+** 雑多なやつ
+*** 「Viperize?」の確認をしない
+    #+BEGIN_SRC emacs-lisp
+      (set-variable 'viper-mode nil)
+    #+END_SRC
+*** shellの設定
+    #+BEGIN_SRC emacs-lisp
+      (set-variable 'shell-file-name
+                    (or (executable-find "zsh")
+                        (executable-find "bash")
+                        (executable-find "sh")))
+    #+END_SRC
+*** パスワード関連
+    #+BEGIN_SRC emacs-lisp
+      (set-variable 'password-cache-expiry 3600)
+      (set-variable 'plstore-encoded t)
+    #+END_SRC
+*** 折り返さない
+    #+BEGIN_SRC emacs-lisp
+      (setq-default truncate-lines t)
+      (set-variable 'truncate-partial-width-windows nil)
+    #+END_SRC
+*** 最終行の改行は`EditorConfig'で管理
+    #+BEGIN_SRC emacs-lisp
+      (set-variable 'mode-require-final-newline nil)
+      (set-variable 'require-final-newline nil)
+    #+END_SRC
+*** ロックファイルを作成しない
+    #+BEGIN_SRC emacs-lisp
+      (set-variable 'create-lockfiles nil)
+    #+END_SRC
+*** 右から左に読む言語に対応しない
+    #+BEGIN_SRC emacs-lisp
+      (setq-default bidi-display-reordering nil)
+    #+END_SRC
 * パッケージ毎の設定
 ** ace-window
    #+BEGIN_SRC emacs-lisp

@@ -90,6 +90,16 @@
       (run-with-idle-timer 0.5 0.5 'e:setup-headerline)
     #+END_SRC
 ** Mac用の調整
+*** タイトルバー
+    #+BEGIN_SRC emacs-lisp
+      (let ((items '((ns-transparent-titlebar . t)
+                     (ns-appearance . dark))))
+        (dolist (item items)
+          (assq-delete-all (car item) initial-frame-alist)
+          (assq-delete-all (car item) default-frame-alist)
+          (add-to-list 'initial-frame-alist item)
+          (add-to-list 'default-frame-alist item)))
+    #+END_SRC
 *** キーボード入力(option, command関連)
     #+BEGIN_SRC emacs-lisp
       (when (e:system-type-darwin-p)

@@ -61,6 +61,7 @@ This function should only modify configuration layer settings."
      markdown
      php
      ruby
+     vimscript
      yaml
      ;; +misc
      copy-as-format

@@ -55,44 +55,48 @@
      (advice-add 'spacemacs/set-default-font :after 'e:spacemacs/set-default-font:after)
    #+END_SRC
 ** ヘッダーラインの設定
-   #+BEGIN_SRC emacs-lisp
-     (defun e:header-line-for-files-format ()
-       "ファイル用のヘッダーラインのフォーマット"
-       (let* ((path (or buffer-file-name "/path/to/filename.test"))
-              (dir  (file-name-directory path))
-              (file (file-name-nondirectory path))
-              (max  (- (window-width) (length file))))
-         (concat
-          (propertize " "
-                      'display '(space :align-to 0))
-          (propertize (e:shorten dir max))
-          (propertize file
-                      'face '(:foreground "#ff0000")))))
-     (defun e:setup-headerline-for-files ()
-       "ファイル用のヘッダーラインの設定"
-       (setq-local spaceline-buffer-id-p nil)
-       (set-face-attribute 'header-line nil
-                           :inherit 'mode-line
-                           :background (face-attribute 'mode-line :background))
-       (setq-local header-line-format
-                   '((:eval (e:header-line-for-files-format)))))
-     (defun e:setup-headerline ()
-       "ヘッダーラインをなるべくいい感じに設定する"
-       (cl-dolist (window (window-list))
-         (with-current-buffer (window-buffer window)
-           (unless header-line-format
-             (cond
-              (buffer-file-name (e:setup-headerline-for-files)))))))
-     ;; 一定時間毎に実行
-     (run-with-idle-timer 0.5 0.5 'e:setup-headerline)
-   #+END_SRC
-** Mac用のキーボード入力の調整(option, command関連)
-   #+BEGIN_SRC emacs-lisp
-     (when (e:system-type-darwin-p)
-       (set-variable 'ns-command-modifier 'meta)
-       (set-variable 'ns-right-command-modifier 'super)
-       (set-variable 'ns-alternate-modifier 'none))
-   #+END_SRC
+*** ファイル用の設定
+    #+BEGIN_SRC emacs-lisp
+      (defun e:header-line-for-files-format ()
+        "ファイル用のヘッダーラインのフォーマット"
+        (let* ((path (or buffer-file-name "/path/to/filename.test"))
+               (dir  (file-name-directory path))
+               (file (file-name-nondirectory path))
+               (max  (- (window-width) (length file))))
+          (concat
+           (propertize " "
+                       'display '(space :align-to 0))
+           (propertize (e:shorten dir max))
+           (propertize file
+                       'face '(:foreground "#ff0000")))))
+      (defun e:setup-headerline-for-files ()
+        "ファイル用のヘッダーラインの設定"
+        (setq-local spaceline-buffer-id-p nil)
+        (set-face-attribute 'header-line nil
+                            :inherit 'mode-line
+                            :background (face-attribute 'mode-line :background))
+        (setq-local header-line-format
+                    '((:eval (e:header-line-for-files-format)))))
+    #+END_SRC
+*** 一定時間毎に実行
+    #+BEGIN_SRC emacs-lisp
+      (defun e:setup-headerline ()
+        "ヘッダーラインをなるべくいい感じに設定する"
+        (cl-dolist (window (window-list))
+          (with-current-buffer (window-buffer window)
+            (unless header-line-format
+              (cond
+               (buffer-file-name (e:setup-headerline-for-files)))))))
+      (run-with-idle-timer 0.5 0.5 'e:setup-headerline)
+    #+END_SRC
+** Mac用の調整
+*** キーボード入力(option, command関連)
+    #+BEGIN_SRC emacs-lisp
+      (when (e:system-type-darwin-p)
+        (set-variable 'ns-command-modifier 'meta)
+        (set-variable 'ns-right-command-modifier 'super)
+        (set-variable 'ns-alternate-modifier 'none))
+    #+END_SRC
 ** 雑多なやつ
 *** 「Viperize?」の確認をしない
     #+BEGIN_SRC emacs-lisp

@@ -191,6 +191,24 @@
        (set-variable 'flycheck-idle-buffer-switch-delay 3.0)
        (set-variable 'flycheck-idle-change-delay 3.0))
    #+END_SRC
+** git-gutter
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs|use-package-add-hook git-gutter
+       :post-config
+       (dolist (face '(git-gutter:added
+                       git-gutter:deleted
+                       git-gutter:modified))
+         (set-face-attribute face nil :background (face-attribute face :foreground))))
+   #+END_SRC
+** git-gutter+
+   #+BEGIN_SRC emacs-lisp
+     (spacemacs|use-package-add-hook git-gutter+
+       :post-config
+       (dolist (face '(git-gutter+-added
+                       git-gutter+-deleted
+                       git-gutter+-modified))
+         (set-face-attribute face nil :background (face-attribute face :foreground))))
+   #+END_SRC
 ** google-translate
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook google-translate

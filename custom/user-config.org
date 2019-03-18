@@ -63,6 +63,8 @@
        (setq evil-cross-lines t)
        (setq evil-move-cursor-back nil)
        ;; キーバインド
+       (evil-define-key 'normal global-map "s" 'evil-avy-goto-char-timer)
+       (evil-define-key 'normal global-map "S" 'evil-avy-goto-word-1)
        (setq evil-insert-state-map (make-sparse-keymap))
        (bind-keys
         ;; モーションモード(motion -> normal -> visual)

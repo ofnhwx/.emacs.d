@@ -63,8 +63,6 @@
        (setq evil-cross-lines t)
        (setq evil-move-cursor-back nil)
        ;; キーバインド
-       (evil-define-key 'normal global-map "s" 'evil-avy-goto-char-timer)
-       (evil-define-key 'normal global-map "S" 'evil-avy-goto-word-1)
        (setq evil-insert-state-map (make-sparse-keymap))
        (bind-keys
         ;; モーションモード(motion -> normal -> visual)
@@ -286,6 +284,18 @@
   #+BEGIN_SRC emacs-lisp
     (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
   #+END_SRC
+** avy-extensions
+   #+BEGIN_SRC emacs-lisp
+     (use-package avy-extensions
+       :config
+       (evil-define-key 'normal global-map "s" 'evil-avy-goto-char-timer)
+       (evil-define-key 'normal global-map "S" 'evil-avy-goto-word-1)
+       (evil-define-key 'normal global-map "gj" 'evil-avy-goto-line-below)
+       (evil-define-key 'normal global-map "gk" 'evil-avy-goto-line-above)
+       (let ((state '(visual operator)))
+         (evil-define-key state global-map "z" 'evil-e:avy-goto-char-1-below)
+         (evil-define-key state global-map "Z" 'evil-e:avy-goto-char-1-above)))
+   #+END_SRC
 ** open-by-jetbrains-ide
    #+BEGIN_SRC emacs-lisp
      (use-package open-by-jetbrains-ide

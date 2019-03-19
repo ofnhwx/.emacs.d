@@ -114,7 +114,10 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ranger
        :config
-       (ranger-override-dired-mode 1))
+       (defun e:ranger-override-dired-mode-on ()
+         (ranger-override-dired-mode 1))
+       (advice-add 'ranger-mode :after 'e:ranger-override-dired-mode-on)
+       (e:ranger-override-dired-mode-on))
    #+END_SRC
 ** tramp
    #+BEGIN_SRC emacs-lisp :noweb yes

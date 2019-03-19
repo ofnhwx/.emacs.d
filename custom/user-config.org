@@ -88,8 +88,11 @@
         :map evil-emacs-state-map)
        ;; normal-state に戻す設定を追加
        (defun e:evil-force-normal-state ()
-         (when (member evil-state '(insert hybrid visual))
-           (evil-force-normal-state)))
+         (cond
+          ((eq evil-state 'visual)
+           (evil-exit-visual-state))
+          ((member evil-state '(insert hybrid))
+           (evil-force-normal-state))))
        (defun e:save-buffer:after (&rest args)
          (e:evil-force-normal-state))
        (defun e:keyboard-quit:before (&rest args)

@@ -262,7 +262,7 @@
            (interactive)
            (e:prodigy-start-service "google-ime-skk"))
          (e:prodigy:google-ime-skk))
-       ;; evil に連動して切替え :tangle no
+       ;; evil に連動して切替え
        (defun e:skk-latin-mode-on:before (&rest args)
          (unless skk-mode-invoked
            (skk-mode-invoke)))

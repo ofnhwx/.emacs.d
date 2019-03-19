@@ -99,17 +99,6 @@
        (advice-add 'save-buffer :after 'e:save-buffer:after)
        (advice-add 'keyboard-quit :before 'e:keyboard-quit:before))
    #+END_SRC
-** open-by-jetbrains-ide
-   #+BEGIN_SRC emacs-lisp
-     (use-package open-by-jetbrains-ide
-       :load-path "custom/lisp"
-       :config
-       (spacemacs/declare-prefix "aj" "jetbrains")
-       (spacemacs/set-leader-keys
-         "ajj" 'jetbrains:open-by-ide
-         "ajc" 'jetbrains:open-by-clion
-         "aji" 'jetbrains:open-by-idea))
-   #+END_SRC
 ** persistent-scratch
    #+BEGIN_SRC emacs-lisp
      (use-package persistent-scratch
@@ -292,6 +281,21 @@
        ;; ヒントが出るまでの時間を調整
        (setq which-key-idle-delay 1.0)
        (setq which-key-idle-secondary-delay 0.1))
+   #+END_SRC
+* パッケージ毎の設定(独自)
+  #+BEGIN_SRC emacs-lisp
+    (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
+  #+END_SRC
+** open-by-jetbrains-ide
+   #+BEGIN_SRC emacs-lisp
+     (use-package open-by-jetbrains-ide
+       :load-path "custom/lisp"
+       :config
+       (spacemacs/declare-prefix "aj" "jetbrains")
+       (spacemacs/set-leader-keys
+         "ajj" 'jetbrains:open-by-ide
+         "ajc" 'jetbrains:open-by-clion
+         "aji" 'jetbrains:open-by-idea))
    #+END_SRC
 * パッチ対応
   #+BEGIN_SRC emacs-lisp

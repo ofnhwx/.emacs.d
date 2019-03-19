@@ -63,7 +63,7 @@
        (setq evil-cross-lines t)
        (setq evil-move-cursor-back nil)
        ;; キーバインド
-       (setq evil-insert-state-map (make-sparse-keymap))
+       (setq evil-disable-insert-state-bindings t)
        (bind-keys
         ;; モーションモード(motion -> normal -> visual)
         :map evil-motion-state-map

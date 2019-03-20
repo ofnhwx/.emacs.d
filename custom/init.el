@@ -96,6 +96,7 @@ This function should only modify configuration layer settings."
    '(;; Utilities
      atomic-chrome
      company-box
+     evil-easymotion
      fish-mode
      helm-tramp
      helpful

@@ -246,6 +246,10 @@
        (set-variable 'magit-diff-refine-hunk 'all)
        (set-variable 'smerge-refine-ignore-whitespace nil)
        :post-config
+       (when (executable-find "ghq")
+         (let ((dirs (s-split "\n" (s-trim (shell-command-to-string "ghq list --full-path")))))
+           (set-variable 'magit-repository-directories
+                         (--map (cons it 0) dirs))))
        (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
    #+END_SRC
 ** notmuch

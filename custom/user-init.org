@@ -61,7 +61,7 @@
         "ファイル用のヘッダーラインのフォーマット"
         (let* ((path (or buffer-file-name "/path/to/filename.test"))
                (dir  (file-name-directory path))
-               (file (file-name-nondirectory path))
+               (file (buffer-name))
                (max  (- (window-width) (length file))))
           (concat
            (propertize " "

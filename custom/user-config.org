@@ -247,6 +247,16 @@
          "hdds" 'helpful-symbol
          "hddv" 'helpful-variable))
    #+END_SRC
+** magit-todos
+   #+BEGIN_SRC emacs-lisp
+     (use-package magit-todos
+       :defer t
+       :init
+       (defun e:magit-todos-mode-on ()
+         (let ((inhibit-message t))
+           (magit-todos-mode 1)))
+       (add-hook 'magit-mode-hook 'e:magit-todos-mode-on))
+   #+END_SRC
 ** navi2ch
    #+BEGIN_SRC emacs-lisp
      (use-package navi2ch

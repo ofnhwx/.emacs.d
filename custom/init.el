@@ -101,6 +101,7 @@ This function should only modify configuration layer settings."
      fish-mode
      helm-tramp
      helpful
+     magit-todos
      persistent-scratch
      visual-regexp
      vlf

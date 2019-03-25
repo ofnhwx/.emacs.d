@@ -5,6 +5,7 @@
 
 # 無視したくないファイルを以下に'![ファイル名]'で指定する
 ##### Gitで管理するファイル #####
+!/.dir-locals.el
 !/.editorconfig
 !/.gitignore
 !/README.md

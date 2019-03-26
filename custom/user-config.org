@@ -379,7 +379,7 @@
                  (--map (-zip vm-attrs it) status-groups))))
          (spacemacs-buffer/warning "`vagrant-tramp' was updated.")))
    #+END_SRC
-** avy-mitemo
+** avy-migemo
    #+BEGIN_SRC emacs-lisp
      (let ((version (pkg-info-format-version (pkg-info-package-version 'avy-migemo)))
            (target "20180716.1455"))

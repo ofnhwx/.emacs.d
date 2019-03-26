@@ -169,15 +169,6 @@
        (set-variable 'company-box-enable-icon nil)
        (add-hook 'company-mode-hook 'company-box-mode))
    #+END_SRC
-** counsel
-   一部の機能は ivy/counsel の方が便利なので個別に設定
-   #+BEGIN_SRC emacs-lisp
-     (use-package counsel
-       :defer t
-       :init
-       (spacemacs/set-leader-keys
-         "fz" 'counsel-fzf))
-   #+END_SRC
 ** evil-easymotion
    #+BEGIN_SRC emacs-lisp
      (use-package evil-easymotion

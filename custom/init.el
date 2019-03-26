@@ -86,6 +86,8 @@ This function should only modify configuration layer settings."
      vagrant
      ;; +web-services
      search-engine
+     ;; custom/layers
+     github-packages
      )
 
    ;; List of additional packages that will be installed without being

@@ -77,7 +77,6 @@
         ("gj" . evil-avy-goto-line-below)
         ("gk" . evil-avy-goto-line-above)
         ("s" . evil-avy-goto-char-timer)
-        ("S" . evil-avy-goto-word-1)
         ;; ビジュアルモード
         :map evil-visual-state-map
         ;; 挿入モード
@@ -206,6 +205,7 @@
         ("#"  . evilem-motion-search-word-backward)
         ("-"  . evilem-motion-previous-line-first-non-blank)
         ("+"  . evilem-motion-next-line-first-non-blank))
+       (bind-key "S" 'e:evil-em-command evil-normal-state-map)
        (bind-key "x" 'e:evil-em-command evil-visual-state-map)
        (bind-key "x" 'e:evil-em-command evil-operator-state-map))
    #+END_SRC

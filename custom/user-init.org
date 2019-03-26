@@ -234,6 +234,7 @@
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook helm
        :post-init
+       (set-variable 'helm-buffer-max-length nil)
        (bind-key [remap eval-expression] 'helm-eval-expression)
        (with-eval-after-load 'eldoc-eval
          (bind-key [remap eldoc-eval-expression] 'helm-eval-expression eldoc-in-minibuffer-mode-map)))

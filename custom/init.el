@@ -39,7 +39,9 @@ This function should only modify configuration layer settings."
       syntax-checking-enable-tooltips nil)
      ;; +completion
      auto-completion
-     helm
+     (helm
+      :variables
+      helm-use-fuzzy nil)
      ;; +emacs
      better-defaults
      org

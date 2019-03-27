@@ -59,16 +59,25 @@
     #+BEGIN_SRC emacs-lisp
       (defun e:header-line-for-files-format ()
         "ファイル用のヘッダーラインのフォーマット"
-        (let* ((path (or buffer-file-name "/path/to/filename.test"))
-               (dir  (file-name-directory path))
-               (file (buffer-name))
-               (max  (- (window-width) (length file))))
+        (let* ((buffer (current-buffer))
+               (path (abbreviate-file-name (buffer-file-name buffer)))
+               (root (e:project-root (file-name-directory path)))
+               (name (if root (concat "[" (e:project-name root) "]")))
+               (file (buffer-name buffer))
+               (dir  (if root
+                         (e:shorten (replace-regexp-in-string (regexp-quote root) "" (file-name-directory path))
+                                    (- (window-width) (length file) (length name)))
+                       (e:shorten (file-name-directory path)
+                                  (- (window-width) (length file))))))
           (concat
            (propertize " "
                        'display '(space :align-to 0))
-           (propertize (e:shorten dir max))
+           (when root
+             (propertize name
+                         'face 'font-lock-keyword-face))
+           (propertize dir)
            (propertize file
-                       'face '(:foreground "#ff0000")))))
+                       'face 'font-lock-constant-face))))
       (defun e:setup-headerline-for-files ()
         "ファイル用のヘッダーラインの設定"
         (setq-local spaceline-buffer-id-p nil)

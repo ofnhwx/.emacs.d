@@ -1,40 +1,46 @@
 
+(require 'cl-lib)
+(require 'dash)
+
+
+
 (defconst jetbrains:idea
-  (cond
-   ((e:system-type-darwin-p)
-    '("/Applications/IntelliJ IDEA.app" "/Applications/IntelliJ IDEA.app/Contents/MacOS/idea"))
-   (t nil))
+  (executable-find "idea")
   "IntelliJ IDEAのパス.")
 
+(defconst jetbrains:pstorm
+  (executable-find "pstorm")
+  "PhpStormのパス.")
+
 (defconst jetbrains:clion
-  (cond
-   ((e:system-type-darwin-p)
-    '("/Applications/CLion.app" "/Applications/CLion.app/Contents/MacOS/clion"))
-   (t nil))
+  (executable-find "clion")
   "CLionのパス.")
 
 (defun jetbrains:select-app (buffer)
   (with-current-buffer buffer
     (cond
-     ((member major-mode '(c++-mode)) intellij:clion-path)
-     (t nil))))
+     ((member major-mode '(php-mode)) jetbrains:pstorm)
+     ((member major-mode '(c++-mode)) jetbrains:clion)
+     (t jetbrains:idea))))
 
 
 
-(defun jetbrains:make-commands (app buffer)
-  (let ((commands nil))
+(defun jetbrains:project-root (buffer)
+  (let ((dir (file-name-directory (buffer-file-name buffer))))
+    (cl-first (--sort (> (length it) (length other))
+                      (--map (locate-dominating-file dir it)
+                             '(".git/" ".hg/" ".svn/" ".git"))))))
+
+(defun jetbrains:make-command (app buffer)
+  (when app
     (with-current-buffer buffer
-      (cond
-       ((e:system-type-darwin-p)
-        (add-to-list 'commands
-                     (format "open -a %s"
-                             (shell-quote-argument (nth 0 app))))
-        (add-to-list 'commands
-                     (format "%s --line %d %s >/dev/null 2>&1"
-                             (shell-quote-argument (nth 1 app))
-                             (line-number-at-pos)
-                             (buffer-file-name))))))
-    commands))
+      ;; {{application}} [-l|--line line] [project_dir|--temp-project] file[:line]
+      (format "%s %s %s:%d"
+              (shell-quote-argument app)
+              (or (jetbrains:project-root buffer)
+                  "--temp-project")
+              (abbreviate-file-name (buffer-file-name))
+              (line-number-at-pos)))))
 
 
 
@@ -42,18 +48,20 @@
   (interactive)
   (jetbrains:open-by-ide jetbrains:idea buffer))
 
+(defun jetbrains:open-by-pstorm (&optional buffer)
+  (interactive)
+  (jetbrains:open-by-ide jetbrains:pstorm buffer))
+
 (defun jetbrains:open-by-clion (&optional buffer)
   (interactive)
   (jetbrains:open-by-ide jetbrains:clion buffer))
 
 (defun jetbrains:open-by-ide (&optional app buffer)
   (interactive)
-  (unless buffer
-    (setq buffer (current-buffer)))
-  (unless app
-    (setq app (jetbrains:select-app buffer)))
-  (let ((commands (jetbrains:make-commands app buffer)))
-    (cl-dolist (command commands)
+  (let* ((buffer (or buffer (current-buffer)))
+         (app (or app (jetbrains:select-app buffer)))
+         (command (jetbrains:make-command app buffer)))
+    (when command
       (shell-command command))))
 
 

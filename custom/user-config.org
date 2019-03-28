@@ -115,6 +115,18 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ranger
        :config
+       (defun ranger--header-lhs ()
+         "Setup header-line for ranger buffer."
+         (let* ((current-file (abbreviate-file-name (or (r--fget ranger-current-file) "")))
+                (project-root (e:project-root current-file))
+                (project-name (if project-root (concat "[" (e:project-name project-root) "]")))
+                (file-path (replace-regexp-in-string (regexp-quote (or project-root "")) ""
+                                                     (or (file-name-directory current-file) "")))
+                (file-name (file-name-nondirectory current-file)))
+           (format " %s%s%s"
+                   (propertize (or project-name "") 'face 'font-lock-keyword-face)
+                   file-path
+                   (propertize file-name 'face 'font-lock-constant-face))))
        (defun e:ranger-override-dired-mode-on ()
          (ranger-override-dired-mode 1))
        (advice-add 'ranger-mode :after 'e:ranger-override-dired-mode-on)
@@ -347,18 +359,6 @@
      (use-package open-by-jetbrains-ide
        :load-path "custom/lisp"
        :config
-       (defun ranger--header-lhs ()
-         "Setup header-line for ranger buffer."
-         (let* ((current-file (abbreviate-file-name (or (r--fget ranger-current-file) "")))
-                (project-root (e:project-root current-file))
-                (project-name (if project-root (concat "[" (e:project-name project-root) "]")))
-                (file-path (replace-regexp-in-string (regexp-quote (or project-root "")) ""
-                                                     (or (file-name-directory current-file) "")))
-                (file-name (file-name-nondirectory current-file)))
-           (format " %s%s%s"
-                   (propertize (or project-name "") 'face 'font-lock-keyword-face)
-                   file-path
-                   (propertize file-name 'face 'font-lock-constant-face))))
        (spacemacs/declare-prefix "aj" "jetbrains")
        (spacemacs/set-leader-keys
          "ajj" 'jetbrains:open-by-ide

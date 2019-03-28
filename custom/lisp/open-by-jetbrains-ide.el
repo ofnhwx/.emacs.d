@@ -4,65 +4,153 @@
 
 
 
-(defconst jetbrains:idea
-  (executable-find "idea")
-  "IntelliJ IDEAのパス.")
+(defconst jetbrains/ide-alist
+  '(
+    ("Android Studio" . jetbrains/ide-studio)
+    ("AppCode"        . jetbrains/ide-appcode)
+    ("CLion"          . jetbrains/ide-clion)
+    ("GoLand"         . jetbrains/ide-goland)
+    ("IntelliJ IDEA"  . jetbrains/ide-idea)
+    ("PhpStorm"       . jetbrains/ide-pstorm)
+    ("PyCharm"        . jetbrains/ide-charm)
+    ("Rider"          . jetbrains/ide-rider)
+    ("RubyMine"       . jetbrains/ide-mine)
+    ("WebStorm"       . jetbrains/ide-wstorm)
+    ))
 
-(defconst jetbrains:pstorm
-  (executable-find "pstorm")
-  "PhpStormのパス.")
+(defvar jetbrains/ide-appcode "appcode")
+(defvar jetbrains/ide-charm   "charm")
+(defvar jetbrains/ide-clion   "clion")
+(defvar jetbrains/ide-goland  "goland")
+(defvar jetbrains/ide-idea    "idea")
+(defvar jetbrains/ide-mine    "mine")
+(defvar jetbrains/ide-pstorm  "pstorm")
+(defvar jetbrains/ide-rider   "rider")
+(defvar jetbrains/ide-studio  "studio")
+(defvar jetbrains/ide-wstorm  "wstorm")
 
-(defconst jetbrains:clion
-  (executable-find "clion")
-  "CLionのパス.")
+(progn
+  (defvar jetbrains/need-open-confirm nil)
+  (put 'jetbrains/need-open-confirm 'safe-local-variable 'booleanp))
 
-(defun jetbrains:select-app (buffer)
-  (with-current-buffer buffer
-    (cond
-     ((member major-mode '(php-mode)) jetbrains:pstorm)
-     ((member major-mode '(c++-mode)) jetbrains:clion)
-     (t jetbrains:idea))))
-
-
-
-(defun jetbrains:project-root (buffer)
-  (let ((dir (file-name-directory (buffer-file-name buffer))))
-    (cl-first (--sort (> (length it) (length other))
-                      (--map (locate-dominating-file dir it)
-                             '(".git/" ".hg/" ".svn/" ".git"))))))
-
-(defun jetbrains:make-command (app buffer)
-  (when app
-    (with-current-buffer buffer
-      ;; {{application}} [-l|--line line] [project_dir|--temp-project] file[:line]
-      (format "%s %s %s:%d"
-              (shell-quote-argument app)
-              (or (jetbrains:project-root buffer)
-                  "--temp-project")
-              (abbreviate-file-name (buffer-file-name))
-              (line-number-at-pos)))))
+(progn
+  (defvar-local jetbrains/ide nil)
+  (put 'jetbrains/ide 'safe-local-variable 'jetbrains/--ide))
 
 
 
-(defun jetbrains:open-by-idea (&optional buffer)
+;;;###autoload
+(defun jetbrains/open-by-appcode (&optional buffer)
   (interactive)
-  (jetbrains:open-by-ide jetbrains:idea buffer))
+  (jetbrains/open-by-ide "AppCode" buffer))
 
-(defun jetbrains:open-by-pstorm (&optional buffer)
+;;;###autoload
+(defun jetbrains/open-by-charm (&optional buffer)
   (interactive)
-  (jetbrains:open-by-ide jetbrains:pstorm buffer))
+  (jetbrains/open-by-ide "PyCharm" buffer))
 
-(defun jetbrains:open-by-clion (&optional buffer)
+;;;###autoload
+(defun jetbrains/open-by-clion (&optional buffer)
   (interactive)
-  (jetbrains:open-by-ide jetbrains:clion buffer))
+  (jetbrains/open-by-ide "CLion" buffer))
 
-(defun jetbrains:open-by-ide (&optional app buffer)
+;;;###autoload
+(defun jetbrains/open-by-goland (&optional buffer)
+  (interactive)
+  (jetbrains/open-by-ide "GoLand" buffer))
+
+;;;###autoload
+(defun jetbrains/open-by-idea (&optional buffer)
+  (interactive)
+  (jetbrains/open-by-ide "IntelliJ IDEA" buffer))
+
+;;;###autoload
+(defun jetbrains/open-by-mine (&optional buffer)
+  (interactive)
+  (jetbrains/open-by-ide "RubyMine" buffer))
+
+;;;###autoload
+(defun jetbrains/open-by-pstorm (&optional buffer)
+  (interactive)
+  (jetbrains/open-by-ide "PhpStorm" buffer))
+
+;;;###autoload
+(defun jetbrains/open-by-rider (&optional buffer)
+  (interactive)
+  (jetbrains/open-by-ide "Rider" buffer))
+
+;;;###autoload
+(defun jetbrains/open-by-studio (&optional buffer)
+  (interactive)
+  (jetbrains/open-by-ide "Android Studio" buffer))
+
+;;;###autoload
+(defun jetbrains/open-by-wstorm (&optional buffer)
+  (interactive)
+  (jetbrains/open-by-ide "WebStorm" buffer))
+
+;;;###autoload
+(defun jetbrains/open-by-ide (&optional ide buffer)
   (interactive)
   (let* ((buffer (or buffer (current-buffer)))
-         (app (or app (jetbrains:select-app buffer)))
-         (command (jetbrains:make-command app buffer)))
-    (when command
-      (shell-command command))))
+         (ide (or (jetbrains/--ide ide)
+                  (jetbrains/--ide-select buffer)))
+         (command (jetbrains/--make-command ide buffer)))
+    (cond
+     ((not (buffer-file-name buffer))
+      (message "Buffer `%s' has no file name." buffer))
+     ((not command)
+      (message "%s is not found." ide))
+     ((or (not jetbrains/need-open-confirm)
+          (y-or-n-p (format "Do you want to open `%s'?" ide)))
+      (shell-command command)))))
+
+
+
+(defun jetbrains/--ide (name)
+  (cond
+   ((symbolp name)
+    (car (--first (eq name (cdr it)) jetbrains/ide-alist)))
+   ((stringp name)
+    (car (--first (string-equal name (car it)) jetbrains/ide-alist)))))
+
+(defun jetbrains/--ide-select (buffer)
+  (or (jetbrains/--ide jetbrains/ide)
+      (with-current-buffer buffer
+        (cond
+         ((member major-mode '(php-mode))
+          "PhpStorm")
+         ((member major-mode '(c++-mode))
+          "CLion")
+         (t
+          "IntelliJ IDEA")))))
+
+(defun jetbrains/--ide-executable (ide)
+  (let* ((sym (cdr (--first (string-equal ide (car it)) jetbrains/ide-alist)))
+         (val (symbol-value sym)))
+    (and val
+         (executable-find val))))
+
+(defun jetbrains/--project-root (filename)
+  (let ((dir (file-name-directory filename)))
+    (or (locate-dominating-file dir ".idea/")
+        (cl-first (--sort (> (length it) (length other))
+                          (--map (locate-dominating-file dir it)
+                                 '(".git/" ".hg/" ".svn/" ".git")))))))
+
+(defun jetbrains/--make-command (ide buffer)
+  (let* ((executable (jetbrains/--ide-executable ide))
+         (filename (buffer-file-name buffer))
+         (project (and filename (or (let ((root (jetbrains/--project-root filename)))
+                                      (expand-file-name root))
+                                    "--temp-project"))))
+    (when (and executable filename)
+      ;; {{application}} [-l|--line line] [project_dir|--temp-project] file[:line]
+      (format "%s %s %s:%d"
+              (shell-quote-argument executable)
+              (shell-quote-argument project)
+              (shell-quote-argument filename)
+              (with-current-buffer buffer (line-number-at-pos))))))
 
 
 

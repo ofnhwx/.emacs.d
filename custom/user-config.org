@@ -366,10 +366,18 @@
        :config
        (spacemacs/declare-prefix "aj" "jetbrains")
        (spacemacs/set-leader-keys
-         "ajj" 'jetbrains:open-by-ide
-         "ajc" 'jetbrains:open-by-clion
-         "aji" 'jetbrains:open-by-idea
-         "ajp" 'jetbrains:open-by-pstorm))
+         "ajA" 'jetbrains/open-by-appcode
+         "ajC" 'jetbrains/open-by-clion
+         "ajR" 'jetbrains/open-by-rider
+         "ajc" 'jetbrains/open-by-charm
+         "ajg" 'jetbrains/open-by-goland
+         "aji" 'jetbrains/open-by-idea
+         "ajj" 'jetbrains/open-by-ide
+         "ajm" 'jetbrains/open-by-mine
+         "ajp" 'jetbrains/open-by-pstorm
+         "ajs" 'jetbrains/open-by-studio
+         "ajw" 'jetbrains/open-by-wstorm
+         ))
    #+END_SRC
 * パッチ対応
   #+BEGIN_SRC emacs-lisp

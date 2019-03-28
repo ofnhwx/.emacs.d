@@ -264,6 +264,11 @@
      (use-package magit-todos
        :defer t
        :init
+       (put 'magit-todos-exclude-globs
+            'safe-local-variable
+            '(lambda (v)
+               (and (listp v)
+                    (--all? (stringp it) v))))
        (defun e:magit-todos-mode-on ()
          (let ((inhibit-message t))
            (magit-todos-mode 1)))

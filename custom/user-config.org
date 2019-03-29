@@ -119,14 +119,16 @@
          "Setup header-line for ranger buffer."
          (let* ((current-file (abbreviate-file-name (or (r--fget ranger-current-file) "")))
                 (project-root (e:project-root current-file))
-                (project-name (if project-root (concat "[" (e:project-name project-root) "]")))
-                (file-path (replace-regexp-in-string (regexp-quote (or project-root "")) ""
-                                                     (or (file-name-directory current-file) "")))
-                (file-name (file-name-nondirectory current-file)))
-           (format " %s%s%s"
-                   (propertize (or project-name "") 'face 'font-lock-keyword-face)
-                   file-path
-                   (propertize file-name 'face 'font-lock-constant-face))))
+                (project-name (and project-root (format "[%s]" (e:project-name project-root))))
+                (dir  (file-name-directory current-file))
+                (file (file-name-nondirectory current-file)))
+           (when project-root
+             (setq dir (replace-regexp-in-string (regexp-quote project-root) "" dir)))
+           (concat
+            (propertize " " 'display '(space :align-to 0))
+            (propertize (or project-name "") 'face 'font-lock-keyword-face)
+            dir
+            (propertize file 'face 'font-lock-constant-face))))
        (defun e:ranger-override-dired-mode-on ()
          (ranger-override-dired-mode 1))
        (advice-add 'ranger-mode :after 'e:ranger-override-dired-mode-on)

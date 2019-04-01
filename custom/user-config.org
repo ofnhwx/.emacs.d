@@ -94,12 +94,12 @@
            (evil-exit-visual-state))
           ((member evil-state '(insert hybrid))
            (evil-force-normal-state))))
-       (defun e:save-buffer:after (&rest args)
+       (defun e:advice:save-buffer:after (&rest args)
          (e:evil-force-normal-state))
-       (defun e:keyboard-quit:before (&rest args)
+       (defun e:advice:keyboard-quit:before (&rest args)
          (e:evil-force-normal-state))
-       (advice-add 'save-buffer :after 'e:save-buffer:after)
-       (advice-add 'keyboard-quit :before 'e:keyboard-quit:before))
+       (advice-add 'save-buffer :after 'e:advice:save-buffer:after)
+       (advice-add 'keyboard-quit :before 'e:advice:keyboard-quit:before))
    #+END_SRC
 ** persistent-scratch
    #+BEGIN_SRC emacs-lisp
@@ -115,24 +115,27 @@
    #+BEGIN_SRC emacs-lisp
      (use-package ranger
        :config
-       (defun ranger--header-lhs ()
-         "Setup header-line for ranger buffer."
-         (let* ((current-file (abbreviate-file-name (or (r--fget ranger-current-file) "")))
-                (project-root (e:project-root current-file))
-                (project-name (and project-root (format "[%s]" (e:project-name project-root))))
-                (dir  (file-name-directory current-file))
-                (file (file-name-nondirectory current-file)))
-           (when project-root
-             (setq dir (replace-regexp-in-string (regexp-quote project-root) "" dir)))
-           (concat
-            (propertize " " 'display '(space :align-to 0))
-            (propertize (or project-name "") 'face 'font-lock-keyword-face)
-            dir
-            (propertize file 'face 'font-lock-constant-face))))
-       (defun e:ranger-override-dired-mode-on ()
-         (ranger-override-dired-mode 1))
-       (advice-add 'ranger-mode :after 'e:ranger-override-dired-mode-on)
-       (e:ranger-override-dired-mode-on))
+       (progn ;; ranger のヘッダーラインの表示を変更
+         (defun e:advice:ranger--header-lhs:override (&rest args)
+           "Setup header-line for ranger buffer."
+           (let* ((current-file (abbreviate-file-name (or (r--fget ranger-current-file) "")))
+                  (project-root (e:project-root current-file))
+                  (project-name (and project-root (format "[%s]" (e:project-name project-root))))
+                  (dir  (file-name-directory current-file))
+                  (file (file-name-nondirectory current-file)))
+             (when project-root
+               (setq dir (replace-regexp-in-string (regexp-quote project-root) "" dir)))
+             (concat
+              (propertize " " 'display '(space :align-to 0))
+              (propertize (or project-name "") 'face 'font-lock-keyword-face)
+              dir
+              (propertize file 'face 'font-lock-constant-face))))
+         (advice-add 'ranger--header-lhs :override 'e:advice:ranger--header-lhs:override))
+       (progn ;; 常に dired の代わりに ranger を使用する
+         (defun e:advice:ranger-override-dired-mode-on:after (&rest args)
+           (ranger-override-dired-mode 1))
+         (advice-add 'ranger-mode :after 'e:advice:ranger-override-dired-mode-on:after))
+       (ranger-override-dired-mode 1))
    #+END_SRC
 ** tramp
    #+BEGIN_SRC emacs-lisp :noweb yes
@@ -164,13 +167,13 @@
         :defer t
         :config
         ;; ssh/conf.d の内容を接続先に追加
-        (defun e:helm-tramp--candidates:filter-return (result)
+        (defun e:advice:helm-tramp--candidates:filter-return (result)
           (dolist (host (--filter (not (string-equal it tramp-default-host))
                                   (-distinct (-flatten (-map 'eval (tramp-get-completion-function "ssh"))))))
             (push (format "/%s:%s:" tramp-default-method host) result)
             (push (format "/ssh:%s|sudo:%s:/" host host) result))
           (-distinct (reverse result)))
-        (advice-add 'helm-tramp--candidates :filter-return 'e:helm-tramp--candidates:filter-return))
+        (advice-add 'helm-tramp--candidates :filter-return 'e:advice:helm-tramp--candidates:filter-return))
     #+END_SRC
 * パッケージ毎の設定(遅延あり)
 ** company-box
@@ -230,7 +233,7 @@
        :config
        ;; 色の有効/無効を切替え
        (defvar e:eww-enable-colorize nil)
-       (defun e:eww-colorize-region:around (&rest args)
+       (defun e:advice:eww-colorize-region:around (&rest args)
          (when e:eww-enable-colorize
            (apply (car args) (cdr args))))
        (defun e:eww-colorize-on ()
@@ -241,8 +244,8 @@
          (interactive)
          (setq-local e:eww-enable-colorize nil)
          (eww-reload))
-       (advice-add 'eww-colorize-region :around 'e:eww-colorize-region:around)
-       (advice-add 'shr-colorize-region :around 'e:eww-colorize-region:around))
+       (advice-add 'eww-colorize-region :around 'e:advice:eww-colorize-region:around)
+       (advice-add 'shr-colorize-region :around 'e:advice:eww-colorize-region:around))
    #+END_SRC
 ** helpful
    #+BEGIN_SRC emacs-lisp
@@ -327,10 +330,10 @@
            (e:prodigy-start-service "google-ime-skk"))
          (e:prodigy:google-ime-skk))
        ;; evil に連動して切替え
-       (defun e:skk-latin-mode-on:before (&rest args)
+       (defun e:advice:skk-latin-mode-on:before (&rest args)
          (unless skk-mode-invoked
            (skk-mode-invoke)))
-       (advice-add 'skk-latin-mode-on :before 'e:skk-latin-mode-on:before)
+       (advice-add 'skk-latin-mode-on :before 'e:advice:skk-latin-mode-on:before)
        (add-hook 'evil-hybrid-state-entry-hook 'skk-latin-mode-on)
        (add-hook 'evil-hybrid-state-exit-hook  'skk-mode-exit))
    #+END_SRC
@@ -385,6 +388,21 @@
   #+BEGIN_SRC emacs-lisp
     (require 'pkg-info)
   #+END_SRC
+** avy-migemo
+   #+BEGIN_SRC emacs-lisp
+     (let ((version (pkg-info-format-version (pkg-info-package-version 'avy-migemo)))
+           (target "20180716.1455"))
+       (if (string-equal version target)
+           (use-package avy-migemo
+             :defer t
+             :config
+             (defun e:patch:avy--generic-jump:filter-args (&rest args)
+               (if (= (length args) 4)
+                   args
+                 (e:remove-nth 2 args)))
+             (advice-add 'avy--generic-jump :filter-args 'e:patch:avy--generic-jump:filter-args))
+         (spacemacs-buffer/warning "`avy-migemo' was updated.")))
+   #+END_SRC
 ** vagrant-tramp
    #+BEGIN_SRC emacs-lisp
      (let ((version (pkg-info-format-version (pkg-info-package-version 'vagrant-tramp)))
@@ -393,7 +411,7 @@
            (use-package vagrant-tramp
              :defer t
              :config
-             (defun vagrant-tramp--all-boxes ()
+             (defun e:patch:vagrant-tramp--all-boxes:override (&rest args)
                "List of VMs per `vagrant global-status` as alists."
                (let* ((status-cmd "vagrant global-status --machine-readable")
                       (status-raw (shell-command-to-string status-cmd))
@@ -404,21 +422,7 @@
                       (status-data (--map (replace-regexp-in-string " " "" it) status-data-raw))
                       (status-groups (-butlast (-split-on "" status-data)))
                       (vm-attrs '(id name provider state dir)))
-                 (--map (-zip vm-attrs it) status-groups))))
+                 (--map (-zip vm-attrs it) status-groups)))
+             (advice-add 'vagrant-tramp--all-boxes :override 'e:patch:vagrant-tramp--all-boxes:override))
          (spacemacs-buffer/warning "`vagrant-tramp' was updated.")))
-   #+END_SRC
-** avy-migemo
-   #+BEGIN_SRC emacs-lisp
-     (let ((version (pkg-info-format-version (pkg-info-package-version 'avy-migemo)))
-           (target "20180716.1455"))
-       (if (string-equal version target)
-           (use-package avy-migemo
-             :defer t
-             :config
-             (defun e:avy--generic-jump:filter-args (args)
-               (if (= (length args) 4)
-                   args
-                 (e:remove-nth 2 args)))
-             (advice-add 'avy--generic-jump :filter-args 'e:avy--generic-jump:filter-args))
-         (spacemacs-buffer/warning "`avy-migemo' was updated.")))
    #+END_SRC

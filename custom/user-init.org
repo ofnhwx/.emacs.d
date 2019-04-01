@@ -32,7 +32,7 @@
    #+END_SRC
 ** フォントの設定
    #+BEGIN_SRC emacs-lisp
-     (defun e:spacemacs/set-default-font:after (&rest args)
+     (defun e:advice:spacemacs/set-default-font:after (&rest args)
        ;; 日本語関連
        (let* ((charsets '(japanese-jisx0208
                           japanese-jisx0208-1978
@@ -52,7 +52,7 @@
        (add-to-list 'load-path (expand-file-name "locale-eaw" e:external-directory))
        (when (require 'eaw nil t)
          (eaw-fullwidth)))
-     (advice-add 'spacemacs/set-default-font :after 'e:spacemacs/set-default-font:after)
+     (advice-add 'spacemacs/set-default-font :after 'e:advice:spacemacs/set-default-font:after)
    #+END_SRC
 ** ヘッダーラインの設定
 *** ファイル用の設定
@@ -321,11 +321,11 @@
        (set-variable 'recentf-filename-handlers '(abbreviate-file-name))
        :post-config
        (progn
-         (defun e:recentf-save-list:before (&rest args)
+         (defun e:advice:recentf-save-list:before (&rest args)
            (let ((list nil))
              (dolist (file (mapcar 'abbreviate-file-name recentf-list))
                (or (member file list)
                    (push file list)))
              (setq recentf-list (reverse list))))
-         (advice-add 'recentf-save-list :before 'e:recentf-save-list:before)))
+         (advice-add 'recentf-save-list :before 'e:advice:recentf-save-list:before)))
    #+END_SRC

@@ -185,6 +185,14 @@
        (set-variable 'company-box-enable-icon nil)
        (add-hook 'company-mode-hook 'company-box-mode))
    #+END_SRC
+** elisp-demos
+   #+BEGIN_SRC emacs-lisp
+     (use-package elisp-demos
+       :defer t
+       :init
+       (advice-add 'describe-function-1 :after 'elisp-demos-advice-describe-function-1)
+       (advice-add 'helpful-update :after 'elisp-demos-advice-helpful-update))
+   #+END_SRC
 ** evil-easymotion
    #+BEGIN_SRC emacs-lisp
      (use-package evil-easymotion

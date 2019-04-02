@@ -154,6 +154,12 @@
     #+BEGIN_SRC emacs-lisp
       (setq-default bidi-display-reordering nil)
     #+END_SRC
+*** 特定のバッファを消させない
+    #+BEGIN_SRC emacs-lisp
+      (dolist (buffer '("*scratch*" "*Messages*"))
+        (with-current-buffer buffer
+          (emacs-lock-mode 'kill)))
+    #+END_SRC
 * パッケージ毎の設定
 ** ace-window
    #+BEGIN_SRC emacs-lisp

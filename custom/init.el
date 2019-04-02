@@ -107,6 +107,7 @@ This function should only modify configuration layer settings."
      helm-tramp
      helpful
      magit-todos
+     ob-restclient
      persistent-scratch
      visual-regexp
      vlf

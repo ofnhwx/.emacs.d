@@ -297,6 +297,11 @@
    #+BEGIN_SRC emacs-lisp
      (spacemacs|use-package-add-hook org
        :post-init
+       (unless (--find (eq (car it) 'restclient) org-babel-load-languages)
+         (org-babel-do-load-languages
+          'org-babel-load-languages
+          (append org-babel-load-languages
+                  '((restclient . t)))))
        (set-variable 'org-directory (expand-file-name "org" e:private-directory))
        (let ((org-agenda-directory (expand-file-name "agenda" org-directory)))
          (when (file-directory-p org-agenda-directory)

@@ -285,7 +285,7 @@
        (defun e:magit-todos-mode-on ()
          (let ((inhibit-message t))
            (magit-todos-mode 1)))
-       (add-hook 'magit-mode-hook 'e:magit-todos-mode-on))
+       (add-hook 'magit-status-mode-hook 'e:magit-todos-mode-on))
    #+END_SRC
 ** navi2ch
    #+BEGIN_SRC emacs-lisp

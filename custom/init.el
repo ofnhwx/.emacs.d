@@ -484,7 +484,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (org-babel-load-file (expand-file-name "user-init.org" e:custom-directory)))
+  (load-file (expand-file-name "user-init.el" e:custom-directory)))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.

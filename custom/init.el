@@ -34,14 +34,10 @@ This function should only modify configuration layer settings."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(;; +checkers
-     (syntax-checking
-      :variables
-      syntax-checking-enable-tooltips nil)
+     (syntax-checking :variables syntax-checking-enable-tooltips nil)
      ;; +completion
      auto-completion
-     (helm
-      :variables
-      helm-use-fuzzy nil)
+     (helm :variables helm-use-fuzzy nil)
      ;; +emacs
      better-defaults
      org
@@ -71,7 +67,7 @@ This function should only modify configuration layer settings."
      ;; +pair-programming
      floobits
      ;; +source-control
-     git
+     (git :variables git-magit-status-fullscreen t)
      github
      ;; +tags
      gtags
@@ -80,9 +76,7 @@ This function should only modify configuration layer settings."
      lsp
      prodigy
      ranger
-     (shell
-      :variables
-      shell-default-shell 'eshell)
+     (shell :variables shell-default-shell 'eshell)
      vagrant
      ;; +web-services
      search-engine

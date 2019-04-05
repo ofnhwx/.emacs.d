@@ -544,16 +544,23 @@
      (use-package org
        :defer t
        :init
-       (unless (--find (eq (car it) 'restclient) org-babel-load-languages)
-         (org-babel-do-load-languages
-          'org-babel-load-languages
-          (append org-babel-load-languages
-                  '((restclient . t)))))
-       (set-variable 'org-directory (expand-file-name "org" e:private-directory))
-       (let ((org-agenda-directory (expand-file-name "agenda" org-directory)))
-         (when (file-directory-p org-agenda-directory)
-           (set-variable 'org-agenda-files (cl-remove-if 'file-directory-p (directory-files org-agenda-directory t))))))
+       (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
+       (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
+       (set-variable 'org-agenda-files (directory-files-recursively org-directory org-agenda-file-regexp))
+       (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3)))
+       (set-variable 'org-todo-keywords
+                     '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
+                       (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c@)"))))
    #+END_SRC
+*** ob-restclient
+    #+BEGIN_SRC emacs-lisp
+      (use-package ob-restclient
+        :defer t
+        :init
+        (unless (--find (eq (car it) 'restclient) org-babel-load-languages)
+          (org-babel-do-load-languages 'org-babel-load-languages
+                                       (append org-babel-load-languages '((restclient . t))))))
+    #+END_SRC
 ** persistent-scratch
    #+BEGIN_SRC emacs-lisp
      (use-package persistent-scratch

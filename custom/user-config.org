@@ -526,17 +526,17 @@
        :config
        (spacemacs/declare-prefix "aj" "jetbrains")
        (spacemacs/set-leader-keys
-         "ajA" 'jetbrains/open-by-appcode
-         "ajC" 'jetbrains/open-by-clion
-         "ajR" 'jetbrains/open-by-rider
-         "ajc" 'jetbrains/open-by-charm
-         "ajg" 'jetbrains/open-by-goland
-         "aji" 'jetbrains/open-by-idea
-         "ajj" 'jetbrains/open-by-ide
-         "ajm" 'jetbrains/open-by-mine
-         "ajp" 'jetbrains/open-by-pstorm
-         "ajs" 'jetbrains/open-by-studio
-         "ajw" 'jetbrains/open-by-wstorm
+         "ajA" '("AppCode" . jetbrains/open-by-appcode)
+         "ajC" '("CLion" . jetbrains/open-by-clion)
+         "ajR" '("Rider" . jetbrains/open-by-rider)
+         "ajc" '("PyCharm" . jetbrains/open-by-charm)
+         "ajg" '("GoLand" . jetbrains/open-by-goland)
+         "aji" '("IntelliJ IDEA" . jetbrains/open-by-idea)
+         "ajj" '("Default" . jetbrains/open-by-ide)
+         "ajm" '("RubyMine" . jetbrains/open-by-mine)
+         "ajp" '("PhpStorm" . jetbrains/open-by-pstorm)
+         "ajs" '("Android Studio" . jetbrains/open-by-studio)
+         "ajw" '("WebStorm" . jetbrains/open-by-wstorm)
          ))
    #+END_SRC
 ** org
@@ -740,14 +740,6 @@
      (use-package vterm
        :load-path "external/emacs-libvterm"
        :commands (vterm))
-   #+END_SRC
-** which-key
-   #+BEGIN_SRC emacs-lisp
-     (use-package which-key
-       :defer t
-       :init
-       (set-variable 'which-key-idle-delay 1.0)
-       (set-variable 'which-key-idle-secondary-delay 0.1))
    #+END_SRC
 * パッチ対応
   #+BEGIN_SRC emacs-lisp

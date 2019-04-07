@@ -19,24 +19,11 @@
 *** フォント
     #+begin_src emacs-lisp
       (defun e:advice:spacemacs/set-default-font:after (&rest args)
-        ;; 設定
-        (let* ((charsets '(japanese-jisx0208
-                           japanese-jisx0208-1978
-                           japanese-jisx0212
-                           japanese-jisx0213-1
-                           japanese-jisx0213-2
-                           japanese-jisx0213.2004-1
-                           japanese-jisx0213-a
-                           katakana-jisx0201
-                           katakana-sjis))
-               (fontspec (font-spec :family e:font-name)))
-          (dolist (charset charsets)
-            (set-fontset-font t charset fontspec)))
-        ;; リサイズ
-        (setq face-font-rescale-alist `((,e:font-name . ,e:font-rescale)))
-        ;; 対策: East Asian Ambiguous Width
-        (add-to-list 'load-path (expand-file-name "locale-eaw" e:external-directory))
-        (when (require 'eaw nil t)
+        (set-fontset-font t 'unicode (font-spec :family e:font-name))
+        (setq face-font-rescale-alist (list e:font-name e:font-rescale))
+        (use-package eaw
+          :load-path "external/locale-eaw"
+          :config
           (eaw-fullwidth)))
       (advice-add 'spacemacs/set-default-font :after 'e:advice:spacemacs/set-default-font:after)
     #+end_src

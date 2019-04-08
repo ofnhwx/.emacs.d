@@ -16,17 +16,6 @@
         (set-terminal-coding-system    coding-system)
         (set-keyboard-coding-system    coding-system))
     #+end_src
-*** フォント
-    #+begin_src emacs-lisp
-      (defun e:advice:spacemacs/set-default-font:after (&rest args)
-        (set-fontset-font t 'unicode (font-spec :family e:font-name))
-        (setq face-font-rescale-alist (list e:font-name e:font-rescale))
-        (use-package eaw
-          :load-path "external/locale-eaw"
-          :config
-          (eaw-fullwidth)))
-      (advice-add 'spacemacs/set-default-font :after 'e:advice:spacemacs/set-default-font:after)
-    #+end_src
 ** 情報表示
 *** ヘッダーライン
 **** ファイル用の設定

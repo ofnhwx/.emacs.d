@@ -559,6 +559,13 @@
        :config
        (persistent-scratch-setup-default))
    #+end_src
+** persp-mode
+   #+begin_src emacs-lisp
+     (use-package persp-mode
+       :defer t
+       :init
+       (set-variable 'persp-kill-foreign-buffer-behaviour nil))
+   #+end_src
 ** php-mode
    #+begin_src emacs-lisp
      (use-package php-mode
@@ -580,6 +587,17 @@
    #+begin_src emacs-lisp
      (use-package ranger
        :config
+       (progn ;; 非アクティブ状態のバッファを削除
+         (defun e:ranger-kill-inactive-buffers ()
+           (interactive)
+           (let* ((frames (frame-list))
+                  (windows (-flatten (-map #'window-list frames)))
+                  (buffers (-map #'window-buffer windows)))
+             (--each (--filter (member (e:major-mode it) '(ranger-mode))
+                               (buffer-list))
+               (unless (member it buffers)
+                 (kill-buffer it)))))
+         (run-with-idle-timer 5.0 5.0 #'e:ranger-kill-inactive-buffers))
        (progn ;; ranger のヘッダーラインの表示を変更
          (defun e:advice:ranger--header-lhs:override (&rest args)
            "Setup header-line for ranger buffer."
@@ -599,8 +617,8 @@
        (progn ;; 常に dired の代わりに ranger を使用する
          (defun e:advice:ranger-override-dired-mode-on:after (&rest args)
            (ranger-override-dired-mode 1))
-         (advice-add 'ranger-mode :after 'e:advice:ranger-override-dired-mode-on:after))
-       (ranger-override-dired-mode 1))
+         (advice-add 'ranger-mode :after 'e:advice:ranger-override-dired-mode-on:after)
+         (ranger-override-dired-mode 1)))
    #+end_src
 ** recentf
    #+begin_src emacs-lisp

@@ -63,3 +63,7 @@
         (setq length (- length (length (nth target parts)) 1))
         (setq parts (e:remove-nth target parts))))
     (string-join parts separator)))
+
+(defun e:major-mode (buffer)
+  (with-current-buffer buffer
+    major-mode))

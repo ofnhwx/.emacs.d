@@ -1,4 +1,7 @@
 
+;; custom-file を移動
+(set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
+
 ;; フォントの設定
 (progn
  (defun e:advice:spacemacs/set-default-font:after (&rest args)

@@ -630,8 +630,7 @@
 ** skk
    #+begin_src emacs-lisp
      (use-package skk
-       :commands (skk-latin-mode-on skk-mode-exit)
-       :hook ((evil-hybrid-state-entry . skk-latin-mode-on)
+       :hook ((evil-hybrid-state-entry . skk-mode)
               (evil-hybrid-state-exit  . skk-mode-exit))
        :bind
        (:map global-map
@@ -670,11 +669,8 @@
            (interactive)
            (e:prodigy-start-service "google-ime-skk"))
          (e:prodigy:google-ime-skk))
-       ;; evil に連動して切替え
-       (defun e:advice:skk-latin-mode-on:before (&rest args)
-         (unless skk-mode-invoked
-           (skk-mode-invoke)))
-       (advice-add 'skk-latin-mode-on :before 'e:advice:skk-latin-mode-on:before))
+       ;; skk の有効化で半角英数入力にする
+       (add-hook 'skk-mode-hook #'skk-latin-mode-on))
    #+end_src
 ** tramp
    #+begin_src emacs-lisp

@@ -93,10 +93,6 @@
      (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
    #+end_src
 ** 雑多なやつ
-*** 「Viperize?」の確認をしない
-    #+begin_src emacs-lisp
-      (set-variable 'viper-mode nil)
-    #+end_src
 *** shell の設定
     #+begin_src emacs-lisp
       (set-variable 'shell-file-name

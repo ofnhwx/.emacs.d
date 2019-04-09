@@ -616,11 +616,7 @@
        :config
        (progn
          (defun e:advice:recentf-save-list:before (&rest args)
-           (let ((list nil))
-             (dolist (file (mapcar 'abbreviate-file-name recentf-list))
-               (or (member file list)
-                   (push file list)))
-             (setq recentf-list (reverse list))))
+           (setq recentf-list (-distinct (-map 'f-short recentf-list))))
          (advice-add 'recentf-save-list :before 'e:advice:recentf-save-list:before)))
    #+end_src
 ** skk

@@ -443,6 +443,10 @@
                 (and (listp v)
                      (--all? (stringp it) v))))
         :config
+        (progn
+          (defun e:advice:magit-todos--line-item:around (fn &rest args)
+            (ignore-errors (apply fn args)))
+          (advice-add 'magit-todos--line-item :around 'e:advice:magit-todos--line-item:around))
         (defun e:magit-todos-mode-on ()
           (let ((inhibit-message t))
             (magit-todos-mode 1))))

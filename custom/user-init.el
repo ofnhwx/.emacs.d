@@ -20,3 +20,9 @@
 
 ;; which-key の設定
 (set-variable 'which-key-enable-extended-define-key t)
+
+;; 【暫定対応】font-lock でエラーが出てたのでとりあえず
+(progn
+  (defun e:font-lock-fontify-region (beg end loudly)
+    (ignore-errors (font-lock-default-fontify-region beg end loudly)))
+  (set-variable 'font-lock-fontify-region-function #'e:font-lock-fontify-region))

@@ -19,8 +19,14 @@
   (defvar e:external-directory (expand-file-name "external/" user-emacs-directory))
   (defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory)))
 
-;; 独自の拡張関数
-(load-file (expand-file-name "user-functions.el" e:custom-directory))
+;; org ファイルをロードする設定
+(when (require 'literate-elisp (expand-file-name "literate-elisp/literate-elisp.el" e:external-directory))
+  (set-variable 'literate-elisp-begin-src-id "#+begin_src emacs-lisp")
+  (set-variable 'literate-elisp-end-src-id "#+end_src"))
+
+;; 独自の変数・関数を定義
+(literate-elisp-load-file (expand-file-name "user-variables.org" e:custom-directory))
+(literate-elisp-load-file (expand-file-name "user-functions.org" e:custom-directory))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Spacemacs

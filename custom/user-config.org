@@ -524,7 +524,8 @@
 *** org
     #+begin_src emacs-lisp
       (use-package org
-        :defer t
+        :no-require
+        :after (org)
         :init
         (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
         (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
@@ -538,6 +539,7 @@
     #+begin_src emacs-lisp
       (use-package ob-restclient
         :defer t
+        :after (org)
         :init
         (unless (--find (eq (car it) 'restclient) org-babel-load-languages)
           (org-babel-do-load-languages 'org-babel-load-languages

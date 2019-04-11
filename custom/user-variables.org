@@ -1,0 +1,13 @@
+#+TITLE: user-variables.org
+#+STARTUP: overview
+
+* フォント設定
+  #+begin_src emacs-lisp
+    (defvar e:font-name "Ricty Diminished Discord")
+    (defvar e:font-size 14)
+    (defvar e:font-rescale 1.00)
+  #+end_src
+* プロジェクト設定
+  #+begin_src emacs-lisp
+    (defvar e:project-root-mark '(".git/" ".hg/" ".svn/" ".git"))
+  #+end_src

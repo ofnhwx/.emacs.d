@@ -1,0 +1,32 @@
+#+TITLE: user-init.org
+#+STARTUP: overview
+
+* custom-file を移動
+  #+begin_src emacs-lisp
+    (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
+  #+end_src
+* フォント設定
+** 設定用の関数を定義
+   #+begin_src emacs-lisp
+     (defun e:advice:spacemacs/set-default-font:after (&rest args)
+       (set-fontset-font t 'unicode (font-spec :family e:font-name))
+       (set-variable 'face-font-rescale-alist (list e:font-name e:font-rescale))
+       (when (require 'eaw nil t)
+         (eaw-fullwidth)))
+   #+end_src
+** spacemacs のフォント設定の後に実行
+   #+begin_src emacs-lisp
+     (advice-add 'spacemacs/set-default-font :after 'e:advice:spacemacs/set-default-font:after)
+   #+end_src
+* 「Viperize?」の確認をしない
+  #+begin_src emacs-lisp
+    (set-variable 'viper-mode nil)
+  #+end_src
+* Spacemacs が作成する環境変数を保存しておくファイル
+  #+begin_src emacs-lisp
+    (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
+  #+end_src
+* which-key の設定
+  #+begin_src emacs-lisp
+    (set-variable 'which-key-enable-extended-define-key t)
+  #+end_src

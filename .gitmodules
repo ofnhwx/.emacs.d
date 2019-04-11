@@ -4,3 +4,6 @@
 [submodule "external/spacemacs"]
 	path = external/spacemacs
 	url = https://github.com/syl20bnr/spacemacs.git
+[submodule "external/literate-elisp"]
+	path = external/literate-elisp
+	url = https://github.com/jingtaozf/literate-elisp.git

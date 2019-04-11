@@ -80,8 +80,6 @@ This function should only modify configuration layer settings."
      vagrant
      ;; +web-services
      search-engine
-     ;; custom/layers
-     github-packages
      )
 
    ;; List of additional packages that will be installed without being
@@ -93,6 +91,8 @@ This function should only modify configuration layer settings."
    ;; Also include the dependencies as they will not be resolved automatically.
    dotspacemacs-additional-packages
    '(;; Utilities
+     (evil-plugins :location (recipe :fetcher github :repo "tarao/evil-plugins"))
+     (helm-fzf :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
      atomic-chrome
      company-box
      elisp-demos

@@ -326,6 +326,19 @@
         (bind-key "x" 'e:evil-em-command evil-visual-state-map)
         (bind-key "x" 'e:evil-em-command evil-operator-state-map))
     #+end_src
+*** evil-little-word
+    #+begin_src emacs-lisp
+      (use-package evil-little-word
+        :after (evil)
+        :catch
+        (lambda (keyword error)
+          (spacemacs-buffer/message "evil-little-word: %s" (error-message-string error))))
+    #+end_src
+*** evil-textobj-between
+    #+begin_src emacs-lisp
+      (use-package evil-textobj-between
+        :after (evil))
+    #+end_src
 ** eww
    #+begin_src emacs-lisp
      (use-package eww
@@ -386,21 +399,32 @@
        (set-variable 'google-translate-default-target-language "ja"))
    #+end_src
 ** helm
-   #+begin_src emacs-lisp
-     (use-package helm
-       :bind
-       (:map global-map
-             ([remap eval-expression] . helm-eval-expression))
-       :init
-       (set-variable 'helm-buffer-max-length nil))
-   #+end_src
-*** after: eldoc-eval
+*** helm
     #+begin_src emacs-lisp
       (use-package helm
-        :after (eldoc-eval)
         :bind
-        (:map eldoc-in-minibuffer-mode-map
-              ([remap eldoc-eval-expression] . helm-eval-expression)))
+        (:map global-map
+              ([remap eval-expression] . helm-eval-expression))
+        :init
+        (set-variable 'helm-buffer-max-length nil))
+    #+end_src
+**** after: eldoc-eval
+     #+begin_src emacs-lisp
+       (use-package helm
+         :after (eldoc-eval)
+         :bind
+         (:map eldoc-in-minibuffer-mode-map
+               ([remap eldoc-eval-expression] . helm-eval-expression)))
+     #+end_src
+*** helm-fzf
+    #+begin_src emacs-lisp
+      (use-package helm-fzf
+        :defer t
+        :init
+        (set-variable 'helm-fzf-args nil)
+        (spacemacs/set-leader-keys
+          "fz" 'helm-fzf
+          "pz" 'helm-fzf-project-root))
     #+end_src
 ** helpful
    #+begin_src emacs-lisp

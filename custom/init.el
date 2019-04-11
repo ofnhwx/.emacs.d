@@ -74,6 +74,7 @@ This function should only modify configuration layer settings."
      ;; +tools
      docker
      lsp
+     nginx
      prodigy
      ranger
      (shell :variables shell-default-shell 'eshell)

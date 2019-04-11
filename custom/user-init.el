@@ -7,8 +7,7 @@
  (defun e:advice:spacemacs/set-default-font:after (&rest args)
    (set-fontset-font t 'unicode (font-spec :family e:font-name))
    (set-variable 'face-font-rescale-alist (list e:font-name e:font-rescale))
-   (use-package eaw
-     :config
+   (when (require 'eaw nil t)
      (eaw-fullwidth)))
  (advice-add 'spacemacs/set-default-font :after 'e:advice:spacemacs/set-default-font:after))
 

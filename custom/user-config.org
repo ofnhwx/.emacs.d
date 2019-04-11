@@ -477,30 +477,6 @@
           (let ((inhibit-message t))
             (magit-todos-mode 1))))
     #+end_src
-** navi2ch
-   #+begin_src emacs-lisp
-     (use-package navi2ch
-       :load-path "external/navi2ch"
-       :commands (navi2ch)
-       :init
-       (setq navi2ch-net-http-proxy "127.0.0.1:9080")
-       :config
-       ;; 2chproxy.pl を起動
-       (when (require 'prodigy nil t)
-         (let ((cmd (expand-file-name "2chproxy.pl/2chproxy.pl" e:external-directory))
-               (yml (expand-file-name "2chproxy.yml" e:custom-directory)))
-           (when (and (executable-find cmd)
-                      (file-exists-p yml))
-             (prodigy-define-service
-               :name "2chproxy.pl"
-               :command (format "%s --config %s" cmd yml)
-               :tags '(general)
-               :kill-signal 'sigkill)))
-         (defun e:prodigy:2chproxy.pl ()
-           (interactive)
-           (e:prodigy-start-service "2chproxy.pl"))
-         (e:prodigy:2chproxy.pl)))
-   #+end_src
 ** notmuch
    #+begin_src emacs-lisp
      (use-package notmuch
@@ -751,12 +727,6 @@
        :bind
        (:map global-map
              ([remap query-replace] . vr/query-replace)))
-   #+end_src
-** vterm
-   #+begin_src emacs-lisp
-     (use-package vterm
-       :load-path "external/emacs-libvterm"
-       :commands (vterm))
    #+end_src
 * パッチ対応
   #+begin_src emacs-lisp

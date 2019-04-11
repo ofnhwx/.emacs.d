@@ -93,6 +93,7 @@ This function should only modify configuration layer settings."
    '(;; Utilities
      (evil-plugins :location (recipe :fetcher github :repo "tarao/evil-plugins"))
      (helm-fzf :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
+     (locale-eaw :location (recipe :fetcher github :repo "hamano/locale-eaw"))
      atomic-chrome
      company-box
      elisp-demos

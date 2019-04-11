@@ -235,52 +235,53 @@
        (set-variable 'eshell-history-size 100000))
    #+end_src
 ** evil
-   #+begin_src emacs-lisp
-     (use-package evil
-       :defer t
-       :init
-       (set-variable 'evil-cross-lines t)
-       (set-variable 'evil-move-cursor-back nil)
-       :config
-       ;; キーバインド
-       (setq evil-disable-insert-state-bindings t)
-       (bind-keys
-        ;; モーションモード(motion -> normal -> visual)
-        :map evil-motion-state-map
-        ("C-^" . nil) ;; evil-buffer
-        ;; 通常モード
-        :map evil-normal-state-map
-        ("<down>" . evil-next-visual-line)
-        ("<up>" . evil-previous-visual-line)
-        ("j" . evil-next-visual-line)
-        ("k" . evil-previous-visual-line)
-        ("gj" . evil-avy-goto-line-below)
-        ("gk" . evil-avy-goto-line-above)
-        ("s" . evil-avy-goto-char-timer)
-        ;; ビジュアルモード
-        :map evil-visual-state-map
-        ;; 挿入モード
-        :map evil-insert-state-map
-        ;; オペレーターモード
-        :map evil-operator-state-map
-        ;; 置き換えモード
-        :map evil-replace-state-map
-        ;; Emacsモード
-        :map evil-emacs-state-map)
-       ;; normal-state に戻す設定を追加
-       (defun e:evil-force-normal-state ()
-         (cond
-          ((eq evil-state 'visual)
-           (evil-exit-visual-state))
-          ((member evil-state '(insert hybrid))
-           (evil-force-normal-state))))
-       (defun e:advice:save-buffer:after (&rest args)
-         (e:evil-force-normal-state))
-       (defun e:advice:keyboard-quit:before (&rest args)
-         (e:evil-force-normal-state))
-       (advice-add 'save-buffer :after 'e:advice:save-buffer:after)
-       (advice-add 'keyboard-quit :before 'e:advice:keyboard-quit:before))
-   #+end_src
+*** evil
+    #+begin_src emacs-lisp
+      (use-package evil
+        :defer t
+        :init
+        (set-variable 'evil-cross-lines t)
+        (set-variable 'evil-move-cursor-back nil)
+        :config
+        ;; キーバインド
+        (setq evil-disable-insert-state-bindings t)
+        (bind-keys
+         ;; モーションモード(motion -> normal -> visual)
+         :map evil-motion-state-map
+         ("C-^" . nil) ;; evil-buffer
+         ;; 通常モード
+         :map evil-normal-state-map
+         ("<down>" . evil-next-visual-line)
+         ("<up>" . evil-previous-visual-line)
+         ("j" . evil-next-visual-line)
+         ("k" . evil-previous-visual-line)
+         ("gj" . evil-avy-goto-line-below)
+         ("gk" . evil-avy-goto-line-above)
+         ("s" . evil-avy-goto-char-timer)
+         ;; ビジュアルモード
+         :map evil-visual-state-map
+         ;; 挿入モード
+         :map evil-insert-state-map
+         ;; オペレーターモード
+         :map evil-operator-state-map
+         ;; 置き換えモード
+         :map evil-replace-state-map
+         ;; Emacsモード
+         :map evil-emacs-state-map)
+        ;; normal-state に戻す設定を追加
+        (defun e:evil-force-normal-state ()
+          (cond
+           ((eq evil-state 'visual)
+            (evil-exit-visual-state))
+           ((member evil-state '(insert hybrid))
+            (evil-force-normal-state))))
+        (defun e:advice:save-buffer:after (&rest args)
+          (e:evil-force-normal-state))
+        (defun e:advice:keyboard-quit:before (&rest args)
+          (e:evil-force-normal-state))
+        (advice-add 'save-buffer :after 'e:advice:save-buffer:after)
+        (advice-add 'keyboard-quit :before 'e:advice:keyboard-quit:before))
+    #+end_src
 *** evil-easymotion
     #+begin_src emacs-lisp
       (use-package evil-easymotion
@@ -418,20 +419,21 @@
          "hddv" 'helpful-variable))
    #+end_src
 ** magit
-   #+begin_src emacs-lisp
-     (use-package magit
-       :defer t
-       :init
-       (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
-       (set-variable 'magit-diff-refine-hunk 'all)
-       (set-variable 'smerge-refine-ignore-whitespace nil)
-       :config
-       (when (executable-find "ghq")
-         (let ((dirs (s-split "\n" (s-trim (shell-command-to-string "ghq list --full-path")))))
-           (set-variable 'magit-repository-directories
-                         (--map (cons it 0) dirs))))
-       (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
-   #+end_src
+*** magit
+    #+begin_src emacs-lisp
+      (use-package magit
+        :defer t
+        :init
+        (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
+        (set-variable 'magit-diff-refine-hunk 'all)
+        (set-variable 'smerge-refine-ignore-whitespace nil)
+        :config
+        (when (executable-find "ghq")
+          (let ((dirs (s-split "\n" (s-trim (shell-command-to-string "ghq list --full-path")))))
+            (set-variable 'magit-repository-directories
+                          (--map (cons it 0) dirs))))
+        (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
+    #+end_src
 *** magit-todos
     #+begin_src emacs-lisp
       (use-package magit-todos
@@ -519,18 +521,19 @@
          ))
    #+end_src
 ** org
-   #+begin_src emacs-lisp
-     (use-package org
-       :defer t
-       :init
-       (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
-       (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
-       (set-variable 'org-agenda-files (directory-files-recursively org-directory org-agenda-file-regexp))
-       (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3)))
-       (set-variable 'org-todo-keywords
-                     '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-                       (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c@)"))))
-   #+end_src
+*** org
+    #+begin_src emacs-lisp
+      (use-package org
+        :defer t
+        :init
+        (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
+        (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
+        (set-variable 'org-agenda-files (directory-files-recursively org-directory org-agenda-file-regexp))
+        (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3)))
+        (set-variable 'org-todo-keywords
+                      '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
+                        (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c@)"))))
+    #+end_src
 *** ob-restclient
     #+begin_src emacs-lisp
       (use-package ob-restclient
@@ -669,12 +672,13 @@
        (add-hook 'skk-mode-hook #'skk-latin-mode-on))
    #+end_src
 ** tramp
-   #+begin_src emacs-lisp
-     (use-package tramp
-       :defer t
-       :init
-       (set-variable 'tramp-default-host "localhost"))
-   #+end_src
+*** tramp
+    #+begin_src emacs-lisp
+      (use-package tramp
+        :defer t
+        :init
+        (set-variable 'tramp-default-host "localhost"))
+    #+end_src
 *** tramp-sh
     #+begin_src emacs-lisp
       (use-package tramp-sh

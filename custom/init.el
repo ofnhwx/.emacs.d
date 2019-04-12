@@ -105,6 +105,7 @@ This function should only modify configuration layer settings."
      magit-todos
      ob-restclient
      persistent-scratch
+     poly-org
      visual-regexp
      vlf
      )

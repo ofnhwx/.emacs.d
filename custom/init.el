@@ -97,6 +97,7 @@ This function should only modify configuration layer settings."
      (locale-eaw :location (recipe :fetcher github :repo "hamano/locale-eaw"))
      atomic-chrome
      company-box
+     company-tabnine
      elisp-demos
      evil-easymotion
      fish-mode

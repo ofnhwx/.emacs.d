@@ -5,723 +5,724 @@
 ** 日本語環境
 *** 言語環境
     #+begin_src emacs-lisp
-      (set-language-environment "Japanese")
+    (set-language-environment "Japanese")
     #+end_src
 *** エンコーディング
     #+begin_src emacs-lisp
-      (let ((coding-system 'utf-8))
-        (prefer-coding-system          coding-system)
-        (set-default-coding-systems    coding-system)
-        (set-buffer-file-coding-system coding-system)
-        (set-terminal-coding-system    coding-system)
-        (set-keyboard-coding-system    coding-system))
+    (let ((coding-system 'utf-8))
+      (prefer-coding-system          coding-system)
+      (set-default-coding-systems    coding-system)
+      (set-buffer-file-coding-system coding-system)
+      (set-terminal-coding-system    coding-system)
+      (set-keyboard-coding-system    coding-system))
     #+end_src
 ** 情報表示
 *** ヘッダーライン
 **** ファイル用の設定
      #+begin_src emacs-lisp
-       (defun e:header-line-for-files-format ()
-         "ファイル用のヘッダーラインのフォーマット"
-         (let* ((buffer (current-buffer))
-                (path   (abbreviate-file-name (buffer-file-name buffer)))
-                (file   (buffer-name buffer))
-                (dir    (file-name-directory path))
-                (limit  (- (window-width) (length file)))
-                (project-root (e:project-root (file-name-directory path)))
-                (project-name (and project-root (format "[%s]" (e:project-name project-root)))))
-           ;; プロジェクト内のファイルの場合はプロジェクト名を省略
-           (when project-root
-             (setq dir   (replace-regexp-in-string (regexp-quote project-root) "" dir))
-             (setq limit (- limit (length project-name))))
-           ;; ディレクトリ部分を頑張って短くする
-           (setq dir (e:shorten dir limit))
-           (let ((index (s-index-of "..." dir)))
-             (when index
-               (set-text-properties index (+ index 3) '(face font-lock-comment-face) dir)))
-           ;; 属性を設定しつつ結合する
-           (concat
-            (propertize " " 'display '(space :align-to 0))
-            (propertize (or project-name "") 'face 'font-lock-keyword-face)
-            dir
-            (propertize file 'face 'font-lock-constant-face))))
-       (defun e:setup-headerline-for-files ()
-         "ファイル用のヘッダーラインの設定"
-         (setq-local spaceline-buffer-id-p nil)
-         (set-face-attribute 'header-line nil
-                             :inherit 'mode-line
-                             :background (face-attribute 'mode-line :background))
-         (setq-local header-line-format
-                     '((:eval (e:header-line-for-files-format)))))
+     (defun e:header-line-for-files-format ()
+       "ファイル用のヘッダーラインのフォーマット"
+       (let* ((buffer (current-buffer))
+              (path   (abbreviate-file-name (buffer-file-name buffer)))
+              (file   (buffer-name buffer))
+              (dir    (file-name-directory path))
+              (limit  (- (window-width) (length file)))
+              (project-root (e:project-root (file-name-directory path)))
+              (project-name (and project-root (format "[%s]" (e:project-name project-root)))))
+         ;; プロジェクト内のファイルの場合はプロジェクト名を省略
+         (when project-root
+           (setq dir   (replace-regexp-in-string (regexp-quote project-root) "" dir))
+           (setq limit (- limit (length project-name))))
+         ;; ディレクトリ部分を頑張って短くする
+         (setq dir (e:shorten dir limit))
+         (let ((index (s-index-of "..." dir)))
+           (when index
+             (set-text-properties index (+ index 3) '(face font-lock-comment-face) dir)))
+         ;; 属性を設定しつつ結合する
+         (concat
+          (propertize " " 'display '(space :align-to 0))
+          (propertize (or project-name "") 'face 'font-lock-keyword-face)
+          dir
+          (propertize file 'face 'font-lock-constant-face))))
+     (defun e:setup-headerline-for-files ()
+       "ファイル用のヘッダーラインの設定"
+       (setq-local spaceline-buffer-id-p nil)
+       (set-face-attribute 'header-line nil
+                           :inherit 'mode-line
+                           :background (face-attribute 'mode-line :background))
+       (setq-local header-line-format
+                   '((:eval (e:header-line-for-files-format)))))
      #+end_src
 **** 一定時間毎に実行
      #+begin_src emacs-lisp
-       (defun e:setup-headerline ()
-         "ヘッダーラインをなるべくいい感じに設定する"
-         (cl-dolist (window (window-list))
-           (with-current-buffer (window-buffer window)
-             (unless header-line-format
-               (cond
-                (buffer-file-name (e:setup-headerline-for-files)))))))
-       (run-with-idle-timer 0.5 0.5 'e:setup-headerline)
+     (defun e:setup-headerline ()
+       "ヘッダーラインをなるべくいい感じに設定する"
+       (cl-dolist (window (window-list))
+         (with-current-buffer (window-buffer window)
+           (unless header-line-format
+             (cond
+              (buffer-file-name (e:setup-headerline-for-files)))))))
+     (run-with-idle-timer 0.5 0.5 'e:setup-headerline)
      #+end_src
 *** モードライン
 **** 現在のファイルの文字/改行コードを分かりやすく表示
      #+begin_src emacs-lisp
-       (spaceline-define-segment buffer-encoding-abbrev
-         "The line ending convention used in the buffer."
-         (let ((buf-coding (format "%s" buffer-file-coding-system)))
-           (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
-                 (concat (and (string-match "with-signature" buf-coding) "ⓑ")
-                         (and (string-match "unix"           buf-coding) "ⓤ")
-                         (and (string-match "dos"            buf-coding) "ⓓ")
-                         (and (string-match "mac"            buf-coding) "ⓜ")
-                         )))
-         :separator " ")
+     (spaceline-define-segment buffer-encoding-abbrev
+       "The line ending convention used in the buffer."
+       (let ((buf-coding (format "%s" buffer-file-coding-system)))
+         (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
+               (concat (and (string-match "with-signature" buf-coding) "ⓑ")
+                       (and (string-match "unix"           buf-coding) "ⓤ")
+                       (and (string-match "dos"            buf-coding) "ⓓ")
+                       (and (string-match "mac"            buf-coding) "ⓜ")
+                       )))
+       :separator " ")
      #+end_src
 **** 不要なモードを非表示
      #+begin_src emacs-lisp
-       (spacemacs|diminish company-mode)
-       (spacemacs|diminish company-box-mode)
-       (spacemacs|diminish emoji-cheat-sheet-plus-display-mode)
-       (spacemacs|diminish hybrid-mode)
-       (spacemacs|diminish smartparens-mode)
-       (spacemacs|diminish which-key-mode)
-       (spacemacs|diminish yas-minor-mode)
+     (spacemacs|diminish company-mode)
+     (spacemacs|diminish company-box-mode)
+     (spacemacs|diminish emoji-cheat-sheet-plus-display-mode)
+     (spacemacs|diminish hybrid-mode)
+     (spacemacs|diminish smartparens-mode)
+     (spacemacs|diminish which-key-mode)
+     (spacemacs|diminish yas-minor-mode)
      #+end_src
 ** パスの追加
    #+begin_src emacs-lisp
-     (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
+   (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
    #+end_src
 ** 雑多なやつ
 *** shell の設定
     #+begin_src emacs-lisp
-      (set-variable 'shell-file-name
-                    (or (executable-find "zsh")
-                        (executable-find "bash")
-                        (executable-find "sh")))
+    (set-variable 'shell-file-name
+                  (or (executable-find "zsh")
+                      (executable-find "bash")
+                      (executable-find "sh")))
     #+end_src
 *** パスワード関連
     #+begin_src emacs-lisp
-      (set-variable 'password-cache-expiry 3600)
-      (set-variable 'plstore-encoded t)
+    (set-variable 'password-cache-expiry 3600)
+    (set-variable 'plstore-encoded t)
     #+end_src
 *** 折り返さない
     #+begin_src emacs-lisp
-      (setq-default truncate-lines t)
-      (set-variable 'truncate-partial-width-windows nil)
+    (setq-default truncate-lines t)
+    (set-variable 'truncate-partial-width-windows nil)
     #+end_src
 *** 最終行の改行は EditorConfig で管理する
     #+begin_src emacs-lisp
-      (set-variable 'mode-require-final-newline nil)
-      (set-variable 'require-final-newline nil)
+    (set-variable 'mode-require-final-newline nil)
+    (set-variable 'require-final-newline nil)
     #+end_src
 *** ロックファイルを作成しない
     #+begin_src emacs-lisp
-      (set-variable 'create-lockfiles nil)
+    (set-variable 'create-lockfiles nil)
     #+end_src
 *** 右から左に読む言語に対応しない
     #+begin_src emacs-lisp
-      (setq-default bidi-display-reordering nil)
+    (setq-default bidi-display-reordering nil)
     #+end_src
 *** 特定のバッファを消させない
     #+begin_src emacs-lisp
-      (dolist (buffer '("*scratch*" "*Messages*"))
-        (with-current-buffer buffer
-          (emacs-lock-mode 'kill)))
+    (dolist (buffer '("*scratch*" "*Messages*"))
+      (with-current-buffer buffer
+        (emacs-lock-mode 'kill)))
     #+end_src
 ** 個別設定
 *** Mac
 **** タイトルバー
      #+begin_src emacs-lisp
-       (let ((items '((ns-transparent-titlebar . t)
-                      (ns-appearance . dark))))
-         (dolist (item items)
-           (assq-delete-all (car item) initial-frame-alist)
-           (assq-delete-all (car item) default-frame-alist)
-           (add-to-list 'initial-frame-alist item)
-           (add-to-list 'default-frame-alist item)))
+     (let ((items '((ns-transparent-titlebar . t)
+                    (ns-appearance . dark))))
+       (dolist (item items)
+         (assq-delete-all (car item) initial-frame-alist)
+         (assq-delete-all (car item) default-frame-alist)
+         (add-to-list 'initial-frame-alist item)
+         (add-to-list 'default-frame-alist item)))
      #+end_src
 **** キーボード入力(option, command関連)
      #+begin_src emacs-lisp
-       (when (e:system-type-darwin-p)
-         (set-variable 'ns-command-modifier 'meta)
-         (set-variable 'ns-right-command-modifier 'super)
-         (set-variable 'ns-alternate-modifier 'none))
+     (when (e:system-type-darwin-p)
+       (set-variable 'ns-command-modifier 'meta)
+       (set-variable 'ns-right-command-modifier 'super)
+       (set-variable 'ns-alternate-modifier 'none))
      #+end_src
 *** ローカル
     #+begin_src emacs-lisp
-      (let ((private-config (expand-file-name "config.el" e:private-directory)))
-        (when (file-exists-p private-config)
-          (load-file private-config)))
+    (let ((private-config (expand-file-name "config.el" e:private-directory)))
+      (when (file-exists-p private-config)
+        (load-file private-config)))
     #+end_src
 * パッケージ毎の設定
 ** ace-window
    #+begin_src emacs-lisp
-     (use-package ace-window
-       :bind
-       (:map global-map
-             ("C-^" . ace-window))
-       :init
-       (set-variable 'aw-keys (number-sequence ?1 ?9)))
+   (use-package ace-window
+     :bind
+     (:map global-map
+           ("C-^" . ace-window))
+     :init
+     (set-variable 'aw-keys (number-sequence ?1 ?9)))
    #+end_src
 ** atomic-chrome
    #+begin_src emacs-lisp
-     (use-package atomic-chrome
-       :config
-       (atomic-chrome-start-server))
+   (use-package atomic-chrome
+     :config
+     (atomic-chrome-start-server))
    #+end_src
 ** auth-source
    #+begin_src emacs-lisp
-     (use-package auth-source
-       :defer t
-       :init
-       (set-variable 'auth-sources (list (expand-file-name "authinfo.plist" e:private-directory))))
+   (use-package auth-source
+     :defer t
+     :init
+     (set-variable 'auth-sources (list (expand-file-name "authinfo.plist" e:private-directory))))
    #+end_src
 ** avy
    #+begin_src emacs-lisp
-     (use-package avy
-       :defer t
-       :init
-       (set-variable 'avy-keys (number-sequence ?a ?z))
-       (set-variable 'avy-all-windows t))
+   (use-package avy
+     :defer t
+     :init
+     (set-variable 'avy-keys (number-sequence ?a ?z))
+     (set-variable 'avy-all-windows t))
    #+end_src
 ** company-box
    #+begin_src emacs-lisp
-     (use-package company-box
-       :hook (company-mode . company-box-mode)
-       :init
-       (set-variable 'company-box-enable-icon nil))
+   (use-package company-box
+     :hook (company-mode . company-box-mode)
+     :init
+     (set-variable 'company-box-enable-icon nil))
    #+end_src
 ** display-line-numbers
    #+begin_src emacs-lisp
-     (use-package display-line-numbers
-       :hook ((find-file . e:display-line-numbers-mode-on)
-              (prog-mode . e:display-line-numbers-mode-on)
-              (html-mode . e:display-line-numbers-mode-on))
-       :init
-       (setq-default display-line-numbers-width 4)
-       :config
-       (defun e:display-line-numbers-mode-on ()
-         "`display-line-numbers-mode'を有効化."
-         (interactive)
-         (display-line-numbers-mode 1))
-       (defun e:display-line-numbers-mode-off ()
-         "`display-line-numbers-mode'を無効化."
-         (interactive)
-         (display-line-numbers-mode 0)))
+   (use-package display-line-numbers
+     :hook ((find-file . e:display-line-numbers-mode-on)
+            (prog-mode . e:display-line-numbers-mode-on)
+            (html-mode . e:display-line-numbers-mode-on))
+     :init
+     (setq-default display-line-numbers-width 4)
+     :config
+     (defun e:display-line-numbers-mode-on ()
+       "`display-line-numbers-mode'を有効化."
+       (interactive)
+       (display-line-numbers-mode 1))
+     (defun e:display-line-numbers-mode-off ()
+       "`display-line-numbers-mode'を無効化."
+       (interactive)
+       (display-line-numbers-mode 0)))
    #+end_src
 ** elisp-demos
    #+begin_src emacs-lisp
-     (use-package elisp-demos
-       :defer t
-       :init
-       (advice-add 'describe-function-1 :after 'elisp-demos-advice-describe-function-1)
-       (advice-add 'helpful-update :after 'elisp-demos-advice-helpful-update))
+   (use-package elisp-demos
+     :defer t
+     :init
+     (advice-add 'describe-function-1 :after 'elisp-demos-advice-describe-function-1)
+     (advice-add 'helpful-update :after 'elisp-demos-advice-helpful-update))
    #+end_src
 ** emmet-mode
    #+begin_src emacs-lisp
-     (use-package emmet-mode
-       :bind
-       (:map emmet-mode-keymap
-             ("<C-return>" . nil)
-             ("C-c C-j" . emmet-expand-line)
-             ("C-j" . nil)))
+   (use-package emmet-mode
+     :bind
+     (:map emmet-mode-keymap
+           ("<C-return>" . nil)
+           ("C-c C-j" . emmet-expand-line)
+           ("C-j" . nil)))
    #+end_src
 ** eshell
    #+begin_src emacs-lisp
-     (use-package eshell
-       :defer t
-       :init
-       (set-variable 'eshell-history-size 100000))
+   (use-package eshell
+     :defer t
+     :init
+     (set-variable 'eshell-history-size 100000))
    #+end_src
 ** evil
 *** evil
     #+begin_src emacs-lisp
-      (use-package evil
-        :defer t
-        :init
-        (set-variable 'evil-cross-lines t)
-        (set-variable 'evil-move-cursor-back nil)
-        :config
-        ;; キーバインド
-        (setq evil-disable-insert-state-bindings t)
-        (bind-keys
-         ;; モーションモード(motion -> normal -> visual)
-         :map evil-motion-state-map
-         ("C-^" . nil) ;; evil-buffer
-         ;; 通常モード
-         :map evil-normal-state-map
-         ("<down>" . evil-next-visual-line)
-         ("<up>" . evil-previous-visual-line)
-         ("j" . evil-next-visual-line)
-         ("k" . evil-previous-visual-line)
-         ("gj" . evil-avy-goto-line-below)
-         ("gk" . evil-avy-goto-line-above)
-         ("s" . evil-avy-goto-char-timer)
-         ;; ビジュアルモード
-         :map evil-visual-state-map
-         ;; 挿入モード
-         :map evil-insert-state-map
-         ;; オペレーターモード
-         :map evil-operator-state-map
-         ;; 置き換えモード
-         :map evil-replace-state-map
-         ;; Emacsモード
-         :map evil-emacs-state-map)
-        ;; normal-state に戻す設定を追加
-        (defun e:evil-force-normal-state ()
-          (cond
-           ((eq evil-state 'visual)
-            (evil-exit-visual-state))
-           ((member evil-state '(insert hybrid))
-            (evil-force-normal-state))))
-        (defun e:advice:save-buffer:after (&rest args)
-          (e:evil-force-normal-state))
-        (defun e:advice:keyboard-quit:before (&rest args)
-          (e:evil-force-normal-state))
-        (advice-add 'save-buffer :after 'e:advice:save-buffer:after)
-        (advice-add 'keyboard-quit :before 'e:advice:keyboard-quit:before))
+    (use-package evil
+      :defer t
+      :init
+      (set-variable 'evil-cross-lines t)
+      (set-variable 'evil-move-cursor-back nil)
+      :config
+      ;; キーバインド
+      (setq evil-disable-insert-state-bindings t)
+      (bind-keys
+       ;; モーションモード(motion -> normal -> visual)
+       :map evil-motion-state-map
+       ("C-^" . nil) ;; evil-buffer
+       ;; 通常モード
+       :map evil-normal-state-map
+       ("<down>" . evil-next-visual-line)
+       ("<up>" . evil-previous-visual-line)
+       ("j" . evil-next-visual-line)
+       ("k" . evil-previous-visual-line)
+       ("gj" . evil-avy-goto-line-below)
+       ("gk" . evil-avy-goto-line-above)
+       ("s" . evil-avy-goto-char-timer)
+       ;; ビジュアルモード
+       :map evil-visual-state-map
+       ;; 挿入モード
+       :map evil-insert-state-map
+       ;; オペレーターモード
+       :map evil-operator-state-map
+       ;; 置き換えモード
+       :map evil-replace-state-map
+       ;; Emacsモード
+       :map evil-emacs-state-map)
+      ;; normal-state に戻す設定を追加
+      (defun e:evil-force-normal-state ()
+        (cond
+         ((eq evil-state 'visual)
+          (evil-exit-visual-state))
+         ((member evil-state '(insert hybrid))
+          (evil-force-normal-state))))
+      (defun e:advice:save-buffer:after (&rest args)
+        (e:evil-force-normal-state))
+      (defun e:advice:keyboard-quit:before (&rest args)
+        (e:evil-force-normal-state))
+      (advice-add 'save-buffer :after 'e:advice:save-buffer:after)
+      (advice-add 'keyboard-quit :before 'e:advice:keyboard-quit:before))
     #+end_src
 *** evil-easymotion
     #+begin_src emacs-lisp
-      (use-package evil-easymotion
-        :defer t
-        :after (evil)
-        :init
-        (define-prefix-command 'e:evil-em-command)
-        (bind-keys
-         :map e:evil-em-command
-         ("w"  . ("forward-word-begin" . evilem-motion-forward-word-begin))
-         ("W"  . ("forward-WORD-begin" . evilem-motion-forward-WORD-begin))
-         ("e"  . ("forward-word-end" . evilem-motion-forward-word-end))
-         ("E"  . ("forward-WORD-end" . evilem-motion-forward-WORD-end))
-         ("b"  . ("backward-word-begin" . evilem-motion-backward-word-begin))
-         ("B"  . ("backward-WORD-begin" . evilem-motion-backward-WORD-begin))
-         ("j"  . ("next-visual-line" . evilem-motion-next-visual-line))
-         ("k"  . ("previous-visual-line" . evilem-motion-previous-visual-line))
-         ("g"  . ("backward-word/WORD-end, next/previous-line"))
-         ("ge" . ("backward-word-end" . evilem-motion-backward-word-end))
-         ("gE" . ("backward-WORD-end" . evilem-motion-backward-WORD-end))
-         ("gj" . ("next-line" . evilem-motion-next-line))
-         ("gk" . ("previous-line" . evilem-motion-previous-line))
-         ("t"  . ("find-char-to" . evilem-motion-find-char-to))
-         ("T"  . ("find-char-to-backward" . evilem-motion-find-char-to-backward))
-         ("f"  . ("find-char" . evilem-motion-find-char))
-         ("F"  . ("find-char-backward" . evilem-motion-find-char-backward))
-         ("["  . ("backward-section"))
-         ("[[" . ("backward-section-begin" . evilem-motion-backward-section-begin))
-         ("[]" . ("backward-section-end" . evilem-motion-backward-section-end))
-         ("]"  . ("forward-section"))
-         ("]]" . ("forward-section-begin" . evilem-motion-forward-section-begin))
-         ("][" . ("forward-section-end" . evilem-motion-forward-section-end))
-         ("("  . ("backward-section-begin" . evilem-motion-backward-sentence-begin))
-         (")"  . ("forward-section-begin" . evilem-motion-forward-sentence-begin))
-         ("n"  . ("search-next" . evilem-motion-search-next))
-         ("N"  . ("search-previous" . evilem-motion-search-previous))
-         ("*"  . ("search-word-forward" . evilem-motion-search-word-forward))
-         ("#"  . ("search-word-backward" . evilem-motion-search-word-backward))
-         ("-"  . ("previous-line-first-non-blank" . evilem-motion-previous-line-first-non-blank))
-         ("+"  . ("next-line-first-non-blank" . evilem-motion-next-line-first-non-blank)))
-        (bind-key "S" 'e:evil-em-command evil-normal-state-map)
-        (bind-key "x" 'e:evil-em-command evil-visual-state-map)
-        (bind-key "x" 'e:evil-em-command evil-operator-state-map))
+    (use-package evil-easymotion
+      :defer t
+      :after (evil)
+      :init
+      (define-prefix-command 'e:evil-em-command)
+      (bind-keys
+       :map e:evil-em-command
+       ("w"  . ("forward-word-begin" . evilem-motion-forward-word-begin))
+       ("W"  . ("forward-WORD-begin" . evilem-motion-forward-WORD-begin))
+       ("e"  . ("forward-word-end" . evilem-motion-forward-word-end))
+       ("E"  . ("forward-WORD-end" . evilem-motion-forward-WORD-end))
+       ("b"  . ("backward-word-begin" . evilem-motion-backward-word-begin))
+       ("B"  . ("backward-WORD-begin" . evilem-motion-backward-WORD-begin))
+       ("j"  . ("next-visual-line" . evilem-motion-next-visual-line))
+       ("k"  . ("previous-visual-line" . evilem-motion-previous-visual-line))
+       ("g"  . ("backward-word/WORD-end, next/previous-line"))
+       ("ge" . ("backward-word-end" . evilem-motion-backward-word-end))
+       ("gE" . ("backward-WORD-end" . evilem-motion-backward-WORD-end))
+       ("gj" . ("next-line" . evilem-motion-next-line))
+       ("gk" . ("previous-line" . evilem-motion-previous-line))
+       ("t"  . ("find-char-to" . evilem-motion-find-char-to))
+       ("T"  . ("find-char-to-backward" . evilem-motion-find-char-to-backward))
+       ("f"  . ("find-char" . evilem-motion-find-char))
+       ("F"  . ("find-char-backward" . evilem-motion-find-char-backward))
+       ("["  . ("backward-section"))
+       ("[[" . ("backward-section-begin" . evilem-motion-backward-section-begin))
+       ("[]" . ("backward-section-end" . evilem-motion-backward-section-end))
+       ("]"  . ("forward-section"))
+       ("]]" . ("forward-section-begin" . evilem-motion-forward-section-begin))
+       ("][" . ("forward-section-end" . evilem-motion-forward-section-end))
+       ("("  . ("backward-section-begin" . evilem-motion-backward-sentence-begin))
+       (")"  . ("forward-section-begin" . evilem-motion-forward-sentence-begin))
+       ("n"  . ("search-next" . evilem-motion-search-next))
+       ("N"  . ("search-previous" . evilem-motion-search-previous))
+       ("*"  . ("search-word-forward" . evilem-motion-search-word-forward))
+       ("#"  . ("search-word-backward" . evilem-motion-search-word-backward))
+       ("-"  . ("previous-line-first-non-blank" . evilem-motion-previous-line-first-non-blank))
+       ("+"  . ("next-line-first-non-blank" . evilem-motion-next-line-first-non-blank)))
+      (bind-key "S" 'e:evil-em-command evil-normal-state-map)
+      (bind-key "x" 'e:evil-em-command evil-visual-state-map)
+      (bind-key "x" 'e:evil-em-command evil-operator-state-map))
     #+end_src
 *** evil-little-word
     #+begin_src emacs-lisp
-      (use-package evil-little-word
-        :after (evil)
-        :catch
-        (lambda (keyword error)
-          (spacemacs-buffer/message "evil-little-word: %s" (error-message-string error))))
+    (use-package evil-little-word
+      :after (evil)
+      :catch
+      (lambda (keyword error)
+        (spacemacs-buffer/message "evil-little-word: %s" (error-message-string error))))
     #+end_src
 *** evil-textobj-between
     #+begin_src emacs-lisp
-      (use-package evil-textobj-between
-        :after (evil))
+    (use-package evil-textobj-between
+      :after (evil))
     #+end_src
 ** eww
    #+begin_src emacs-lisp
-     (use-package eww
-       :no-require
-       :after (:any eww shr)
-       :config
-       ;; 色の有効/無効を切替え
-       (defvar e:eww-enable-colorize nil)
-       (defun e:advice:eww-colorize-region:around (&rest args)
-         (when e:eww-enable-colorize
-           (apply (car args) (cdr args))))
-       (defun e:eww-colorize-on ()
-         (interactive)
-         (setq-local e:eww-enable-colorize t)
-         (eww-reload))
-       (defun e:eww-colorize-off ()
-         (interactive)
-         (setq-local e:eww-enable-colorize nil)
-         (eww-reload))
-       (advice-add 'eww-colorize-region :around 'e:advice:eww-colorize-region:around)
-       (advice-add 'shr-colorize-region :around 'e:advice:eww-colorize-region:around))
+   (use-package eww
+     :no-require
+     :after (:any eww shr)
+     :config
+     ;; 色の有効/無効を切替え
+     (defvar e:eww-enable-colorize nil)
+     (defun e:advice:eww-colorize-region:around (&rest args)
+       (when e:eww-enable-colorize
+         (apply (car args) (cdr args))))
+     (defun e:eww-colorize-on ()
+       (interactive)
+       (setq-local e:eww-enable-colorize t)
+       (eww-reload))
+     (defun e:eww-colorize-off ()
+       (interactive)
+       (setq-local e:eww-enable-colorize nil)
+       (eww-reload))
+     (advice-add 'eww-colorize-region :around 'e:advice:eww-colorize-region:around)
+     (advice-add 'shr-colorize-region :around 'e:advice:eww-colorize-region:around))
    #+end_src
 ** flycheck
    #+begin_src emacs-lisp
-     (use-package flycheck
-       :defer t
-       :init
-       (set-variable 'flycheck-idle-buffer-switch-delay 3.0)
-       (set-variable 'flycheck-idle-change-delay 3.0))
+   (use-package flycheck
+     :defer t
+     :init
+     (set-variable 'flycheck-idle-buffer-switch-delay 3.0)
+     (set-variable 'flycheck-idle-change-delay 3.0))
    #+end_src
 ** git-gutter
 *** git-gutter
     #+begin_src emacs-lisp
-      (use-package git-gutter
-        :defer t
-        :config
-        (dolist (face '(git-gutter:added
-                        git-gutter:deleted
-                        git-gutter:modified))
-          (set-face-attribute face nil :background (face-attribute face :foreground))))
+    (use-package git-gutter
+      :defer t
+      :config
+      (dolist (face '(git-gutter:added
+                      git-gutter:deleted
+                      git-gutter:modified))
+        (set-face-attribute face nil :background (face-attribute face :foreground))))
     #+end_src
 *** git-gutter+
     #+begin_src emacs-lisp
-      (use-package git-gutter+
-        :defer t
-        :config
-        (dolist (face '(git-gutter+-added
-                        git-gutter+-deleted
-                        git-gutter+-modified))
-          (set-face-attribute face nil :background (face-attribute face :foreground))))
+    (use-package git-gutter+
+      :defer t
+      :config
+      (dolist (face '(git-gutter+-added
+                      git-gutter+-deleted
+                      git-gutter+-modified))
+        (set-face-attribute face nil :background (face-attribute face :foreground))))
     #+end_src
 ** google-translate
    #+begin_src emacs-lisp
-     (use-package google-translate
-       :defer t
-       :init
-       (set-variable 'google-translate-default-source-language nil)
-       (set-variable 'google-translate-default-target-language "ja"))
+   (use-package google-translate
+     :defer t
+     :init
+     (set-variable 'google-translate-default-source-language nil)
+     (set-variable 'google-translate-default-target-language "ja"))
    #+end_src
 ** helm
 *** helm
     #+begin_src emacs-lisp
-      (use-package helm
-        :bind
-        (:map global-map
-              ([remap eval-expression] . helm-eval-expression))
-        :init
-        (set-variable 'helm-buffer-max-length nil))
+    (use-package helm
+      :bind
+      (:map global-map
+            ([remap eval-expression] . helm-eval-expression))
+      :init
+      (set-variable 'helm-buffer-max-length nil))
     #+end_src
 **** after: eldoc-eval
      #+begin_src emacs-lisp
-       (use-package helm
-         :after (eldoc-eval)
-         :bind
-         (:map eldoc-in-minibuffer-mode-map
-               ([remap eldoc-eval-expression] . helm-eval-expression)))
+     (use-package helm
+       :after (eldoc-eval)
+       :bind
+       (:map eldoc-in-minibuffer-mode-map
+             ([remap eldoc-eval-expression] . helm-eval-expression)))
      #+end_src
 *** helm-fzf
     #+begin_src emacs-lisp
-      (use-package helm-fzf
-        :defer t
-        :init
-        (set-variable 'helm-fzf-args nil)
-        (spacemacs/set-leader-keys
-          "fz" 'helm-fzf
-          "pz" 'helm-fzf-project-root))
+    (use-package helm-fzf
+      :defer t
+      :init
+      (set-variable 'helm-fzf-args nil)
+      (spacemacs/set-leader-keys
+        "fz" 'helm-fzf
+        "pz" 'helm-fzf-project-root))
     #+end_src
 ** helpful
    #+begin_src emacs-lisp
-     (use-package helpful
-       :defer t
-       :init
-       (spacemacs/declare-prefix "hdd" "helpful")
-       (spacemacs/set-leader-keys
-         "hddc" 'helpful-callable
-         "hddd" 'helpful-at-point
-         "hddf" 'helpful-function
-         "hddi" 'helpful-command
-         "hddk" 'helpful-key
-         "hddm" 'helpful-macro
-         "hdds" 'helpful-symbol
-         "hddv" 'helpful-variable))
+   (use-package helpful
+     :defer t
+     :init
+     (spacemacs/declare-prefix "hdd" "helpful")
+     (spacemacs/set-leader-keys
+       "hddc" 'helpful-callable
+       "hddd" 'helpful-at-point
+       "hddf" 'helpful-function
+       "hddi" 'helpful-command
+       "hddk" 'helpful-key
+       "hddm" 'helpful-macro
+       "hdds" 'helpful-symbol
+       "hddv" 'helpful-variable))
    #+end_src
 ** magit
 *** magit
     #+begin_src emacs-lisp
-      (use-package magit
-        :defer t
-        :init
-        (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
-        (set-variable 'magit-diff-refine-hunk 'all)
-        (set-variable 'smerge-refine-ignore-whitespace nil)
-        :config
-        (when (executable-find "ghq")
-          (let ((dirs (s-split "\n" (s-trim (shell-command-to-string "ghq list --full-path")))))
-            (set-variable 'magit-repository-directories
-                          (--map (cons it 0) dirs))))
-        (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
+    (use-package magit
+      :defer t
+      :init
+      (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
+      (set-variable 'magit-diff-refine-hunk 'all)
+      (set-variable 'smerge-refine-ignore-whitespace nil)
+      :config
+      (when (executable-find "ghq")
+        (let ((dirs (s-split "\n" (s-trim (shell-command-to-string "ghq list --full-path")))))
+          (set-variable 'magit-repository-directories
+                        (--map (cons it 0) dirs))))
+      (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
     #+end_src
 *** magit-todos
     #+begin_src emacs-lisp
-      (use-package magit-todos
-        :hook (magit-status-mode . e:magit-todos-mode-on)
-        :init
-        (put 'magit-todos-exclude-globs
-             'safe-local-variable
-             '(lambda (v)
-                (and (listp v)
-                     (--all? (stringp it) v))))
-        :config
-        (progn
-          (defun e:advice:magit-todos--line-item:around (fn &rest args)
-            (ignore-errors (apply fn args)))
-          (advice-add 'magit-todos--line-item :around 'e:advice:magit-todos--line-item:around))
-        (defun e:magit-todos-mode-on ()
-          (let ((inhibit-message t))
-            (magit-todos-mode 1))))
+    (use-package magit-todos
+      :hook (magit-status-mode . e:magit-todos-mode-on)
+      :init
+      (put 'magit-todos-exclude-globs
+           'safe-local-variable
+           '(lambda (v)
+              (and (listp v)
+                   (--all? (stringp it) v))))
+      :config
+      (progn
+        (defun e:advice:magit-todos--line-item:around (fn &rest args)
+          (ignore-errors (apply fn args)))
+        (advice-add 'magit-todos--line-item :around 'e:advice:magit-todos--line-item:around))
+      (defun e:magit-todos-mode-on ()
+        (let ((inhibit-message t))
+          (magit-todos-mode 1))))
     #+end_src
 ** notmuch
    #+begin_src emacs-lisp
-     (use-package notmuch
-       :defer t
-       :init
-       (set-variable 'notmuch-archive-tags '("-inbox" "-unread"))
-       (set-variable 'notmuch-column-control 1.0)
-       (set-variable 'notmuch-hello-thousands-separator ",")
-       (set-variable 'notmuch-search-oldest-first nil)
-       (set-variable 'notmuch-show-empty-saved-searches t)
-       (set-variable 'notmuch-show-logo nil)
-       (set-variable 'notmuch-hello-hide-tags
-                     '("encrypted" "drafts" "flagged" "inbox" "sent" "signed" "spam" "unread"))
-       (set-variable 'notmuch-saved-searches
-                     '((:name "受信トレイ" :query "tag:inbox"   :key "i")
-                       (:name "未読　　　" :query "tag:unread"  :key "u")
-                       (:name "スター付き" :query "tag:flagged" :key "f")
-                       (:name "送信済み　" :query "tag:sent"    :key "t")
-                       (:name "下書き　　" :query "tag:draft"   :key "d")
-                       (:name "すべて　　" :query "*"           :key "a")
-                       (:name "迷惑メール" :query "tag:spam"    :key "s")))
-       (setenv "XAPIAN_CJK_NGRAM" "1"))
+   (use-package notmuch
+     :defer t
+     :init
+     (set-variable 'notmuch-archive-tags '("-inbox" "-unread"))
+     (set-variable 'notmuch-column-control 1.0)
+     (set-variable 'notmuch-hello-thousands-separator ",")
+     (set-variable 'notmuch-search-oldest-first nil)
+     (set-variable 'notmuch-show-empty-saved-searches t)
+     (set-variable 'notmuch-show-logo nil)
+     (set-variable 'notmuch-hello-hide-tags
+                   '("encrypted" "drafts" "flagged" "inbox" "sent" "signed" "spam" "unread"))
+     (set-variable 'notmuch-saved-searches
+                   '((:name "受信トレイ" :query "tag:inbox"   :key "i")
+                     (:name "未読　　　" :query "tag:unread"  :key "u")
+                     (:name "スター付き" :query "tag:flagged" :key "f")
+                     (:name "送信済み　" :query "tag:sent"    :key "t")
+                     (:name "下書き　　" :query "tag:draft"   :key "d")
+                     (:name "すべて　　" :query "*"           :key "a")
+                     (:name "迷惑メール" :query "tag:spam"    :key "s")))
+     (setenv "XAPIAN_CJK_NGRAM" "1"))
    #+end_src
 ** open-by-jetbrains-ide
    #+begin_src emacs-lisp
-     (use-package open-by-jetbrains-ide
-       :load-path "custom/lisp"
-       :config
-       (spacemacs/declare-prefix "aj" "jetbrains")
-       (spacemacs/set-leader-keys
-         "ajA" '("AppCode" . jetbrains/open-by-appcode)
-         "ajC" '("CLion" . jetbrains/open-by-clion)
-         "ajR" '("Rider" . jetbrains/open-by-rider)
-         "ajc" '("PyCharm" . jetbrains/open-by-charm)
-         "ajg" '("GoLand" . jetbrains/open-by-goland)
-         "aji" '("IntelliJ IDEA" . jetbrains/open-by-idea)
-         "ajj" '("Default" . jetbrains/open-by-ide)
-         "ajm" '("RubyMine" . jetbrains/open-by-mine)
-         "ajp" '("PhpStorm" . jetbrains/open-by-pstorm)
-         "ajs" '("Android Studio" . jetbrains/open-by-studio)
-         "ajw" '("WebStorm" . jetbrains/open-by-wstorm)
-         ))
+   (use-package open-by-jetbrains-ide
+     :load-path "custom/lisp"
+     :config
+     (spacemacs/declare-prefix "aj" "jetbrains")
+     (spacemacs/set-leader-keys
+       "ajA" '("AppCode" . jetbrains/open-by-appcode)
+       "ajC" '("CLion" . jetbrains/open-by-clion)
+       "ajR" '("Rider" . jetbrains/open-by-rider)
+       "ajc" '("PyCharm" . jetbrains/open-by-charm)
+       "ajg" '("GoLand" . jetbrains/open-by-goland)
+       "aji" '("IntelliJ IDEA" . jetbrains/open-by-idea)
+       "ajj" '("Default" . jetbrains/open-by-ide)
+       "ajm" '("RubyMine" . jetbrains/open-by-mine)
+       "ajp" '("PhpStorm" . jetbrains/open-by-pstorm)
+       "ajs" '("Android Studio" . jetbrains/open-by-studio)
+       "ajw" '("WebStorm" . jetbrains/open-by-wstorm)
+       ))
    #+end_src
 ** org
 *** org
     #+begin_src emacs-lisp
-      (use-package org
-        :no-require
-        :after (org)
-        :init
-        (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
-        (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
-        (set-variable 'org-agenda-files (directory-files-recursively org-directory org-agenda-file-regexp))
-        (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3)))
-        (set-variable 'org-todo-keywords
-                      '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-                        (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c@)"))))
+    (use-package org
+      :no-require
+      :after (org)
+      :init
+      (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
+      (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
+      (set-variable 'org-agenda-files (directory-files-recursively org-directory org-agenda-file-regexp))
+      (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3)))
+      (set-variable 'org-todo-keywords
+                    '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
+                      (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c@)")))
+      (set-variable 'org-edit-src-content-indentation 0))
     #+end_src
 *** ob-restclient
     #+begin_src emacs-lisp
-      (use-package ob-restclient
-        :defer t
-        :after (org)
-        :init
-        (unless (--find (eq (car it) 'restclient) org-babel-load-languages)
-          (org-babel-do-load-languages 'org-babel-load-languages
-                                       (append org-babel-load-languages '((restclient . t))))))
+    (use-package ob-restclient
+      :defer t
+      :after (org)
+      :init
+      (unless (--find (eq (car it) 'restclient) org-babel-load-languages)
+        (org-babel-do-load-languages 'org-babel-load-languages
+                                     (append org-babel-load-languages '((restclient . t))))))
     #+end_src
 ** persistent-scratch
    #+begin_src emacs-lisp
-     (use-package persistent-scratch
-       :init
-       (set-variable 'persistent-scratch-save-file (expand-file-name "scratch" e:private-directory))
-       :config
-       (persistent-scratch-setup-default))
+   (use-package persistent-scratch
+     :init
+     (set-variable 'persistent-scratch-save-file (expand-file-name "scratch" e:private-directory))
+     :config
+     (persistent-scratch-setup-default))
    #+end_src
 ** persp-mode
    #+begin_src emacs-lisp
-     (use-package persp-mode
-       :defer t
-       :init
-       (set-variable 'persp-kill-foreign-buffer-behaviour nil))
+   (use-package persp-mode
+     :defer t
+     :init
+     (set-variable 'persp-kill-foreign-buffer-behaviour nil))
    #+end_src
 ** php-mode
    #+begin_src emacs-lisp
-     (use-package php-mode
-       :defer t
-       :init
-       (spacemacs|add-company-backends :modes php-mode))
+   (use-package php-mode
+     :defer t
+     :init
+     (spacemacs|add-company-backends :modes php-mode))
    #+end_src
 ** prodigy
    #+begin_src emacs-lisp
-     (use-package prodigy
-       :commands (e:prodigy-start-service)
-       :config
-       (defun e:prodigy-start-service (name)
-         (let ((service (prodigy-find-service name)))
-           (when service
-             (prodigy-start-service service)))))
+   (use-package prodigy
+     :commands (e:prodigy-start-service)
+     :config
+     (defun e:prodigy-start-service (name)
+       (let ((service (prodigy-find-service name)))
+         (when service
+           (prodigy-start-service service)))))
    #+end_src
 ** ranger
    #+begin_src emacs-lisp
-     (use-package ranger
-       :config
-       (progn ;; 非アクティブ状態のバッファを削除
-         (defun e:ranger-kill-inactive-buffers ()
-           (interactive)
-           (let* ((frames (frame-list))
-                  (windows (-flatten (-map #'window-list frames)))
-                  (buffers (-map #'window-buffer windows)))
-             (--each (--filter (member (e:major-mode it) '(ranger-mode))
-                               (buffer-list))
-               (unless (member it buffers)
-                 (kill-buffer it)))))
-         (run-with-idle-timer 5.0 5.0 #'e:ranger-kill-inactive-buffers))
-       (progn ;; ranger のヘッダーラインの表示を変更
-         (defun e:advice:ranger--header-lhs:override (&rest args)
-           "Setup header-line for ranger buffer."
-           (let* ((current-file (abbreviate-file-name (or (r--fget ranger-current-file) "")))
-                  (project-root (e:project-root current-file))
-                  (project-name (and project-root (format "[%s]" (e:project-name project-root))))
-                  (dir  (file-name-directory current-file))
-                  (file (file-name-nondirectory current-file)))
-             (when project-root
-               (setq dir (replace-regexp-in-string (regexp-quote project-root) "" dir)))
-             (concat
-              (propertize " " 'display '(space :align-to 0))
-              (propertize (or project-name "") 'face 'font-lock-keyword-face)
-              dir
-              (propertize file 'face 'font-lock-constant-face))))
-         (advice-add 'ranger--header-lhs :override 'e:advice:ranger--header-lhs:override))
-       (progn ;; 常に dired の代わりに ranger を使用する
-         (defun e:advice:ranger-override-dired-mode-on:after (&rest args)
-           (ranger-override-dired-mode 1))
-         (advice-add 'ranger-mode :after 'e:advice:ranger-override-dired-mode-on:after)
-         (ranger-override-dired-mode 1)))
+   (use-package ranger
+     :config
+     (progn ;; 非アクティブ状態のバッファを削除
+       (defun e:ranger-kill-inactive-buffers ()
+         (interactive)
+         (let* ((frames (frame-list))
+                (windows (-flatten (-map #'window-list frames)))
+                (buffers (-map #'window-buffer windows)))
+           (--each (--filter (member (e:major-mode it) '(ranger-mode))
+                             (buffer-list))
+             (unless (member it buffers)
+               (kill-buffer it)))))
+       (run-with-idle-timer 5.0 5.0 #'e:ranger-kill-inactive-buffers))
+     (progn ;; ranger のヘッダーラインの表示を変更
+       (defun e:advice:ranger--header-lhs:override (&rest args)
+         "Setup header-line for ranger buffer."
+         (let* ((current-file (abbreviate-file-name (or (r--fget ranger-current-file) "")))
+                (project-root (e:project-root current-file))
+                (project-name (and project-root (format "[%s]" (e:project-name project-root))))
+                (dir  (file-name-directory current-file))
+                (file (file-name-nondirectory current-file)))
+           (when project-root
+             (setq dir (replace-regexp-in-string (regexp-quote project-root) "" dir)))
+           (concat
+            (propertize " " 'display '(space :align-to 0))
+            (propertize (or project-name "") 'face 'font-lock-keyword-face)
+            dir
+            (propertize file 'face 'font-lock-constant-face))))
+       (advice-add 'ranger--header-lhs :override 'e:advice:ranger--header-lhs:override))
+     (progn ;; 常に dired の代わりに ranger を使用する
+       (defun e:advice:ranger-override-dired-mode-on:after (&rest args)
+         (ranger-override-dired-mode 1))
+       (advice-add 'ranger-mode :after 'e:advice:ranger-override-dired-mode-on:after)
+       (ranger-override-dired-mode 1)))
    #+end_src
 ** recentf
    #+begin_src emacs-lisp
-     (use-package recentf
-       :defer t
-       :init
-       (set-variable 'recentf-max-menu-items 20)
-       (set-variable 'recentf-max-saved-items 3000)
-       (set-variable 'recentf-filename-handlers '(abbreviate-file-name))
-       :config
-       (progn
-         (defun e:advice:recentf-save-list:before (&rest args)
-           (setq recentf-list (-distinct (-map 'f-short recentf-list))))
-         (advice-add 'recentf-save-list :before 'e:advice:recentf-save-list:before)))
+   (use-package recentf
+     :defer t
+     :init
+     (set-variable 'recentf-max-menu-items 20)
+     (set-variable 'recentf-max-saved-items 3000)
+     (set-variable 'recentf-filename-handlers '(abbreviate-file-name))
+     :config
+     (progn
+       (defun e:advice:recentf-save-list:before (&rest args)
+         (setq recentf-list (-distinct (-map 'f-short recentf-list))))
+       (advice-add 'recentf-save-list :before 'e:advice:recentf-save-list:before)))
    #+end_src
 ** skk
    #+begin_src emacs-lisp
-     (use-package skk
-       :hook ((evil-hybrid-state-entry . skk-mode)
-              (evil-hybrid-state-exit  . skk-mode-exit))
-       :bind
-       (:map global-map
-             ([remap toggle-input-method] . skk-mode)
-             ("C-¥" . skk-mode))
-       :init
-       (set-variable 'default-input-method "japanese-skk")
-       (progn
-         (set-variable 'skk-user-directory (expand-file-name "ddskk" e:private-directory))
-         (set-variable 'skk-large-jisyo (expand-file-name "dic-mirror/SKK-JISYO.L" e:external-directory)))
-       (progn
-         (set-variable 'skk-preload t)
-         (set-variable 'skk-egg-like-newline t)
-         (set-variable 'skk-share-private-jisyo t)
-         (set-variable 'skk-show-annotation t)
-         (set-variable 'skk-show-inline 'vertical)
-         (set-variable 'skk-sticky-key ";")
-         (set-variable 'skk-use-jisx0201-input-method t))
-       (when (executable-find "google-ime-skk")
-         (set-variable 'skk-server-prog (executable-find "google-ime-skk"))
-         (set-variable 'skk-server-inhibit-startup-server t)
-         (set-variable 'skk-server-host "127.0.0.1")
-         (set-variable 'skk-server-portnum 55100))
-       :config
-       ;; skk-study を有効化
-       (require 'skk-study nil t)
-       ;; google-ime-skk を起動
-       (when (and (executable-find "google-ime-skk")
-                  (require 'prodigy nil t))
-         (prodigy-define-service
-           :name "google-ime-skk"
-           :command "google-ime-skk"
-           :tags '(general)
-           :kill-signal 'sigkill)
-         (defun e:prodigy:google-ime-skk ()
-           (interactive)
-           (e:prodigy-start-service "google-ime-skk"))
-         (e:prodigy:google-ime-skk))
-       ;; skk の有効化で半角英数入力にする
-       (add-hook 'skk-mode-hook #'skk-latin-mode-on))
+   (use-package skk
+     :hook ((evil-hybrid-state-entry . skk-mode)
+            (evil-hybrid-state-exit  . skk-mode-exit))
+     :bind
+     (:map global-map
+           ([remap toggle-input-method] . skk-mode)
+           ("C-¥" . skk-mode))
+     :init
+     (set-variable 'default-input-method "japanese-skk")
+     (progn
+       (set-variable 'skk-user-directory (expand-file-name "ddskk" e:private-directory))
+       (set-variable 'skk-large-jisyo (expand-file-name "dic-mirror/SKK-JISYO.L" e:external-directory)))
+     (progn
+       (set-variable 'skk-preload t)
+       (set-variable 'skk-egg-like-newline t)
+       (set-variable 'skk-share-private-jisyo t)
+       (set-variable 'skk-show-annotation t)
+       (set-variable 'skk-show-inline 'vertical)
+       (set-variable 'skk-sticky-key ";")
+       (set-variable 'skk-use-jisx0201-input-method t))
+     (when (executable-find "google-ime-skk")
+       (set-variable 'skk-server-prog (executable-find "google-ime-skk"))
+       (set-variable 'skk-server-inhibit-startup-server t)
+       (set-variable 'skk-server-host "127.0.0.1")
+       (set-variable 'skk-server-portnum 55100))
+     :config
+     ;; skk-study を有効化
+     (require 'skk-study nil t)
+     ;; google-ime-skk を起動
+     (when (and (executable-find "google-ime-skk")
+                (require 'prodigy nil t))
+       (prodigy-define-service
+         :name "google-ime-skk"
+         :command "google-ime-skk"
+         :tags '(general)
+         :kill-signal 'sigkill)
+       (defun e:prodigy:google-ime-skk ()
+         (interactive)
+         (e:prodigy-start-service "google-ime-skk"))
+       (e:prodigy:google-ime-skk))
+     ;; skk の有効化で半角英数入力にする
+     (add-hook 'skk-mode-hook #'skk-latin-mode-on))
    #+end_src
 ** tramp
 *** tramp
     #+begin_src emacs-lisp
-      (use-package tramp
-        :defer t
-        :init
-        (set-variable 'tramp-default-host "localhost"))
+    (use-package tramp
+      :defer t
+      :init
+      (set-variable 'tramp-default-host "localhost"))
     #+end_src
 *** tramp-sh
     #+begin_src emacs-lisp
-      (use-package tramp-sh
-        :after (tramp)
-        :config
-        ;; ssh/conf.d の内容を接続先に追加
-        (let* ((files (--filter (not (file-directory-p it))
-                                (-map 'abbreviate-file-name (directory-files "~/.ssh/conf.d/hosts" t))))
-               (functions (--map (list 'tramp-parse-sconfig it) files)))
-          (dolist (method '("ssh" "scp"))
-            (let ((functions (append (tramp-get-completion-function method) functions)))
-              (tramp-set-completion-function method functions)))))
+    (use-package tramp-sh
+      :after (tramp)
+      :config
+      ;; ssh/conf.d の内容を接続先に追加
+      (let* ((files (--filter (not (file-directory-p it))
+                              (-map 'abbreviate-file-name (directory-files "~/.ssh/conf.d/hosts" t))))
+             (functions (--map (list 'tramp-parse-sconfig it) files)))
+        (dolist (method '("ssh" "scp"))
+          (let ((functions (append (tramp-get-completion-function method) functions)))
+            (tramp-set-completion-function method functions)))))
     #+end_src
 *** helm-tramp
     #+begin_src emacs-lisp
-      (use-package helm-tramp
-        :defer t
-        :config
-        ;; ssh/conf.d の内容を接続先に追加
-        (defun e:advice:helm-tramp--candidates:filter-return (result)
-          (dolist (host (--filter (not (string-equal it tramp-default-host))
-                                  (-distinct (-flatten (-map 'eval (tramp-get-completion-function "ssh"))))))
-            (push (format "/%s:%s:" tramp-default-method host) result)
-            (push (format "/ssh:%s|sudo:%s:/" host host) result))
-          (-distinct (reverse result)))
-        (advice-add 'helm-tramp--candidates :filter-return 'e:advice:helm-tramp--candidates:filter-return))
+    (use-package helm-tramp
+      :defer t
+      :config
+      ;; ssh/conf.d の内容を接続先に追加
+      (defun e:advice:helm-tramp--candidates:filter-return (result)
+        (dolist (host (--filter (not (string-equal it tramp-default-host))
+                                (-distinct (-flatten (-map 'eval (tramp-get-completion-function "ssh"))))))
+          (push (format "/%s:%s:" tramp-default-method host) result)
+          (push (format "/ssh:%s|sudo:%s:/" host host) result))
+        (-distinct (reverse result)))
+      (advice-add 'helm-tramp--candidates :filter-return 'e:advice:helm-tramp--candidates:filter-return))
     #+end_src
 ** url
 *** url-cache
     #+begin_src emacs-lisp
-      (use-package url-cache
-        :defer t
-        :init
-        (set-variable 'url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory)))
+    (use-package url-cache
+      :defer t
+      :init
+      (set-variable 'url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory)))
     #+end_src
 *** url-cookie
     #+begin_src emacs-lisp
-      (use-package url-cookie
-        :defer t
-        :init
-        (set-variable 'url-cookie-file (expand-file-name "url/cookies" spacemacs-cache-directory)))
+    (use-package url-cookie
+      :defer t
+      :init
+      (set-variable 'url-cookie-file (expand-file-name "url/cookies" spacemacs-cache-directory)))
     #+end_src
 ** visual-regexp
    #+begin_src emacs-lisp
@@ -732,43 +733,43 @@
    #+end_src
 * パッチ対応
   #+begin_src emacs-lisp
-    (require 'pkg-info)
+  (require 'pkg-info)
   #+end_src
 ** avy-migemo
    #+begin_src emacs-lisp
-     (let ((version (pkg-info-format-version (pkg-info-package-version 'avy-migemo)))
-           (target "20180716.1455"))
-       (if (string-equal version target)
-           (use-package avy-migemo
-             :defer t
-             :config
-             (defun e:patch:avy--generic-jump:filter-args (args)
-               (if (= (length args) 4)
-                   args
-                 (e:remove-nth 2 args)))
-             (advice-add 'avy--generic-jump :filter-args 'e:patch:avy--generic-jump:filter-args))
-         (spacemacs-buffer/warning "`avy-migemo' was updated.")))
+   (let ((version (pkg-info-format-version (pkg-info-package-version 'avy-migemo)))
+         (target "20180716.1455"))
+     (if (string-equal version target)
+         (use-package avy-migemo
+           :defer t
+           :config
+           (defun e:patch:avy--generic-jump:filter-args (args)
+             (if (= (length args) 4)
+                 args
+               (e:remove-nth 2 args)))
+           (advice-add 'avy--generic-jump :filter-args 'e:patch:avy--generic-jump:filter-args))
+       (spacemacs-buffer/warning "`avy-migemo' was updated.")))
    #+end_src
 ** vagrant-tramp
    #+begin_src emacs-lisp
-     (let ((version (pkg-info-format-version (pkg-info-package-version 'vagrant-tramp)))
-           (target "20190125.1859"))
-       (if (string-equal version target)
-           (use-package vagrant-tramp
-             :defer t
-             :config
-             (defun e:patch:vagrant-tramp--all-boxes:override (&rest args)
-               "List of VMs per `vagrant global-status` as alists."
-               (let* ((status-cmd "vagrant global-status --machine-readable")
-                      (status-raw (shell-command-to-string status-cmd))
-                      (status-lines (-drop 7 (split-string status-raw "\n")))
-                      (status-data-raw (--map (mapconcat 'identity
-                                                         (-drop 4 (split-string it ",")) ",")
-                                              status-lines))
-                      (status-data (--map (replace-regexp-in-string " " "" it) status-data-raw))
-                      (status-groups (-butlast (-split-on "" status-data)))
-                      (vm-attrs '(id name provider state dir)))
-                 (--map (-zip vm-attrs it) status-groups)))
-             (advice-add 'vagrant-tramp--all-boxes :override 'e:patch:vagrant-tramp--all-boxes:override))
-         (spacemacs-buffer/warning "`vagrant-tramp' was updated.")))
+   (let ((version (pkg-info-format-version (pkg-info-package-version 'vagrant-tramp)))
+         (target "20190125.1859"))
+     (if (string-equal version target)
+         (use-package vagrant-tramp
+           :defer t
+           :config
+           (defun e:patch:vagrant-tramp--all-boxes:override (&rest args)
+             "List of VMs per `vagrant global-status` as alists."
+             (let* ((status-cmd "vagrant global-status --machine-readable")
+                    (status-raw (shell-command-to-string status-cmd))
+                    (status-lines (-drop 7 (split-string status-raw "\n")))
+                    (status-data-raw (--map (mapconcat 'identity
+                                                       (-drop 4 (split-string it ",")) ",")
+                                            status-lines))
+                    (status-data (--map (replace-regexp-in-string " " "" it) status-data-raw))
+                    (status-groups (-butlast (-split-on "" status-data)))
+                    (vm-attrs '(id name provider state dir)))
+               (--map (-zip vm-attrs it) status-groups)))
+           (advice-add 'vagrant-tramp--all-boxes :override 'e:patch:vagrant-tramp--all-boxes:override))
+       (spacemacs-buffer/warning "`vagrant-tramp' was updated.")))
    #+end_src

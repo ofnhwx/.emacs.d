@@ -196,7 +196,7 @@
 *** company-tabnine
     #+begin_src emacs-lisp
     (use-package company-tabnine
-      :defer t
+      :commands (company-tabnine)
       :init
       (set-variable 'company-tabnine-binaries-folder (expand-file-name "tabnine" e:private-directory)))
     #+end_src

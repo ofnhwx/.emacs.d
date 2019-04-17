@@ -732,6 +732,13 @@
         (-distinct (reverse result)))
       (advice-add 'helm-tramp--candidates :filter-return 'e:advice:helm-tramp--candidates:filter-return))
     #+end_src
+** transient
+   #+begin_src emacs-lisp
+   (use-package transient
+     :no-require
+     :init
+     (set-variable 'transient-default-level 7))
+   #+end_src
 ** url
 *** url-cache
     #+begin_src emacs-lisp

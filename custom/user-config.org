@@ -474,6 +474,7 @@
       (set-variable 'magit-diff-refine-hunk 'all)
       (set-variable 'smerge-refine-ignore-whitespace nil)
       :config
+      (magit-add-section-hook 'magit-status-sections-hook #'magit-insert-skip-worktree-files nil t)
       (when (executable-find "ghq")
         (let ((dirs (s-split "\n" (s-trim (shell-command-to-string "ghq list --full-path")))))
           (set-variable 'magit-repository-directories

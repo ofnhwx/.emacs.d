@@ -20,30 +20,34 @@
 *** ヘッダーライン
 **** ファイル用の設定
      #+begin_src emacs-lisp
+     (defvar e:header-line-for-files-cache (make-hash-table))
      (defun e:header-line-for-files-format ()
        "ファイル用のヘッダーラインのフォーマット"
-       (let* ((buffer (current-buffer))
-              (path   (abbreviate-file-name (buffer-file-name buffer)))
-              (file   (buffer-name buffer))
-              (dir    (file-name-directory path))
-              (limit  (- (window-width) (length file)))
-              (project-root (e:project-root (file-name-directory path)))
-              (project-name (and project-root (format "[%s]" (e:project-name project-root)))))
-         ;; プロジェクト内のファイルの場合はプロジェクト名を省略
-         (when project-root
-           (setq dir   (replace-regexp-in-string (regexp-quote project-root) "" dir))
-           (setq limit (- limit (length project-name))))
-         ;; ディレクトリ部分を頑張って短くする
-         (setq dir (e:shorten dir limit))
-         (let ((index (s-index-of "..." dir)))
-           (when index
-             (set-text-properties index (+ index 3) '(face font-lock-comment-face) dir)))
-         ;; 属性を設定しつつ結合する
-         (concat
-          (propertize " " 'display '(space :align-to 0))
-          (propertize (or project-name "") 'face 'font-lock-keyword-face)
-          dir
-          (propertize file 'face 'font-lock-constant-face))))
+       (or (gethash (buffer-file-name) e:header-line-for-files-cache)
+           (let* ((buffer (current-buffer))
+                  (path   (abbreviate-file-name (buffer-file-name buffer)))
+                  (file   (buffer-name buffer))
+                  (dir    (file-name-directory path))
+                  (limit  (- (window-width) (length file)))
+                  (project-root (e:project-root (file-name-directory path)))
+                  (project-name (and project-root (format "[%s]" (e:project-name project-root)))))
+             ;; プロジェクト内のファイルの場合はプロジェクト名を省略
+             (when project-root
+               (setq dir   (replace-regexp-in-string (regexp-quote project-root) "" dir))
+               (setq limit (- limit (length project-name))))
+             ;; ディレクトリ部分を頑張って短くする
+             (setq dir (e:shorten dir limit))
+             (let ((index (s-index-of "..." dir)))
+               (when index
+                 (set-text-properties index (+ index 3) '(face font-lock-comment-face) dir)))
+             ;; 属性を設定しつつ結合する
+             (puthash (buffer-file-name)
+                      (concat
+                       (propertize " " 'display '(space :align-to 0))
+                       (propertize (or project-name "") 'face 'font-lock-keyword-face)
+                       dir
+                       (propertize file 'face 'font-lock-constant-face))
+                      e:header-line-for-files-cache))))
      (defun e:setup-headerline-for-files ()
        "ファイル用のヘッダーラインの設定"
        (setq-local spaceline-buffer-id-p nil)

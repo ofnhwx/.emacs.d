@@ -659,7 +659,7 @@
 ** skk
    #+begin_src emacs-lisp
    (use-package skk
-     :hook ((evil-hybrid-state-entry . skk-mode)
+     :hook ((evil-hybrid-state-entry . e:skk-mode)
             (evil-hybrid-state-exit  . skk-mode-exit))
      :bind
      (:map global-map
@@ -684,6 +684,11 @@
        (set-variable 'skk-server-host "127.0.0.1")
        (set-variable 'skk-server-portnum 55100))
      :config
+     ;; skk の有効化で半角英数入力にする
+     (defun e:skk-mode ()
+       (interactive)
+       (let ((skk-mode-hook (-union skk-mode-hook '(skk-latin-mode-on))))
+         (skk-mode)))
      ;; skk-study を有効化
      (require 'skk-study nil t)
      ;; google-ime-skk を起動
@@ -697,9 +702,7 @@
        (defun e:prodigy:google-ime-skk ()
          (interactive)
          (e:prodigy-start-service "google-ime-skk"))
-       (e:prodigy:google-ime-skk))
-     ;; skk の有効化で半角英数入力にする
-     (add-hook 'skk-mode-hook #'skk-latin-mode-on))
+       (e:prodigy:google-ime-skk)))
    #+end_src
 ** tramp
 *** tramp

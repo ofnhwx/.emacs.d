@@ -32,56 +32,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
 
    ;; List of configuration layers to load.
-   dotspacemacs-configuration-layers
-   '(;; +checkers
-     (syntax-checking :variables syntax-checking-enable-tooltips nil)
-     ;; +completion
-     auto-completion
-     (helm :variables helm-use-fuzzy nil)
-     ;; +emacs
-     better-defaults
-     org
-     ;; +email
-     notmuch
-     ;; +filetree
-     treemacs
-     ;; +fun
-     emoji
-     ;; +intl
-     japanese
-     ;; +lang
-     csv
-     emacs-lisp
-     html
-     java
-     javascript
-     kotlin
-     markdown
-     php
-     ruby
-     sql
-     vimscript
-     yaml
-     ;; +misc
-     copy-as-format
-     ;; +pair-programming
-     floobits
-     ;; +source-control
-     (git :variables git-magit-status-fullscreen t)
-     github
-     ;; +tags
-     gtags
-     ;; +tools
-     docker
-     lsp
-     nginx
-     prodigy
-     ranger
-     (shell :variables shell-default-shell 'eshell)
-     vagrant
-     ;; +web-services
-     search-engine
-     )
+   dotspacemacs-configuration-layers e:dotspacemacs-configuration-layers
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -90,37 +41,13 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages
-   '(;; Utilities
-     (evil-plugins :location (recipe :fetcher github :repo "tarao/evil-plugins"))
-     (helm-fzf :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
-     (locale-eaw :location (recipe :fetcher github :repo "hamano/locale-eaw"))
-     atomic-chrome
-     company-box
-     company-tabnine
-     elisp-demos
-     evil-easymotion
-     fish-mode
-     helm-tramp
-     helpful
-     magit-todos
-     ob-restclient
-     persistent-scratch
-     poly-org
-     visual-regexp
-     vlf
-     )
+   dotspacemacs-additional-packages e:dotspacemacs-additional-packages
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages
-   '(;; +intl/japanese
-     pangu-spacing
-     ;; +lang/php
-     company-php
-     )
+   dotspacemacs-excluded-packages e:dotspacemacs-excluded-packages
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.

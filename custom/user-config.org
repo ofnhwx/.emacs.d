@@ -20,7 +20,7 @@
 *** ヘッダーライン
 **** ファイル用の設定
      #+begin_src emacs-lisp
-     (defvar e:header-line-for-files-cache (make-hash-table))
+     (defvar e:header-line-for-files-cache (make-hash-table :test 'equal))
      (defun e:header-line-for-files-format ()
        "ファイル用のヘッダーラインのフォーマット"
        (let* ((path (f-long (or buffer-file-name magit-buffer-file-name "")))

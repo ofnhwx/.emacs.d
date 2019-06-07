@@ -21,21 +21,24 @@
 **** ファイル用の設定
      #+begin_src emacs-lisp
      (defvar e:header-line-for-files-cache (make-hash-table :test 'equal))
-     (defun e:header-line-for-files-format ()
-       "ファイル用のヘッダーラインのフォーマット"
-       (let* ((path (f-long (or buffer-file-name magit-buffer-file-name "")))
-              (refname (if magit-buffer-refname (format "<%s>" magit-buffer-refname) ""))
-              (key (concat path refname)))
+     (defun e:header-line-for-files-format-internal (path &optional refname)
+       (let* ((path    (or path ""))
+              (refname (or refname ""))
+              (key     (concat path refname)))
          (or (gethash key e:header-line-for-files-cache)
              (let* ((file  (f-filename path))
                     (dir   (f-short (file-name-directory path)))
+                    (tramp (file-remote-p path))
                     (limit (- (window-width) (length file)))
                     (proot (e:project-root dir))
-                    (pname (if proot (format "[%s]" (e:project-name proot)) "")))
+                    (pname (if proot (format "[%s]" (e:project-name proot)))))
                ;; プロジェクト内のファイルの場合はプロジェクト名を省略
                (when proot
                  (setq dir   (replace-regexp-in-string (regexp-quote proot) "" dir))
                  (setq limit (- limit (length pname))))
+               ;; Tramp 接続の場合は該当箇所を省略
+               (when tramp
+                 (setq dir (replace-regexp-in-string (regexp-quote tramp) "" dir)))
                ;; ディレクトリ部分を頑張って短くする
                (setq dir (e:shorten dir limit))
                (let ((index (s-index-of "..." dir)))
@@ -45,11 +48,17 @@
                (puthash key
                         (concat
                          (propertize " " 'display '(space :align-to 0))
-                         (propertize pname 'face 'font-lock-keyword-face)
+                         (propertize (or tramp "") 'face 'font-lock-comment-face)
+                         (propertize (or pname "") 'face 'font-lock-keyword-face)
                          dir
                          (propertize file 'face 'font-lock-constant-face)
                          (propertize refname 'face 'font-lock-keyword-face))
                         e:header-line-for-files-cache)))))
+     (defun e:header-line-for-files-format ()
+       "ファイル用のヘッダーラインのフォーマット"
+       (e:header-line-for-files-format-internal
+        (f-long (or buffer-file-name magit-buffer-file-name))
+        (if magit-buffer-refname (format "<%s>" magit-buffer-refname))))
      (defun e:setup-headerline-for-files ()
        "ファイル用のヘッダーラインの設定"
        (setq-local spaceline-buffer-id-p nil)
@@ -627,18 +636,8 @@
      (progn ;; ranger のヘッダーラインの表示を変更
        (defun e:advice:ranger--header-lhs:override (&rest args)
          "Setup header-line for ranger buffer."
-         (let* ((current-file (abbreviate-file-name (or (r--fget ranger-current-file) "")))
-                (project-root (e:project-root current-file))
-                (project-name (and project-root (format "[%s]" (e:project-name project-root))))
-                (dir  (file-name-directory current-file))
-                (file (file-name-nondirectory current-file)))
-           (when project-root
-             (setq dir (replace-regexp-in-string (regexp-quote project-root) "" dir)))
-           (concat
-            (propertize " " 'display '(space :align-to 0))
-            (propertize (or project-name "") 'face 'font-lock-keyword-face)
-            dir
-            (propertize file 'face 'font-lock-constant-face))))
+         (e:header-line-for-files-format-internal
+          (abbreviate-file-name (or (r--fget ranger-current-file) ""))))
        (advice-add 'ranger--header-lhs :override 'e:advice:ranger--header-lhs:override))
      (progn ;; 常に dired の代わりに ranger を使用する
        (defun e:advice:ranger-override-dired-mode-on:after (&rest args)

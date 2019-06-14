@@ -38,7 +38,8 @@
                  (setq limit (- limit (length pname))))
                ;; Tramp 接続の場合は該当箇所を省略
                (when tramp
-                 (setq dir (replace-regexp-in-string (regexp-quote tramp) "" dir)))
+                 (setq dir   (replace-regexp-in-string (regexp-quote tramp) "" dir))
+                 (setq limit (- limit (length tramp))))
                ;; ディレクトリ部分を頑張って短くする
                (setq dir (e:shorten dir limit))
                (let ((index (s-index-of "..." dir)))

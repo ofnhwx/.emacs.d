@@ -58,8 +58,8 @@
      (defun e:header-line-for-files-format ()
        "ファイル用のヘッダーラインのフォーマット"
        (e:header-line-for-files-format-internal
-        (f-long (or buffer-file-name magit-buffer-file-name))
-        (if magit-buffer-refname (format "<%s>" magit-buffer-refname))))
+        (f-long (or buffer-file-name (bound-and-true-p magit-buffer-file-name)))
+        (if (bound-and-true-p magit-buffer-refname) (format "<%s>" magit-buffer-refname))))
      (defun e:setup-headerline-for-files ()
        "ファイル用のヘッダーラインの設定"
        (setq-local spaceline-buffer-id-p nil)
@@ -638,7 +638,7 @@
        (defun e:advice:ranger--header-lhs:override (&rest args)
          "Setup header-line for ranger buffer."
          (e:header-line-for-files-format-internal
-          (abbreviate-file-name (or (r--fget ranger-current-file) ""))))
+          (f-long (or (r--fget ranger-current-file) ""))))
        (advice-add 'ranger--header-lhs :override 'e:advice:ranger--header-lhs:override))
      (progn ;; 常に dired の代わりに ranger を使用する
        (defun e:advice:ranger-override-dired-mode-on:after (&rest args)

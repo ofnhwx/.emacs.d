@@ -792,6 +792,7 @@
                    '((space-mark   ?\u3000 [?\u30ed])
                      (tab-mark     ?\t     [?\u00bb ?\t])
                      (newline-mark ?\n     [?\u0024 ?\n])))
+     :config
      (set-face-attribute 'whitespace-trailing nil
                          :background "#800000")
      (set-face-attribute 'whitespace-tab nil
@@ -800,7 +801,6 @@
                          :foreground "#404040")
      (set-face-attribute 'whitespace-newline nil
                          :foreground "#404040")
-     :config
      (defun e:whitespace-mode-on ()
        (interactive)
        (whitespace-mode 1)))

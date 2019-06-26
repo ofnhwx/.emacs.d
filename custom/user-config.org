@@ -772,6 +772,39 @@
        (:map global-map
              ([remap query-replace] . vr/query-replace)))
    #+end_src
+** whitespace
+   #+begin_src emacs-lisp
+   (use-package whitespace
+     :hook ((find-file . e:whitespace-mode-on)
+            (prog-mode . e:whitespace-mode-on))
+     :init
+     (set-variable 'whitespace-style
+                   '(face
+                     trailing
+                     tabs
+                     tab-mark
+                     spaces
+                     space-mark
+                     newline
+                     newline-mark))
+     (set-variable 'whitespace-space-regexp "\\(\u3000+\\)")
+     (set-variable 'whitespace-display-mappings
+                   '((space-mark   ?\u3000 [?\u30ed])
+                     (tab-mark     ?\t     [?\u00bb ?\t])
+                     (newline-mark ?\n     [?\u0024 ?\n])))
+     (set-face-attribute 'whitespace-trailing nil
+                         :background "#800000")
+     (set-face-attribute 'whitespace-tab nil
+                         :foreground "#404040")
+     (set-face-attribute 'whitespace-space nil
+                         :foreground "#404040")
+     (set-face-attribute 'whitespace-newline nil
+                         :foreground "#404040")
+     :config
+     (defun e:whitespace-mode-on ()
+       (interactive)
+       (whitespace-mode 1)))
+   #+end_src
 * パッチ対応
   #+begin_src emacs-lisp
   (require 'pkg-info)

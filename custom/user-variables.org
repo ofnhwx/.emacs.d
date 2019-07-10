@@ -27,6 +27,8 @@
        notmuch
        ;; +filetree
        treemacs
+       ;; +frameworks
+       react
        ;; +fun
        emoji
        ;; +intl

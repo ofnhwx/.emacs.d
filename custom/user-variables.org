@@ -3,18 +3,18 @@
 
 * フォント設定
   #+begin_src emacs-lisp
-  (defvar e:font-name "Cica")
-  (defvar e:font-size 14)
-  (defvar e:font-rescale 1.00)
+  (setq e:font-name "Cica")
+  (setq e:font-size 14)
+  (setq e:font-rescale 1.00)
   #+end_src
 * プロジェクト設定
   #+begin_src emacs-lisp
-  (defvar e:project-root-mark '(".git/" ".hg/" ".svn/" ".git"))
+  (setq e:project-root-mark '(".git/" ".hg/" ".svn/" ".git"))
   #+end_src
 * パッケージ(spacemacs)
 ** レイヤー
    #+begin_src emacs-lisp
-   (defvar e:dotspacemacs-configuration-layers
+   (setq e:dotspacemacs-configuration-layers
      '(;; +checkers
        (syntax-checking :variables syntax-checking-enable-tooltips nil)
        ;; +completion
@@ -69,7 +69,7 @@
    #+end_src
 ** 追加
    #+begin_src emacs-lisp
-   (defvar e:dotspacemacs-additional-packages
+   (setq e:dotspacemacs-additional-packages
      '(;; Utilities
        (evil-plugins :location (recipe :fetcher github :repo "tarao/evil-plugins"))
        (helm-fzf :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
@@ -92,7 +92,7 @@
    #+end_src
 ** 除外
    #+begin_src emacs-lisp
-   (defvar e:dotspacemacs-excluded-packages
+   (setq e:dotspacemacs-excluded-packages
      '(;; +intl/japanese
        pangu-spacing
        ;; +lang/php

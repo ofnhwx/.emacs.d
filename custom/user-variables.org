@@ -75,6 +75,7 @@
        (helm-fzf :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
        (locale-eaw :location (recipe :fetcher github :repo "hamano/locale-eaw"))
        atomic-chrome
+       codic
        company-box
        company-tabnine
        elisp-demos

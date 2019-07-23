@@ -232,6 +232,13 @@
       :init
       (set-variable 'company-tabnine-binaries-folder (expand-file-name "tabnine" e:private-directory)))
     #+end_src
+** codic
+   #+begin_src emacs-lisp
+   (use-package codic
+     :defer t
+     :config
+     (set-variable 'codic-api-token (e:auth-source-get 'api-token :app "codic")))
+   #+end_src
 ** display-line-numbers
    #+begin_src emacs-lisp
    (use-package display-line-numbers

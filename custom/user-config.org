@@ -16,6 +16,11 @@
       (set-terminal-coding-system    coding-system)
       (set-keyboard-coding-system    coding-system))
     #+end_src
+*** ロケール
+    #+begin_src emacs-lisp
+    (setenv "LANG" "ja_JP.UTF-8")
+    (setenv "LC_ALL" "ja_JP.UTF-8")
+    #+end_src
 ** 情報表示
 *** ヘッダーライン
 **** ファイル用の設定

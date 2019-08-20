@@ -784,6 +784,13 @@
        (:map global-map
              ([remap query-replace] . vr/query-replace)))
    #+end_src
+** vterm
+   #+begin_src emacs-lisp
+   (use-package vterm
+     :load-path "external/emacs-libvterm"
+     :defer t
+     :commands (vterm))
+   #+end_src
 ** whitespace
    #+begin_src emacs-lisp
    (use-package whitespace

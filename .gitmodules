@@ -7,3 +7,6 @@
 [submodule "external/literate-elisp"]
 	path = external/literate-elisp
 	url = https://github.com/jingtaozf/literate-elisp.git
+[submodule "external/emacs-libvterm"]
+	path = external/emacs-libvterm
+	url = https://github.com/akermu/emacs-libvterm.git

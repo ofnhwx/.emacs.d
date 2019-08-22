@@ -21,7 +21,7 @@
 
 ;; org ファイルをロードする設定
 (when (require 'literate-elisp (expand-file-name "literate-elisp/literate-elisp.el" e:external-directory))
-  (set-variable 'literate-elisp-begin-src-id "#+begin_src emacs-lisp")
+  (set-variable 'literate-elisp-begin-src-id "#+begin_src")
   (set-variable 'literate-elisp-end-src-id "#+end_src"))
 
 ;; 独自の変数・関数を定義

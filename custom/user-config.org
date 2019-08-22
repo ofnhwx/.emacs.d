@@ -599,6 +599,15 @@
         (org-babel-do-load-languages 'org-babel-load-languages
                                      (append org-babel-load-languages '((restclient . t))))))
     #+end_src
+** paradox
+*** paradox-github
+    #+begin_src emacs-lisp
+    (use-package paradox-github
+      :no-require
+      :after (paradox-github)
+      :init
+      (set-variable 'paradox-github-token (e:auth-source-get 'token :host "paradox")))
+    #+end_src
 ** persistent-scratch
    #+begin_src emacs-lisp
    (use-package persistent-scratch

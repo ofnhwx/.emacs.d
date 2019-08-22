@@ -235,7 +235,10 @@
     (use-package company-tabnine
       :commands (company-tabnine)
       :init
-      (set-variable 'company-tabnine-binaries-folder (expand-file-name "tabnine" e:private-directory)))
+      (set-variable 'company-tabnine-binaries-folder (expand-file-name "tabnine" e:private-directory))
+      (spacemacs|add-company-backends
+        :backends company-tabnine
+        :modes js2-mode php-mode ruby-mode))
     #+end_src
 ** codic
    #+begin_src emacs-lisp

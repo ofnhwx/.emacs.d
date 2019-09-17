@@ -797,22 +797,6 @@
        (:map global-map
              ([remap query-replace] . vr/query-replace)))
    #+end_src
-** vterm
-   #+begin_src emacs-lisp
-   (use-package vterm
-     :load-path "external/emacs-libvterm"
-     :defer t
-     :commands (vterm)
-     :init
-     (make-shell-pop-command vterm)
-     (spacemacs/set-leader-keys
-       "asv" 'spacemacs/shell-pop-vterm)
-     :config
-     (progn
-       (defun e:patch:vterm:filter-args (args)
-         nil)
-       (advice-add 'vterm :filter-args 'e:patch:vterm:filter-args)))
-   #+end_src
 ** whitespace
    #+begin_src emacs-lisp
    (use-package whitespace

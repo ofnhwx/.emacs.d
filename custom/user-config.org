@@ -220,6 +220,8 @@
       (define-prefix-command 'e:complete-command)
       (evil-define-key 'hybrid global-map (kbd "<backtab>") #'e:complete-command)
       (bind-keys
+       :map company-active-map
+       ("<escape>" . company-abort)
        :map e:complete-command
        ("<backtab>" . ("Company" . company-complete))
        ("d" . ("Dabbrev" . company-dabbrev))

@@ -566,6 +566,10 @@
    #+begin_src emacs-lisp
    (use-package open-by-jetbrains-ide
      :load-path "custom/lisp"
+     :init
+     (set-variable 'jetbrains/use-toolbox-mode t)
+     (set-variable 'jetbrains/ide-pstorm "phpstorm")
+     (set-variable 'jetbrains/ide-mine   "rubymine")
      :config
      (spacemacs/declare-prefix "aj" "jetbrains")
      (spacemacs/set-leader-keys

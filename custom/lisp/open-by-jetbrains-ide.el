@@ -18,6 +18,8 @@
     ("WebStorm"       . jetbrains/ide-wstorm)
     ))
 
+(defvar jetbrains/use-toolbox-mode nil)
+
 (defvar jetbrains/ide-appcode "appcode")
 (defvar jetbrains/ide-charm   "charm")
 (defvar jetbrains/ide-clion   "clion")
@@ -95,15 +97,18 @@
   (let* ((buffer (or buffer (current-buffer)))
          (ide (or (jetbrains/--ide ide)
                   (jetbrains/--ide-select buffer)))
-         (command (jetbrains/--make-command ide buffer)))
+         (commands (if jetbrains/use-toolbox-mode
+                       (jetbrains/--make-toolbox-commands ide buffer)
+                     (jetbrains/--make-commands ide buffer))))
     (cond
      ((not (buffer-file-name buffer))
       (message "Buffer `%s' has no file name." buffer))
-     ((not command)
+     ((not commands)
       (message "%s is not found." ide))
      ((or (not jetbrains/need-open-confirm)
           (y-or-n-p (format "Do you want to open `%s'?" ide)))
-      (shell-command command)))))
+      (cl-dolist (command commands)
+        (shell-command command))))))
 
 
 
@@ -138,7 +143,7 @@
                           (--map (locate-dominating-file dir it)
                                  '(".git/" ".hg/" ".svn/" ".git")))))))
 
-(defun jetbrains/--make-command (ide buffer)
+(defun jetbrains/--make-commands (ide buffer)
   (let* ((executable (jetbrains/--ide-executable ide))
          (filename (buffer-file-name buffer))
          (project (and filename (or (let ((root (jetbrains/--project-root filename)))
@@ -146,11 +151,28 @@
                                     "--temp-project"))))
     (when (and executable filename)
       ;; {{application}} [-l|--line line] [project_dir|--temp-project] file[:line]
-      (format "%s %s %s:%d"
-              (shell-quote-argument executable)
-              (shell-quote-argument project)
-              (shell-quote-argument filename)
-              (with-current-buffer buffer (line-number-at-pos))))))
+      (list (format "%s %s %s:%d"
+                    (shell-quote-argument executable)
+                    (shell-quote-argument project)
+                    (shell-quote-argument filename)
+                    (with-current-buffer buffer (line-number-at-pos)))))))
+
+(defun jetbrains/--make-toolbox-commands (ide buffer)
+  (let* ((filename (buffer-file-name buffer))
+         (matched (s-match
+                   "open[[:space:]]+-a[[:space:]]+\"\\(\\(.*?\\.app\\).*?\\)\""
+                   (with-temp-buffer
+                     (ignore-errors (insert-file-contents (jetbrains/--ide-executable ide)))
+                     (buffer-string))))
+         (executable (nth 1 matched))
+         (application (nth 2 matched)))
+    (when (and executable application filename)
+      (list (format "%s --line %d %s >/dev/null 2>&1"
+                    (shell-quote-argument executable)
+                    (with-current-buffer buffer (line-number-at-pos))
+                    (shell-quote-argument filename))
+            (format "open -a %s"
+                    (shell-quote-argument executable))))))
 
 
 

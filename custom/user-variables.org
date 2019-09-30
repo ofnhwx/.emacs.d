@@ -81,6 +81,7 @@
        company-tabnine
        elisp-demos
        evil-easymotion
+       exec-path-from-shell
        fish-mode
        helm-tramp
        helpful

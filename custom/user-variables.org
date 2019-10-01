@@ -29,6 +29,7 @@
        treemacs
        ;; +frameworks
        react
+       ruby-on-rails
        ;; +fun
        emoji
        ;; +intl

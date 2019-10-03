@@ -760,6 +760,12 @@
          (e:prodigy-start-service "google-ime-skk"))
        (e:prodigy:google-ime-skk)))
    #+end_src
+** so-long
+   #+begin_src emacs-lisp
+   (use-package so-long
+     :config
+     (global-so-long-mode 1))
+   #+end_src
 ** tramp
 *** tramp
     #+begin_src emacs-lisp

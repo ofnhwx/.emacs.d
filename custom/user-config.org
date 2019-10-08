@@ -111,6 +111,18 @@
      (spacemacs|diminish which-key-mode)
      (spacemacs|diminish yas-minor-mode)
      #+end_src
+**** テスト成否での色の変更を一定時間で戻す
+     #+begin_src emacs-lisp
+     (progn
+       (defvar e:mode-line-foreground (face-foreground 'mode-line))
+       (defvar e:mode-line-background (face-background 'mode-line))
+       (defun e:set-face-attribute:around (fn &rest args)
+         (apply fn args)
+         (when (eq (car args) 'mode-line)
+           (sit-for 3)
+           (funcall fn 'mode-line nil :foreground e:mode-line-foreground :background e:mode-line-background)))
+       (advice-add 'set-face-attribute :around 'e:set-face-attribute:around))
+     #+end_src
 ** パスの追加
 *** シェルの設定を反映
     #+begin_src emacs-lisp

@@ -712,6 +712,13 @@
          (setq recentf-list (-distinct (-map 'f-short recentf-list))))
        (advice-add 'recentf-save-list :before 'e:advice:recentf-save-list:before)))
    #+end_src
+** ruby-mode
+   #+begin_src emacs-lisp
+   (use-package ruby-mode
+     :defer t
+     :init
+     (set-variable 'ruby-insert-encoding-magic-comment nil))
+   #+end_src
 ** skk
    #+begin_src emacs-lisp
    (use-package skk

@@ -521,6 +521,22 @@
        "hdds" 'helpful-symbol
        "hddv" 'helpful-variable))
    #+end_src
+** lsp
+*** lsp-mode
+    #+begin_src emacs-lisp
+    (use-package lsp-mode
+      :defer t
+      :init
+      (set-variable 'lsp-session-file (expand-file-name ".lsp-session-v1" spacemacs-cache-directory)))
+    #+end_src
+*** lsp-java
+    #+begin_src emacs-lisp
+    (use-package lsp-java
+      :defer t
+      :init
+      (set-variable 'lsp-java-server-install-dir (expand-file-name "java/lsp" spacemacs-cache-directory))
+      (set-variable 'lsp-java-workspace-dir (expand-file-name "java/workspace" spacemacs-cache-directory)))
+    #+end_src
 ** magit
 *** magit
     #+begin_src emacs-lisp
@@ -832,10 +848,10 @@
     #+end_src
 ** visual-regexp
    #+begin_src emacs-lisp
-     (use-package visual-regexp
-       :bind
-       (:map global-map
-             ([remap query-replace] . vr/query-replace)))
+   (use-package visual-regexp
+     :bind
+     (:map global-map
+           ([remap query-replace] . vr/query-replace)))
    #+end_src
 ** whitespace
    #+begin_src emacs-lisp

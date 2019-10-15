@@ -119,8 +119,9 @@
        (defun e:set-face-attribute:around (fn &rest args)
          (apply fn args)
          (when (eq (car args) 'mode-line)
-           (sit-for 3)
-           (funcall fn 'mode-line nil :foreground e:mode-line-foreground :background e:mode-line-background)))
+           (let ((inhibit-quit t))
+             (sit-for 3)
+             (funcall fn 'mode-line nil :foreground e:mode-line-foreground :background e:mode-line-background))))
        (advice-add 'set-face-attribute :around 'e:set-face-attribute:around))
      #+end_src
 ** パスの追加

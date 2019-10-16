@@ -741,6 +741,13 @@
          (setq recentf-list (-distinct (-map 'f-short recentf-list))))
        (advice-add 'recentf-save-list :before 'e:advice:recentf-save-list:before)))
    #+end_src
+** rubocopfmt
+   #+begin_src emacs-lisp
+   (use-package rubocopfmt
+     :defer t
+     :init
+     (set-variable 'rubocopfmt-use-bundler-when-possible nil))
+   #+end_src
 ** ruby-mode
    #+begin_src emacs-lisp
    (use-package ruby-mode

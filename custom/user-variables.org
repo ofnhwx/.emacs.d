@@ -38,7 +38,7 @@
        csv
        emacs-lisp
        html
-       java
+       (java :variables java-backend 'meghanada)
        javascript
        kotlin
        markdown

@@ -16,7 +16,7 @@
    #+begin_src emacs-lisp
    (setq e:dotspacemacs-configuration-layers
      '(;; +checkers
-       (syntax-checking :variables syntax-checking-enable-tooltips nil)
+       syntax-checking
        ;; +completion
        auto-completion
        (helm :variables helm-use-fuzzy nil)
@@ -44,6 +44,7 @@
        markdown
        php
        ruby
+       shell-scripts
        sql
        vimscript
        yaml
@@ -62,6 +63,7 @@
        nginx
        prodigy
        ranger
+       restclient
        (shell :variables shell-default-shell 'eshell)
        vagrant
        ;; +web-services
@@ -78,16 +80,13 @@
        atomic-chrome
        basic-mode
        codic
-       company-box
        company-tabnine
        elisp-demos
        evil-easymotion
        exec-path-from-shell
-       fish-mode
        helm-tramp
        helpful
        magit-todos
-       ob-restclient
        persistent-scratch
        poly-org
        visual-regexp

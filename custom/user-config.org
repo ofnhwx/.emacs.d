@@ -198,7 +198,7 @@
      #+end_src
 **** キーボード入力(option, command関連)
      #+begin_src emacs-lisp
-     (when (e:system-type-darwin-p)
+     (when (spacemacs/system-is-mac)
        (set-variable 'ns-command-modifier 'meta)
        (set-variable 'ns-right-command-modifier 'super)
        (set-variable 'ns-alternate-modifier 'none))
@@ -258,13 +258,6 @@
        ("d" . ("Dabbrev" . company-dabbrev))
        ("f" . ("Files" . company-files))
        ("t" . ("TabNine" . company-tabnine))))
-    #+end_src
-*** company-box
-    #+begin_src emacs-lisp
-    (use-package company-box
-      :hook (company-mode . company-box-mode)
-      :init
-      (set-variable 'company-box-enable-icon nil))
     #+end_src
 *** company-tabnine
     #+begin_src emacs-lisp

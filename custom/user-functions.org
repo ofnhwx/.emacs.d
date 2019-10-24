@@ -1,13 +1,6 @@
 #+TITLE: user-functions.org
 #+STARTUP: overview
 
-* OS判定
-** Mac
-   #+begin_src emacs-lisp
-     (defun e:system-type-darwin-p ()
-       "OS が Mac かを取得する."
-       (eq system-type 'darwin))
-   #+end_src
 * フォント設定
   #+begin_src emacs-lisp
     (defun e:font ()

@@ -210,6 +210,12 @@
         (load-file private-config)))
     #+end_src
 * パッケージ毎の設定
+** 標準
+   #+begin_src emacs-lisp
+   (spacemacs/set-leader-keys
+     "%" 'query-replace
+     "&" 'async-shell-command)
+   #+end_src
 ** ace-window
    #+begin_src emacs-lisp
    (use-package ace-window
@@ -554,9 +560,8 @@
       :config
       (magit-add-section-hook 'magit-status-sections-hook #'magit-insert-skip-worktree-files nil t)
       (when (executable-find "ghq")
-        (let ((dirs (s-split "\n" (s-trim (shell-command-to-string "ghq list --full-path")))))
-          (set-variable 'magit-repository-directories
-                        (--map (cons it 0) dirs))))
+        (set-variable 'magit-repository-directories
+                      (list (cons (e:shell-command-to-string "ghq root") 3))))
       (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
     #+end_src
 *** magit-todos

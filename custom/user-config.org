@@ -764,7 +764,10 @@
      :config
      (progn
        (defun e:advice:recentf-save-list:before (&rest args)
-         (setq recentf-list (-distinct (-map 'f-short recentf-list))))
+         (setq recentf-list (-distinct (-map 'f-short recentf-list)))
+         (setq recentf-list (--filter (or (file-remote-p it)
+                                          (f-exists? it))
+                                      recentf-list))
        (advice-add 'recentf-save-list :before 'e:advice:recentf-save-list:before)))
    #+end_src
 ** rubocopfmt

@@ -3,6 +3,8 @@
 
 * テスト成否によるモードラインの色の変更を一定時間で戻す
   #+begin_src emacs-lisp
+  (defvar e:mode-line-foreground (face-foreground 'mode-line))
+  (defvar e:mode-line-background (face-background 'mode-line))
   (define-advice set-face-attribute (:around (fn &rest args) auto-reset-mode-line-colors)
     (apply fn args)
     (when (eq (car args) 'mode-line)

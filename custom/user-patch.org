@@ -1,0 +1,19 @@
+#+TITLE: user-patch.org
+#+STARTUP: overview
+
+* 準備
+  #+begin_src emacs-lisp
+  (require 'pkg-info)
+  #+end_src
+* avy-migemo
+  #+begin_src emacs-lisp
+  (let ((version (pkg-info-format-version (pkg-info-package-version 'avy-migemo)))
+        (target "20180716.1455"))
+    (if (string-equal version target)
+        (with-eval-after-load 'avy-migemo
+          (define-advice avy--generic-jump (:filter-args (args) patch-20180716-1455)
+            (if (= (length args) 4)
+                args
+              (e:remove-nth 2 args))))
+      (spacemacs-buffer/warning "`avy-migemo' was updated.")))
+  #+end_src

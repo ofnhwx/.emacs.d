@@ -1,15 +1,10 @@
-#+TITLE: user-functions.org
+#+TITLE: user-features.org
 #+STARTUP: overview
 
-* フォント設定
-  #+begin_src emacs-lisp
-  (defun e:font ()
-    "フォント"
-    (list e:font-name :size e:font-size))
-  #+end_src
 * プロジェクト設定
 ** プロジェクトルートの取得
    #+begin_src emacs-lisp
+   (setq e:project-root-mark '(".git/" ".hg/" ".svn/" ".git"))
    (defun e:project-root (dir)
      "指定した DIR のプロジェクトルートを返す."
      (let* ((dir (file-name-directory (expand-file-name dir)))
@@ -27,6 +22,19 @@
        (if parent
            (concat (e:project-name parent) "/" name)
          name)))
+   #+end_src
+* コマンドの結果を取得
+** コマンドの結果を文字列で取得
+   #+begin_src emacs-lisp
+   (defun e:shell-command-to-string (command)
+     "コマンドの結果を文字列で取得."
+     (string-trim (shell-command-to-string command)))
+   #+end_src
+** コマンドの結果をリストで取得
+   #+begin_src emacs-lisp
+   (defun e:shell-command-to-list (command)
+     "コマンドの結果をリストで取得."
+     (split-string (e:shell-command-to-string command) "\n"))
    #+end_src
 * その他の便利な関数
 ** 認証情報の取得
@@ -74,17 +82,4 @@
    (defun e:major-mode (buffer)
      (with-current-buffer buffer
        major-mode))
-   #+end_src
-** コマンドの結果を取得
-*** コマンドの結果を文字列で取得
-   #+begin_src emacs-lisp
-   (defun e:shell-command-to-string (command)
-     "コマンドの結果を文字列で取得."
-     (string-trim (shell-command-to-string command)))
-   #+end_src
-*** コマンドの結果をリストで取得
-   #+begin_src emacs-lisp
-   (defun e:shell-command-to-list (command)
-     "コマンドの結果をリストで取得."
-     (split-string (e:shell-command-to-string command) "\n"))
    #+end_src

@@ -24,9 +24,18 @@
   (set-variable 'literate-elisp-begin-src-id "#+begin_src")
   (set-variable 'literate-elisp-end-src-id "#+end_src"))
 
-;; 独自の変数・関数を定義
-(literate-elisp-load-file (expand-file-name "user-variables.org" e:custom-directory))
-(literate-elisp-load-file (expand-file-name "user-functions.org" e:custom-directory))
+;; フォント設定
+(progn
+  (setq e:font-name "Cica")
+  (setq e:font-size 14)
+  (setq e:font-rescale 1.00)
+  (defun e:font ()
+    (list e:font-name :size e:font-size))
+  (define-advice spacemacs/set-default-font (:after (&rest _) japanese-font-setting)
+    (set-fontset-font t 'unicode (font-spec :family e:font-name))
+    (set-variable 'face-font-rescale-alist (list e:font-name e:font-rescale))
+    (when (require 'eaw nil t)
+      (eaw-fullwidth))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Spacemacs

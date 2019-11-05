@@ -111,19 +111,6 @@
      (spacemacs|diminish which-key-mode)
      (spacemacs|diminish yas-minor-mode)
      #+end_src
-**** テスト成否での色の変更を一定時間で戻す
-     #+begin_src emacs-lisp
-     (progn
-       (defvar e:mode-line-foreground (face-foreground 'mode-line))
-       (defvar e:mode-line-background (face-background 'mode-line))
-       (defun e:set-face-attribute:around (fn &rest args)
-         (apply fn args)
-         (when (eq (car args) 'mode-line)
-           (let ((inhibit-quit t))
-             (sit-for 3)
-             (funcall fn 'mode-line nil :foreground e:mode-line-foreground :background e:mode-line-background))))
-       (advice-add 'set-face-attribute :around 'e:set-face-attribute:around))
-     #+end_src
 ** パスの追加
 *** シェルの設定を反映
     #+begin_src emacs-lisp
@@ -357,20 +344,7 @@
        ;; 置き換えモード
        :map evil-replace-state-map
        ;; Emacsモード
-       :map evil-emacs-state-map)
-      ;; normal-state に戻す設定を追加
-      (defun e:evil-force-normal-state ()
-        (cond
-         ((eq evil-state 'visual)
-          (evil-exit-visual-state))
-         ((member evil-state '(insert hybrid))
-          (evil-force-normal-state))))
-      (defun e:advice:save-buffer:after (&rest args)
-        (e:evil-force-normal-state))
-      (defun e:advice:keyboard-quit:before (&rest args)
-        (e:evil-force-normal-state))
-      (advice-add 'save-buffer :after 'e:advice:save-buffer:after)
-      (advice-add 'keyboard-quit :before 'e:advice:keyboard-quit:before))
+       :map evil-emacs-state-map))
     #+end_src
 *** evil-easymotion
     #+begin_src emacs-lisp
@@ -429,28 +403,6 @@
     (use-package evil-textobj-between
       :after (evil))
     #+end_src
-** eww
-   #+begin_src emacs-lisp
-   (use-package eww
-     :no-require
-     :after (:any eww shr)
-     :config
-     ;; 色の有効/無効を切替え
-     (defvar e:eww-enable-colorize nil)
-     (defun e:advice:eww-colorize-region:around (&rest args)
-       (when e:eww-enable-colorize
-         (apply (car args) (cdr args))))
-     (defun e:eww-colorize-on ()
-       (interactive)
-       (setq-local e:eww-enable-colorize t)
-       (eww-reload))
-     (defun e:eww-colorize-off ()
-       (interactive)
-       (setq-local e:eww-enable-colorize nil)
-       (eww-reload))
-     (advice-add 'eww-colorize-region :around 'e:advice:eww-colorize-region:around)
-     (advice-add 'shr-colorize-region :around 'e:advice:eww-colorize-region:around))
-   #+end_src
 ** flycheck
    #+begin_src emacs-lisp
    (use-package flycheck
@@ -575,10 +527,6 @@
               (and (listp v)
                    (--all? (stringp it) v))))
       :config
-      (progn
-        (defun e:advice:magit-todos--line-item:around (fn &rest args)
-          (ignore-errors (apply fn args)))
-        (advice-add 'magit-todos--line-item :around 'e:advice:magit-todos--line-item:around))
       (defun e:magit-todos-mode-on ()
         (let ((inhibit-message t))
           (magit-todos-mode 1))))
@@ -741,17 +689,8 @@
              (unless (member it buffers)
                (kill-buffer it)))))
        (run-with-idle-timer 5.0 5.0 #'e:ranger-kill-inactive-buffers))
-     (progn ;; ranger のヘッダーラインの表示を変更
-       (defun e:advice:ranger--header-lhs:override (&rest args)
-         "Setup header-line for ranger buffer."
-         (e:header-line-for-files-format-internal
-          (f-long (or (r--fget ranger-current-file) ""))))
-       (advice-add 'ranger--header-lhs :override 'e:advice:ranger--header-lhs:override))
-     (progn ;; 常に dired の代わりに ranger を使用する
-       (defun e:advice:ranger-override-dired-mode-on:after (&rest args)
-         (ranger-override-dired-mode 1))
-       (advice-add 'ranger-mode :after 'e:advice:ranger-override-dired-mode-on:after)
-       (ranger-override-dired-mode 1)))
+     ;; 常に dired の代わりに ranger を使用する
+     (ranger-override-dired-mode 1))
    #+end_src
 ** recentf
    #+begin_src emacs-lisp
@@ -760,15 +699,7 @@
      :init
      (set-variable 'recentf-max-menu-items 20)
      (set-variable 'recentf-max-saved-items 3000)
-     (set-variable 'recentf-filename-handlers '(abbreviate-file-name))
-     :config
-     (progn
-       (defun e:advice:recentf-save-list:before (&rest args)
-         (setq recentf-list (-distinct (-map 'f-short recentf-list)))
-         (setq recentf-list (--filter (or (file-remote-p it)
-                                          (f-exists? it))
-                                      recentf-list)))
-       (advice-add 'recentf-save-list :before 'e:advice:recentf-save-list:before)))
+     (set-variable 'recentf-filename-handlers '(abbreviate-file-name)))
    #+end_src
 ** rubocopfmt
    #+begin_src emacs-lisp
@@ -859,20 +790,6 @@
           (let ((functions (append (tramp-get-completion-function method) functions)))
             (tramp-set-completion-function method functions)))))
     #+end_src
-*** helm-tramp
-    #+begin_src emacs-lisp
-    (use-package helm-tramp
-      :defer t
-      :config
-      ;; ssh/conf.d の内容を接続先に追加
-      (defun e:advice:helm-tramp--candidates:filter-return (result)
-        (dolist (host (--filter (not (string-equal it tramp-default-host))
-                                (-distinct (-flatten (-map 'eval (tramp-get-completion-function "ssh"))))))
-          (push (format "/%s:%s:" tramp-default-method host) result)
-          (push (format "/ssh:%s|sudo:%s:/" host host) result))
-        (-distinct (reverse result)))
-      (advice-add 'helm-tramp--candidates :filter-return 'e:advice:helm-tramp--candidates:filter-return))
-    #+end_src
 ** transient
    #+begin_src emacs-lisp
    (use-package transient
@@ -934,23 +851,4 @@
      (defun e:whitespace-mode-on ()
        (interactive)
        (whitespace-mode 1)))
-   #+end_src
-* パッチ対応
-  #+begin_src emacs-lisp
-  (require 'pkg-info)
-  #+end_src
-** avy-migemo
-   #+begin_src emacs-lisp
-   (let ((version (pkg-info-format-version (pkg-info-package-version 'avy-migemo)))
-         (target "20180716.1455"))
-     (if (string-equal version target)
-         (use-package avy-migemo
-           :defer t
-           :config
-           (defun e:patch:avy--generic-jump:filter-args (args)
-             (if (= (length args) 4)
-                 args
-               (e:remove-nth 2 args)))
-           (advice-add 'avy--generic-jump :filter-args 'e:patch:avy--generic-jump:filter-args))
-       (spacemacs-buffer/warning "`avy-migemo' was updated.")))
    #+end_src

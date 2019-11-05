@@ -1,32 +1,110 @@
 #+TITLE: user-init.org
 #+STARTUP: overview
 
+* パッケージ(spacemacs)
+** レイヤー
+   #+begin_src emacs-lisp
+   (defun e:dotspacemacs-configuration-layers ()
+     '(;; +checkers
+       syntax-checking
+       ;; +completion
+       auto-completion
+       (helm :variables helm-use-fuzzy nil)
+       ;; +emacs
+       better-defaults
+       org
+       ;; +email
+       notmuch
+       ;; +filetree
+       treemacs
+       ;; +frameworks
+       react
+       ruby-on-rails
+       ;; +fun
+       emoji
+       ;; +intl
+       japanese
+       ;; +lang
+       csv
+       emacs-lisp
+       html
+       (java :variables java-backend 'meghanada)
+       javascript
+       kotlin
+       markdown
+       php
+       ruby
+       shell-scripts
+       sql
+       vimscript
+       yaml
+       ;; +misc
+       copy-as-format
+       ;; +pair-programming
+       floobits
+       ;; +source-control
+       (git :variables git-magit-status-fullscreen t)
+       github
+       ;; +tags
+       gtags
+       ;; +tools
+       docker
+       lsp
+       nginx
+       prodigy
+       ranger
+       restclient
+       (shell :variables shell-default-shell 'eshell)
+       vagrant
+       ;; +web-services
+       search-engine
+       ))
+   #+end_src
+** 追加
+   #+begin_src emacs-lisp
+   (defun e:dotspacemacs-additional-packages ()
+     '(;; Utilities
+       (evil-plugins :location (recipe :fetcher github :repo "tarao/evil-plugins"))
+       (helm-fzf :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
+       (locale-eaw :location (recipe :fetcher github :repo "hamano/locale-eaw"))
+       atomic-chrome
+       basic-mode
+       codic
+       company-tabnine
+       elisp-demos
+       evil-easymotion
+       exec-path-from-shell
+       helm-tramp
+       helpful
+       magit-todos
+       persistent-scratch
+       poly-org
+       visual-regexp
+       vlf
+       ))
+   #+end_src
+** 除外
+   #+begin_src emacs-lisp
+   (defun e:dotspacemacs-excluded-packages ()
+     '(;; +intl/japanese
+       pangu-spacing
+       ;; +lang/php
+       company-php
+       ))
+   #+end_src
 * custom-file を移動
   #+begin_src emacs-lisp
-    (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
+  (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
   #+end_src
-* フォント設定
-** 設定用の関数を定義
-   #+begin_src emacs-lisp
-     (defun e:advice:spacemacs/set-default-font:after (&rest args)
-       (set-fontset-font t 'unicode (font-spec :family e:font-name))
-       (set-variable 'face-font-rescale-alist (list e:font-name e:font-rescale))
-       (when (require 'eaw nil t)
-         (eaw-fullwidth)))
-   #+end_src
-** spacemacs のフォント設定の後に実行
-   #+begin_src emacs-lisp
-     (advice-add 'spacemacs/set-default-font :after 'e:advice:spacemacs/set-default-font:after)
-   #+end_src
 * 「Viperize?」の確認をしない
   #+begin_src emacs-lisp
-    (set-variable 'viper-mode nil)
+  (set-variable 'viper-mode nil)
   #+end_src
 * Spacemacs が作成する環境変数を保存しておくファイル
   #+begin_src emacs-lisp
-    (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
+  (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
   #+end_src
 * which-key の設定
   #+begin_src emacs-lisp
-    (set-variable 'which-key-enable-extended-define-key t)
+  (set-variable 'which-key-enable-extended-define-key t)
   #+end_src

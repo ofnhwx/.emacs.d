@@ -1,0 +1,96 @@
+#+TITLE: user-advice.org
+#+STARTUP: overview
+
+* テスト成否によるモードラインの色の変更を一定時間で戻す
+  #+begin_src emacs-lisp
+  (define-advice set-face-attribute (:around (fn &rest args) auto-reset-mode-line-colors)
+    (apply fn args)
+    (when (eq (car args) 'mode-line)
+      (let ((inhibit-quit t))
+        (sit-for 3)
+        (funcall fn 'mode-line nil :foreground e:mode-line-foreground :background e:mode-line-background))))
+  #+end_src
+* evil
+** 保存時にノーマルステートに戻す
+   #+begin_src emacs-lisp
+   (with-eval-after-load 'evil
+     (defun e:evil-force-normal-state ()
+       (cond
+        ((eq evil-state 'visual)
+         (evil-exit-visual-state))
+        ((member evil-state '(insert hybrid))
+         (evil-force-normal-state))))
+     (define-advice save-buffer (:after (&rest _) evil-force-normal-state)
+       (e:evil-force-normal-state))
+     (define-advice keyboard-quit (:before (&rest _) evil-force-normal-state)
+       (e:evil-force-normal-state)))
+   #+end_src
+* eww/shr
+** 色の有効/無効を切替え可能にする
+   #+begin_src emacs-lisp
+   (defvar e:eww-enable-colorize nil)
+   (defun e:eww-colorize-on ()
+     (interactive)
+     (setq-local e:eww-enable-colorize t)
+     (eww-reload))
+   (defun e:eww-colorize-off ()
+     (interactive)
+     (setq-local e:eww-enable-colorize nil)
+     (eww-reload))
+   #+end_src
+** ewwで有効化
+   #+begin_src emacs-lisp
+   (with-eval-after-load 'eww
+     (define-advice eww-colorize-region (:around (fn &rest args) enable-colorize-config)
+       (when e:eww-enable-colorize
+         (apply fn args))))
+   #+end_src
+** shrで有効化
+   #+begin_src emacs-lisp
+   (with-eval-after-load 'shr
+     (define-advice shr-colorize-region (:around (fn &rest args) enable-colorize-config)
+       (when e:eww-enable-colorize
+         (apply fn args))))
+   #+end_src
+* helm-tramp
+** sshの設定ファイルから候補を追加
+  #+begin_src emacs-lisp
+  (with-eval-after-load 'helm-tramp
+    (define-advice helm-tramp--candidates (:filter-return (result) add-candidates-from-ssh-config)
+      (dolist (host (--filter (not (string-equal it tramp-default-host))
+                              (-distinct (-flatten (-map 'eval (tramp-get-completion-function "ssh"))))))
+        (push (format "/%s:%s:" tramp-default-method host) result)
+        (push (format "/ssh:%s|sudo:%s:/" host host) result))
+      (-distinct (reverse result))))
+  #+end_src
+* magit-todos
+** TODOの表示でエラーがでないように調整
+   #+begin_src emacs-lisp
+   (with-eval-after-load 'magit-todos
+     (define-advice magit-todos--line-item (:around (fn &rest args) ignore-errors)
+       (ignore-errors (apply fn args))))
+   #+end_src
+* ranger
+** ヘッダーラインの表示を変更
+   #+begin_src emacs-lisp
+   (with-eval-after-load 'ranger
+     (define-advice ranger--header-lhs (:override (&rest _) override-header-line)
+       (e:header-line-for-files-format-internal
+        (f-long (or (r--fget ranger-current-file) "")))))
+   #+end_src
+** diredの代わりに使用
+   #+begin_src emacs-lisp
+   (with-eval-after-load 'ranger
+     (define-advice ranger-mode (:after (&rest _) always-use-ranger)
+       (ranger-override-dired-mode 1)))
+   #+end_src
+* recentf
+** 存在しないファイルを履歴から削除する
+   #+begin_src emacs-lisp
+   (with-eval-after-load 'recentf
+     (define-advice recentf-save-list (:before (&rest _) remove-non-existing-files)
+       (setq recentf-list (-distinct (-map 'f-short recentf-list)))
+       (setq recentf-list (--filter (or (file-remote-p it)
+                                        (f-exists? it))
+                                    recentf-list))))
+   #+end_src

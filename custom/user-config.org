@@ -448,7 +448,9 @@
       (:map global-map
             ([remap eval-expression] . helm-eval-expression))
       :init
-      (set-variable 'helm-buffer-max-length nil))
+      (set-variable 'helm-buffer-max-length nil)
+      :config
+      (helm-migemo-mode))
     #+end_src
 **** after: eldoc-eval
      #+begin_src emacs-lisp

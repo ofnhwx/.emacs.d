@@ -23,68 +23,16 @@
     #+end_src
 ** 情報表示
 *** ヘッダーライン
-**** ファイル用の設定
-     #+begin_src emacs-lisp
-     (defvar e:header-line-for-files-cache (make-hash-table :test 'equal))
-     (defun e:header-line-for-files-format-internal (path &optional refname)
-       (let* ((path    (or path ""))
-              (refname (or refname ""))
-              (key     (concat path refname)))
-         (or (gethash key e:header-line-for-files-cache)
-             (let* ((file  (f-filename path))
-                    (dir   (f-short (file-name-directory path)))
-                    (tramp (file-remote-p path))
-                    (limit (- (window-width) (length file)))
-                    (proot (e:project-root dir))
-                    (pname (if proot (format "[%s]" (e:project-name proot)))))
-               ;; プロジェクト内のファイルの場合はプロジェクト名を省略
-               (when proot
-                 (setq dir   (replace-regexp-in-string (regexp-quote proot) "" dir))
-                 (setq limit (- limit (length pname))))
-               ;; Tramp 接続の場合は該当箇所を省略
-               (when tramp
-                 (setq dir   (replace-regexp-in-string (regexp-quote tramp) "" dir))
-                 (setq limit (- limit (length tramp))))
-               ;; ディレクトリ部分を頑張って短くする
-               (setq dir (e:shorten dir limit))
-               (let ((index (s-index-of "..." dir)))
-                 (when index
-                   (set-text-properties index (+ index 3) '(face font-lock-comment-face) dir)))
-               ;; 属性を設定しつつ結合する
-               (puthash key
-                        (concat
-                         (propertize " " 'display '(space :align-to 0))
-                         (propertize (or tramp "") 'face 'font-lock-comment-face)
-                         (propertize (or pname "") 'face 'font-lock-keyword-face)
-                         dir
-                         (propertize file 'face 'font-lock-constant-face)
-                         (propertize refname 'face 'font-lock-keyword-face))
-                        e:header-line-for-files-cache)))))
-     (defun e:header-line-for-files-format ()
-       "ファイル用のヘッダーラインのフォーマット"
-       (e:header-line-for-files-format-internal
-        (f-long (or buffer-file-name (bound-and-true-p magit-buffer-file-name)))
-        (if (bound-and-true-p magit-buffer-refname) (format "<%s>" magit-buffer-refname))))
-     (defun e:setup-headerline-for-files ()
-       "ファイル用のヘッダーラインの設定"
-       (setq-local spaceline-buffer-id-p nil)
-       (set-face-attribute 'header-line nil
-                           :inherit 'mode-line
-                           :background (face-attribute 'mode-line :background))
-       (setq-local header-line-format
-                   '((:eval (e:header-line-for-files-format)))))
-     #+end_src
 **** 一定時間毎に実行
      #+begin_src emacs-lisp
      (defun e:setup-headerline ()
        "ヘッダーラインをなるべくいい感じに設定する"
-       (cl-dolist (window (window-list))
-         (with-current-buffer (window-buffer window)
-           (unless header-line-format
-             (cond
-              ((or buffer-file-name
-                   (bound-and-true-p magit-buffer-file-name))
-               (e:setup-headerline-for-files)))))))
+       (cl-loop for buffer in (--filter (with-current-buffer it (not header-line-format))
+                                        (-map #'window-buffer (window-list)))
+                do (with-current-buffer buffer
+                     (cond
+                      ((e:current-buffer-file-name)
+                       (e:setup-headerline-for-files))))))
      (run-with-idle-timer 0.5 0.5 'e:setup-headerline)
      #+end_src
 *** モードライン

@@ -73,7 +73,6 @@
        company-tabnine
        elisp-demos
        evil-easymotion
-       exec-path-from-shell
        helm-tramp
        helpful
        magit-todos

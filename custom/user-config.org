@@ -111,28 +111,10 @@
      (spacemacs|diminish which-key-mode)
      (spacemacs|diminish yas-minor-mode)
      #+end_src
-** パスの追加
-*** シェルの設定を反映
-    #+begin_src emacs-lisp
-    (use-package exec-path-from-shell
-      :init
-      (exec-path-from-shell-initialize)
-      (setq exec-path (-distinct exec-path)))
-    #+end_src
-*** anyenv 関連の設定を追加
-    #+begin_src emacs-lisp
-    (let ((path (f-expand "~/.anyenv/envs/rbenv/shims")))
-      (when (f-directory? path)
-        (setq exec-path (cons path exec-path))))
-    #+end_src
-*** PATH に反映
-    #+begin_src emacs-lisp
-    (setenv "PATH" (s-join ":" exec-path))
-    #+end_src
-*** load-path の追加
-    #+begin_src emacs-lisp
-    (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
-    #+end_src
+** load-path の追加
+   #+begin_src emacs-lisp
+   (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
+   #+end_src
 ** 雑多なやつ
 *** shell の設定
     #+begin_src emacs-lisp

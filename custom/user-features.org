@@ -131,9 +131,8 @@
    #+end_src
 ** メジャーモードの取得
    #+begin_src emacs-lisp
-   (defun e:major-mode (buffer)
-     (with-current-buffer buffer
-       major-mode))
+   (defun e:major-mode (&optional buffer)
+     (buffer-local-value 'major-mode (or buffer (current-buffer))))
    #+end_src
 ** いい感じにファイル名を取得
    #+begin_src emacs-lisp

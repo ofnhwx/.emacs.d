@@ -763,9 +763,10 @@
                      (newline-mark ?\n     [?\u0024 ?\n])))
      :config
      (set-face-attribute 'whitespace-trailing nil :background "#800000")
-     (set-face-attribute 'whitespace-tab      nil :foreground "#404040" :background "#404040")
-     (set-face-attribute 'whitespace-space    nil :foreground "#404040")
-     (set-face-attribute 'whitespace-newline  nil :foreground "#404040")
+     (let ((color "#595D63"))
+       (set-face-attribute 'whitespace-tab      nil :foreground color :strike-through t)
+       (set-face-attribute 'whitespace-space    nil :foreground color)
+       (set-face-attribute 'whitespace-newline  nil :foreground color))
      (defun e:whitespace-mode-on ()
        (interactive)
        (whitespace-mode 1)))

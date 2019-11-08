@@ -1,4 +1,4 @@
-#+TITLE: user-advice.org
+#+TITLE: config/advices.org
 #+STARTUP: overview
 
 * テスト成否によるモードラインの色の変更を一定時間で戻す

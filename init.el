@@ -12,12 +12,14 @@
 ;;; 各種設定
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(progn ;; パス設定
+;; パス関連の設定
+(progn
   (let ((emacs-dir (file-name-directory (or load-file-name buffer-file-name))))
     (setq user-emacs-directory (abbreviate-file-name emacs-dir)))
   (defvar e:custom-directory   (expand-file-name "custom/"   user-emacs-directory))
   (defvar e:external-directory (expand-file-name "external/" user-emacs-directory))
-  (defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory)))
+  (defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory))
+  (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory)))
 
 ;; org ファイルをロードする設定
 (when (require 'literate-elisp (expand-file-name "literate-elisp/literate-elisp.el" e:external-directory))
@@ -26,9 +28,9 @@
 
 ;; フォント設定
 (progn
-  (setq e:font-name "Cica")
-  (setq e:font-size 14)
-  (setq e:font-rescale 1.00)
+  (defvar e:font-name "Cica")
+  (defvar e:font-size 14)
+  (defvar e:font-rescale 1.00)
   (defun e:font ()
     (list e:font-name :size e:font-size))
   (define-advice spacemacs/set-default-font (:after (&rest _) japanese-font-setting)

@@ -425,7 +425,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (literate-elisp-load-file (expand-file-name "user-init.org" e:custom-directory)))
+  (literate-elisp-load-file (expand-file-name "config/init.org" e:custom-directory)))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -440,10 +440,10 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (literate-elisp-load-file (expand-file-name "user-features.org" e:custom-directory))
-  (literate-elisp-load-file (expand-file-name "user-config.org"   e:custom-directory))
-  (literate-elisp-load-file (expand-file-name "user-advice.org"   e:custom-directory))
-  (literate-elisp-load-file (expand-file-name "user-patch.org"    e:custom-directory)))
+  (literate-elisp-load-file (expand-file-name "config/features.org" e:custom-directory))
+  (literate-elisp-load-file (expand-file-name "config/packages.org" e:custom-directory))
+  (literate-elisp-load-file (expand-file-name "config/advices.org"  e:custom-directory))
+  (literate-elisp-load-file (expand-file-name "config/patches.org"  e:custom-directory)))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

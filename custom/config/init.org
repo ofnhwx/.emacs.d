@@ -1,4 +1,4 @@
-#+TITLE: user-init.org
+#+TITLE: config/init.org
 #+STARTUP: overview
 
 * パッケージ(spacemacs)
@@ -8,7 +8,7 @@
      '(;; +checkers
        syntax-checking
        ;; +completion
-       auto-completion
+       (auto-completion :variables auto-completion-use-company-box t)
        (helm :variables helm-use-fuzzy nil)
        ;; +emacs
        better-defaults
@@ -71,6 +71,7 @@
        basic-mode
        codic
        company-tabnine
+       company-try-hard
        elisp-demos
        evil-easymotion
        helm-tramp
@@ -91,17 +92,14 @@
        company-php
        ))
    #+end_src
-* custom-file を移動
+* ファイルの移動(事前に設定しておく必要あり)
   #+begin_src emacs-lisp
   (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
+  (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
   #+end_src
 * 「Viperize?」の確認をしない
   #+begin_src emacs-lisp
   (set-variable 'viper-mode nil)
-  #+end_src
-* Spacemacs が作成する環境変数を保存しておくファイル
-  #+begin_src emacs-lisp
-  (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
   #+end_src
 * which-key の設定
   #+begin_src emacs-lisp

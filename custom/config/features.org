@@ -1,4 +1,4 @@
-#+TITLE: user-features.org
+#+TITLE: config/features.org
 #+STARTUP: overview
 
 * プロジェクト設定

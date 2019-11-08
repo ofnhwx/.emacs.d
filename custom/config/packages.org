@@ -168,11 +168,14 @@
     :no-require
     :bind
     (:map company-active-map
-          ("<escape>" . company-abort))
+          ("<escape>" . company-abort)
+          ("C-z" . company-try-hard))
     :init
     (define-prefix-command 'e:complete-command)
     (evil-define-key 'hybrid global-map (kbd "<backtab>") #'e:complete-command)
     (bind-keys
+     :map global-map
+     ("C-z" . company-try-hard)
      :map e:complete-command
      ("<backtab>" . ("Company" . company-complete))
      ("d" . ("Dabbrev" . company-dabbrev))
@@ -188,17 +191,6 @@
     (spacemacs|add-company-backends
       :backends company-tabnine
       :modes haml-mode js2-mode php-mode ruby-mode))
-  #+end_src
-* company-try-hard
-  #+begin_src emacs-lisp
-  (use-package company-try-hard
-    :defer
-    :init
-    (bind-keys
-     :map global-map
-     ("C-z" . company-try-hard)
-     :map company-active-map
-     ("C-z" . company-try-hard)))
   #+end_src
 * codic
   #+begin_src emacs-lisp

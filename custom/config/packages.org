@@ -175,7 +175,6 @@
     (bind-keys
      :map e:complete-command
      ("<backtab>" . ("Company" . company-complete))
-     ("<tab>" . ("Try hard" . company-try-hard))
      ("d" . ("Dabbrev" . company-dabbrev))
      ("f" . ("Files" . company-files))
      ("t" . ("TabNine" . company-tabnine))))
@@ -189,6 +188,17 @@
     (spacemacs|add-company-backends
       :backends company-tabnine
       :modes haml-mode js2-mode php-mode ruby-mode))
+  #+end_src
+* company-try-hard
+  #+begin_src emacs-lisp
+  (use-package company-try-hard
+    :defer
+    :init
+    (bind-keys
+     :map global-map
+     ("C-z" . company-try-hard)
+     :map company-active-map
+     ("C-z" . company-try-hard)))
   #+end_src
 * codic
   #+begin_src emacs-lisp

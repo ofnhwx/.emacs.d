@@ -8,8 +8,11 @@
      '(;; +checkers
        syntax-checking
        ;; +completion
-       (auto-completion :variables auto-completion-use-company-box t)
-       (helm :variables helm-use-fuzzy nil)
+       (auto-completion :variables
+                        auto-completion-use-company-box t
+                        auto-completion-enable-help-tooltip t)
+       (helm :variables
+             helm-use-fuzzy nil)
        ;; +emacs
        better-defaults
        org
@@ -28,7 +31,8 @@
        csv
        emacs-lisp
        html
-       (java :variables java-backend 'meghanada)
+       (java :variables
+             java-backend 'meghanada)
        javascript
        kotlin
        markdown
@@ -46,7 +50,8 @@
        ;; +pair-programming
        floobits
        ;; +source-control
-       (git :variables git-magit-status-fullscreen t)
+       (git :variables
+            git-magit-status-fullscreen t)
        github
        ;; +tags
        gtags
@@ -57,7 +62,8 @@
        prodigy
        ranger
        restclient
-       (shell :variables shell-default-shell 'eshell)
+       (shell :variables
+              shell-default-shell 'eshell)
        vagrant
        ;; +web-services
        search-engine

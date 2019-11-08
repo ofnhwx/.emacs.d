@@ -41,6 +41,8 @@
        ;; +misc
        copy-as-format
        multiple-cursors
+       ;; +os
+       osx
        ;; +pair-programming
        floobits
        ;; +source-control

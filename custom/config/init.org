@@ -40,6 +40,7 @@
        yaml
        ;; +misc
        copy-as-format
+       multiple-cursors
        ;; +pair-programming
        floobits
        ;; +source-control

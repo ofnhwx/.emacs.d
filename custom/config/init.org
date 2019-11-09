@@ -83,6 +83,7 @@
        company-try-hard
        elisp-demos
        evil-easymotion
+       evil-owl
        helm-tramp
        helpful
        magit-todos

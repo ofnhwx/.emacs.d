@@ -62,6 +62,7 @@
     (spacemacs|diminish company-mode)
     (spacemacs|diminish company-box-mode)
     (spacemacs|diminish emoji-cheat-sheet-plus-display-mode)
+    (spacemacs|diminish evil-owl-mode)
     (spacemacs|diminish helm-migemo-mode)
     (spacemacs|diminish hybrid-mode)
     (spacemacs|diminish smartparens-mode)
@@ -314,7 +315,8 @@
      ("*"  . ("em/search-word-forward" . evilem-motion-search-word-forward))
      ("#"  . ("em/search-word-backward" . evilem-motion-search-word-backward))
      ("-"  . ("em/previous-line-first-non-blank" . evilem-motion-previous-line-first-non-blank))
-     ("+"  . ("em/next-line-first-non-blank" . evilem-motion-next-line-first-non-blank)))
+     ("+"  . ("em/next-line-first-non-blank" . evilem-motion-next-line-first-non-blank))
+     ("s"  . evil-avy-goto-char-timer))
     (bind-key "s" 'e:evil-em-command evil-normal-state-map)
     (bind-key "x" 'e:evil-em-command evil-visual-state-map)
     (bind-key "x" 'e:evil-em-command evil-operator-state-map))
@@ -331,6 +333,12 @@
   #+begin_src emacs-lisp
   (use-package evil-textobj-between
     :after (evil))
+  #+end_src
+* evil-owl
+  #+begin_src emacs-lisp
+  (use-package evil-owl
+    :config
+    (evil-owl-mode 1))
   #+end_src
 * flycheck
   #+begin_src emacs-lisp

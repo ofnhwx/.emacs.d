@@ -2,17 +2,24 @@
 #+STARTUP: overview
 
 * パッケージ(spacemacs)
+** 設定
+   #+begin_src emacs-lisp
+   (set-variable 'auto-completion-enable-help-tooltip t)
+   (set-variable 'auto-completion-use-company-box t)
+   (set-variable 'git-magit-status-fullscreen t)
+   (set-variable 'helm-use-fuzzy nil)
+   (set-variable 'java-backend 'meghanada)
+   (set-variable 'shell-default-shell 'eshell)
+   (set-variable 'vim-style-remap-Y-to-y$ t)
+   #+end_src
 ** レイヤー
    #+begin_src emacs-lisp
    (defun e:dotspacemacs-configuration-layers ()
      '(;; +checkers
        syntax-checking
        ;; +completion
-       (auto-completion :variables
-                        auto-completion-use-company-box t
-                        auto-completion-enable-help-tooltip t)
-       (helm :variables
-             helm-use-fuzzy nil)
+       auto-completion
+       helm
        ;; +emacs
        better-defaults
        org
@@ -31,8 +38,7 @@
        csv
        emacs-lisp
        html
-       (java :variables
-             java-backend 'meghanada)
+       java
        javascript
        kotlin
        markdown
@@ -50,8 +56,7 @@
        ;; +pair-programming
        floobits
        ;; +source-control
-       (git :variables
-            git-magit-status-fullscreen t)
+       git
        github
        ;; +tags
        gtags
@@ -62,8 +67,7 @@
        prodigy
        ranger
        restclient
-       (shell :variables
-              shell-default-shell 'eshell)
+       shell
        vagrant
        ;; +web-services
        search-engine
@@ -114,4 +118,5 @@
 * which-key の設定
   #+begin_src emacs-lisp
   (set-variable 'which-key-enable-extended-define-key t)
+  (set-variable 'which-key-show-early-on-C-h t)
   #+end_src

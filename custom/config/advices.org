@@ -72,6 +72,17 @@
      (define-advice magit-todos--line-item (:around (fn &rest args) ignore-errors)
        (ignore-errors (apply fn args))))
    #+end_src
+* notmuch
+** 終了時にレイアウトを削除
+   #+begin_src emacs-lisp
+   (with-eval-after-load 'notmuch
+     (define-advice notmuch-bury-or-kill-this-buffer (:around (fn) kill-layout)
+       (let ((kill (eq (e:major-mode) 'notmuch-hello-mode)))
+         (prog1
+             (funcall fn)
+           (if kill
+               (persp-kill notmuch-spacemacs-layout-name))))))
+   #+end_src
 * ranger
 ** ヘッダーラインの表示を変更
    #+begin_src emacs-lisp

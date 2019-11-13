@@ -218,6 +218,28 @@
       (interactive)
       (display-line-numbers-mode 0)))
   #+end_src
+* elfeed
+  #+begin_src emacs-lisp
+  (use-package elfeed
+    :defer t
+    :init
+    (defvar e:elfeed-spacemacs-layout-name "@Elfeed")
+    (defvar e:elfeed-spacemacs-layout-binding "f")
+    (spacemacs|define-custom-layout e:elfeed-spacemacs-layout-name
+      :binding e:elfeed-spacemacs-layout-binding
+      :body
+      (call-interactively 'elfeed)
+      (define-advice elfeed-search-quit-window (:after (&rest _) kill-layout)
+        (persp-kill e:elfeed-spacemacs-layout-name))))
+  #+end_src
+* elfeed-goodies
+  #+begin_src emacs-lisp
+  (use-package elfeed-goodies
+    :defer t
+    :init
+    (set-variable 'elfeed-goodies/feed-source-column-width 30)
+    (set-variable 'elfeed-goodies/tag-column-width 30))
+  #+end_src
 * elisp-demos
   #+begin_src emacs-lisp
   (use-package elisp-demos

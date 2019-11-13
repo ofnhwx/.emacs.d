@@ -362,6 +362,20 @@
     :config
     (evil-owl-mode 1))
   #+end_src
+* eww
+  #+begin_src emacs-lisp
+  (use-package eww
+    :defer t
+    :init
+    (defvar e:eww-spacemacs-layout-name "@Eww")
+    (defvar e:eww-spacemacs-layout-binding "w")
+    (spacemacs|define-custom-layout e:eww-spacemacs-layout-name
+      :binding e:eww-spacemacs-layout-binding
+      :body
+      (eww "https://www.google.com/")
+      (define-advice quit-window (:after (&rest _) kill-layout)
+        (persp-kill e:eww-spacemacs-layout-name))))
+  #+end_src
 * flycheck
   #+begin_src emacs-lisp
   (use-package flycheck

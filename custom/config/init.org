@@ -55,6 +55,8 @@
        osx
        ;; +pair-programming
        floobits
+       ;; + readers
+       elfeed
        ;; +source-control
        git
        github

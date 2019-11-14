@@ -9,7 +9,11 @@
    (set-variable 'git-magit-status-fullscreen t)
    (set-variable 'helm-use-fuzzy nil)
    (set-variable 'java-backend 'meghanada)
-   (set-variable 'shell-default-shell 'eshell)
+   (set-variable 'shell-default-shell
+                 (case system-type
+                   (windows-nt 'eshell)
+                   (otherwise 'vterm)))
+   (set-variable 'shell-enable-smart-eshell t)
    (set-variable 'vim-style-remap-Y-to-y$ t)
    #+end_src
 ** レイヤー

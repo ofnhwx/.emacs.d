@@ -73,7 +73,6 @@
 ** 雑多なやつ
 *** shell の設定
     #+begin_src emacs-lisp
-    (set-variable 'shell-default-term-shell shell-file-name)
     (set-variable 'shell-file-name
                   (or (executable-find "zsh")
                       (executable-find "bash")

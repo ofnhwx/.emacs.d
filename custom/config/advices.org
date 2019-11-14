@@ -84,13 +84,6 @@
                (persp-kill notmuch-spacemacs-layout-name))))))
    #+end_src
 * ranger
-** ヘッダーラインの表示を変更
-   #+begin_src emacs-lisp
-   (with-eval-after-load 'ranger
-     (define-advice ranger--header-lhs (:override (&rest _) override-header-line)
-       (e:header-line-for-files-format-internal
-        (f-long (or (r--fget ranger-current-file) "")))))
-   #+end_src
 ** diredの代わりに使用
    #+begin_src emacs-lisp
    (with-eval-after-load 'ranger

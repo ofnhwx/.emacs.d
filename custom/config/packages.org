@@ -712,6 +712,14 @@
      :init
      (set-variable 'ruby-insert-encoding-magic-comment nil))
    #+end_src
+* shr
+  #+begin_src emacs-lisp
+  (use-package shr
+    :defer t
+    :init
+    (set-variable 'shr-use-colors nil)
+    (set-variable 'shr-max-image-proportion 0.6))
+  #+end_src
 * skk
   #+begin_src emacs-lisp
    (use-package skk

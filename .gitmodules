@@ -1,9 +1,6 @@
 [submodule "external/dic-mirror"]
 	path = external/dic-mirror
 	url = https://github.com/skk-users-jp/dic-mirror.git
-[submodule "external/emacs-libvterm"]
-	path = external/emacs-libvterm
-	url = https://github.com/akermu/emacs-libvterm.git
 [submodule "external/literate-elisp"]
 	path = external/literate-elisp
 	url = https://github.com/ofnhwx/literate-elisp.git

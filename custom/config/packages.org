@@ -415,12 +415,39 @@
 * helm
   #+begin_src emacs-lisp
   (use-package helm
+    :commands (e:helm-git-log)
     :bind
     (:map global-map
           ([remap eval-expression] . helm-eval-expression))
     :init
     (set-variable 'helm-buffer-max-length nil)
+    (spacemacs/set-leader-keys
+      "igl" 'e:helm-git-log)
     :config
+    (progn
+      (defvar e:helm-git-log-source
+        (helm-build-in-buffer-source "Git log"
+          :data #'e:helm-git-log-source-data
+          :real-to-display #'e:helm-git-log-source-real-to-display
+          :action #'e:helm-git-log-source-action))
+      (defun e:helm-git-log-regexp ()
+        "\\(.+\\)\x0000\\(.+\\)")
+      (defun e:helm-git-log-source-data ()
+        (s-split "\n" (shell-command-to-string "git log --pretty=format:'%H%x00%s' --no-merges")))
+      (defun e:helm-git-log-source-real-to-display (candidate)
+        (let ((regexp (e:helm-git-log-regexp)))
+          (when (string-match regexp candidate)
+            (format "%s %s"
+                    (propertize (match-string 1 candidate) 'face 'font-lock-comment-face)
+                    (match-string 2 candidate)))))
+      (defun e:helm-git-log-source-action (candidate)
+        (let ((regexp (e:helm-git-log-regexp)))
+          (when (string-match regexp candidate)
+            (insert (match-string 2 candidate) "\n"))))
+      (defun e:helm-git-log ()
+        (interactive)
+        (helm :sources e:helm-git-log-source
+              :buffer "*HELM Git log*")))
     (helm-migemo-mode))
   #+end_src
 ** after: eldoc-eval

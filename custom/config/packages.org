@@ -821,6 +821,14 @@
     :init
     (set-variable 'transient-default-level 7))
   #+end_src
+* treemacs
+  #+begin_src emacs-lisp
+  (use-package treemacs
+    :defer t
+    :init
+    (set-variable 'treemacs-persist-file (expand-file-name "treemacs-persist" spacemacs-cache-directory))
+    (set-variable 'treemacs-last-error-persist-file (expand-file-name "treemacs-persist-at-last-error" spacemacs-cache-directory)))
+  #+end_src
 * url-cache
   #+begin_src emacs-lisp
   (use-package url-cache

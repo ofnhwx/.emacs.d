@@ -707,6 +707,18 @@
   #+begin_src emacs-lisp
   (use-package ranger
     :config
+    (progn ;; 非アクティブ状態のバッファを削除
+      (defun e:ranger-kill-inactive-buffers ()
+        (interactive)
+        (let* ((frames (frame-list))
+               (windows (-flatten (-map #'window-list frames)))
+               (buffers (-map #'window-buffer windows)))
+          (--each (--filter (member (e:major-mode it) '(ranger-mode))
+                            (buffer-list))
+            (unless (member it buffers)
+              (kill-buffer it)))))
+      (run-with-idle-timer 5.0 5.0 #'e:ranger-kill-inactive-buffers))
+    ;; 常に dired の代わりに ranger を使用する
     (ranger-override-dired-mode 1))
   #+end_src
 * recentf

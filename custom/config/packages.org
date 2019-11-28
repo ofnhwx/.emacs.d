@@ -706,19 +706,28 @@
 * ranger
   #+begin_src emacs-lisp
   (use-package ranger
+    :bind
+    (:map ranger-normal-mode-map
+          ("ud" . e:ranger-uncat)
+          ("uy" . e:ranger-uncat))
     :config
-    (progn ;; 非アクティブ状態のバッファを削除
+    (defun e:ranger-uncat ()
+      (interactive)
+      (when (not (ring-empty-p ranger-copy-ring))
+        (ring-remove ranger-copy-ring))
+      (ranger-clear-flags ?P)
+      (ranger-clear-flags ?M))
+    (progn
       (defun e:ranger-kill-inactive-buffers ()
         (interactive)
         (let* ((frames (frame-list))
                (windows (-flatten (-map #'window-list frames)))
                (buffers (-map #'window-buffer windows)))
-          (--each (--filter (member (e:major-mode it) '(ranger-mode))
+          (--each (--filter (eq (e:major-mode it) 'ranger-mode)
                             (buffer-list))
             (unless (member it buffers)
               (kill-buffer it)))))
       (run-with-idle-timer 5.0 5.0 #'e:ranger-kill-inactive-buffers))
-    ;; 常に dired の代わりに ranger を使用する
     (ranger-override-dired-mode 1))
   #+end_src
 * recentf

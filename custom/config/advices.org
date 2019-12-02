@@ -56,13 +56,6 @@
            (if kill
                (persp-kill notmuch-spacemacs-layout-name))))))
    #+end_src
-* ranger
-** diredの代わりに使用
-   #+begin_src emacs-lisp
-   (with-eval-after-load 'ranger
-     (define-advice ranger-mode (:after (&rest _) always-use-ranger)
-       (ranger-override-dired-mode 1)))
-   #+end_src
 * recentf
 ** 存在しないファイルを履歴から削除する
    #+begin_src emacs-lisp

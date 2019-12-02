@@ -72,7 +72,6 @@
        lsp
        nginx
        prodigy
-       ranger
        restclient
        shell
        vagrant

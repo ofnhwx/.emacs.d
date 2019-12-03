@@ -801,12 +801,11 @@
     :after (tramp)
     :config
     ;; ssh/conf.d の内容を接続先に追加
-    (let* ((files (--filter (not (file-directory-p it))
-                            (-map 'abbreviate-file-name (directory-files "~/.ssh/conf.d/hosts" t))))
-           (functions (--map (list 'tramp-parse-sconfig it) files)))
-      (dolist (method '("ssh" "scp"))
-        (let ((functions (append (tramp-get-completion-function method) functions)))
-          (tramp-set-completion-function method functions)))))
+    (let ((functions (->> (ignore-errors (f-files "~/.ssh/conf.d/hostsa" nil t))
+                          (--map (list #'tramp-parse-sconfig it)))))
+      (--each '("ssh" "scp")
+        (let ((new-functions (-union (tramp-get-completion-function it) functions)))
+          (tramp-set-completion-function it new-functions)))))
   #+end_src
 * transient
   #+begin_src emacs-lisp

@@ -205,6 +205,44 @@
     :config
     (set-variable 'codic-api-token (e:auth-source-get 'api-token :app "codic")))
   #+end_src
+* dired
+  #+begin_src emacs-lisp
+  (use-package dired
+    :defer t
+    :init
+    (set-variable 'dired-dwim-target t)
+    (set-variable 'dired-listing-switches "-ahl")
+    (set-variable 'dired-recursive-copies 'always)
+    (set-variable 'dired-recursive-deletes 'always))
+  #+end_src
+* dired > ls-lisp
+  #+begin_src emacs-lisp
+  (use-package ls-lisp
+    :after (dired)
+    :init
+    (set-variable 'ls-lisp-dirs-first t)
+    (set-variable 'ls-lisp-format-time-list '("%Y-%m-%d %H:%M:%S" "%Y-%m-%d %H:%M:%S"))
+    (set-variable 'ls-lisp-ignore-case nil)
+    (set-variable 'ls-lisp-use-insert-directory-program nil)
+    (set-variable 'ls-lisp-use-localized-time-format t)
+    (set-variable 'ls-lisp-verbosity '(uid gid)))
+  #+end_src
+* dired+
+  #+begin_src emacs-lisp
+  (use-package dired+
+    :after (dired)
+    :init
+    (set-variable 'diredp-bind-problematic-terminal-keys nil)
+    (set-variable 'diredp-hide-details-initially-flag nil)
+    (set-variable 'diredp-hide-details-propagate-flag nil))
+  #+end_src
+* dired-filter
+  #+begin_src emacs-lisp
+  (use-package dired-filter
+    :after (dired)
+    :config
+    (add-hook 'dired-mode-hook 'dired-filter-mode))
+  #+end_src
 * display-line-numbers
   #+begin_src emacs-lisp
   (use-package display-line-numbers

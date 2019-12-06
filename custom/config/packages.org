@@ -213,7 +213,11 @@
     (set-variable 'dired-dwim-target t)
     (set-variable 'dired-listing-switches "-ahl")
     (set-variable 'dired-recursive-copies 'always)
-    (set-variable 'dired-recursive-deletes 'always))
+    (set-variable 'dired-recursive-deletes 'always)
+    :config
+    (bind-keys
+     :map dired-mode-map
+     ("C-c C-e" . wdired-change-to-wdired-mode)))
   #+end_src
 * dired > ls-lisp
   #+begin_src emacs-lisp

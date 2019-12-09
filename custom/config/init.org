@@ -83,7 +83,6 @@
    #+begin_src emacs-lisp
    (defun e:dotspacemacs-additional-packages ()
      '(;; Utilities
-       (dired+ :location (recipe :fetcher github :repo "emacsmirror/dired-plus"))
        (evil-plugins :location (recipe :fetcher github :repo "tarao/evil-plugins"))
        (helm-fzf :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
        (locale-eaw :location (recipe :fetcher github :repo "hamano/locale-eaw"))

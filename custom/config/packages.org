@@ -231,14 +231,10 @@
     (set-variable 'ls-lisp-use-localized-time-format t)
     (set-variable 'ls-lisp-verbosity '(uid gid)))
   #+end_src
-* dired+
+* dired > ls-lisp-extension
   #+begin_src emacs-lisp
-  (use-package dired+
-    :after (dired)
-    :init
-    (set-variable 'diredp-bind-problematic-terminal-keys nil)
-    (set-variable 'diredp-hide-details-initially-flag nil)
-    (set-variable 'diredp-hide-details-propagate-flag nil))
+  (use-package ls-lisp-extension
+    :after (ls-lisp))
   #+end_src
 * dired-filter
   #+begin_src emacs-lisp

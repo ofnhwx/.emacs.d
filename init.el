@@ -22,9 +22,11 @@
   (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory)))
 
 ;; org ファイルをロードする設定
-(when (require 'literate-elisp (expand-file-name "literate-elisp/literate-elisp.el" e:external-directory))
-  (set-variable 'literate-elisp-begin-src-id "#+begin_src")
-  (set-variable 'literate-elisp-end-src-id "#+end_src"))
+(let ((dir (expand-file-name "org-mode" e:external-directory)))
+  (when (file-directory-p dir)
+    (add-to-list 'load-path (expand-file-name "lisp" dir))
+    (add-to-list 'load-path (expand-file-name "contrib" dir))
+    (require 'org)))
 
 ;; フォント設定
 (progn

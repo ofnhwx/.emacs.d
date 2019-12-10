@@ -1,9 +1,9 @@
 [submodule "external/dic-mirror"]
 	path = external/dic-mirror
 	url = https://github.com/skk-users-jp/dic-mirror.git
-[submodule "external/literate-elisp"]
-	path = external/literate-elisp
-	url = https://github.com/ofnhwx/literate-elisp.git
+[submodule "external/org-mode"]
+	path = external/org-mode
+	url = https://code.orgmode.org/bzg/org-mode.git
 [submodule "external/spacemacs"]
 	path = external/spacemacs
 	url = https://github.com/syl20bnr/spacemacs.git

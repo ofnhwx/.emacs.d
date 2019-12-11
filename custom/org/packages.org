@@ -212,6 +212,7 @@
     :init
     (set-variable 'dired-dwim-target t)
     (set-variable 'dired-listing-switches "-ahl")
+    (set-variable 'dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.DS_Store")
     (set-variable 'dired-recursive-copies 'always)
     (set-variable 'dired-recursive-deletes 'always)
     :config

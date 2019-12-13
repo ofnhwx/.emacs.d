@@ -97,7 +97,6 @@
        evil-owl
        helm-tramp
        helpful
-       key-chord
        magit-todos
        persistent-scratch
        poly-org

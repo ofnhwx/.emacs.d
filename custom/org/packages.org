@@ -528,34 +528,6 @@
       "hdds" 'helpful-symbol
       "hddv" 'helpful-variable))
   #+end_src
-* key-chord
-  #+begin_src emacs-lisp
-  (use-package key-chord
-    :init
-    (set-variable 'key-chord-two-keys-delay 0.02)
-    :config
-    (key-chord-define evil-hybrid-state-map ",," "<")
-    (key-chord-define evil-hybrid-state-map "--" "=")
-    (key-chord-define evil-hybrid-state-map ".." ">")
-    (key-chord-define evil-hybrid-state-map "//" "?")
-    (key-chord-define evil-hybrid-state-map "11" "!")
-    (key-chord-define evil-hybrid-state-map "22" "\"")
-    (key-chord-define evil-hybrid-state-map "33" "#")
-    (key-chord-define evil-hybrid-state-map "44" "$")
-    (key-chord-define evil-hybrid-state-map "55" "%")
-    (key-chord-define evil-hybrid-state-map "66" "&")
-    (key-chord-define evil-hybrid-state-map "77" "'")
-    (key-chord-define evil-hybrid-state-map "88" "(")
-    (key-chord-define evil-hybrid-state-map "99" ")")
-    (key-chord-define evil-hybrid-state-map "::" "*")
-    (key-chord-define evil-hybrid-state-map ";;" "+")
-    (key-chord-define evil-hybrid-state-map "@@" "`")
-    (key-chord-define evil-hybrid-state-map "[[" "{")
-    (key-chord-define evil-hybrid-state-map "\\\\" "|")
-    (key-chord-define evil-hybrid-state-map "]]" "}")
-    (key-chord-define evil-hybrid-state-map "^^" "~")
-    (key-chord-mode 1))
-  #+end_src
 * lsp-mode
   #+begin_src emacs-lisp
   (use-package lsp-mode

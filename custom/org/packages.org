@@ -262,6 +262,22 @@
       (interactive)
       (display-line-numbers-mode 0)))
   #+end_src
+* ediff
+  #+begin_src emacs-lisp
+  (use-package ediff
+    :commands (e:ediff)
+    :config
+    (defun e:ediff ()
+      (interactive)
+      (let ((files (->> (window-list (selected-frame))
+                        (-map #'window-buffer)
+                        (-map #'buffer-file-name)
+                        (-non-nil))))
+        (if (= (length files) 2)
+            (ediff (nth 0 files)
+                   (nth 1 files))
+          (call-interactively #'ediff)))))
+  #+end_src
 * elfeed
   #+begin_src emacs-lisp
   (use-package elfeed

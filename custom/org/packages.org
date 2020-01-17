@@ -28,6 +28,9 @@
      "%" 'query-replace
      "&" 'async-shell-command
      "^" 'ace-window)
+   (bind-keys
+    :map global-map
+    ("C-;" . spacemacs/default-pop-shell))
    #+end_src
 ** ヘッダーライン
 *** バッファーの種類毎に振分け

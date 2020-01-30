@@ -134,6 +134,16 @@
        (set-variable 'ns-right-command-modifier 'super)
        (set-variable 'ns-alternate-modifier 'none))
      #+end_src
+*** WSL
+**** Windows側のブラウザを起動
+     #+begin_src emacs-lisp
+     (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+           (cmd-args '("/c" "start")))
+       (when (file-exists-p cmd-exe)
+         (set-variable 'browse-url-generic-program  cmd-exe)
+         (set-variable 'browse-url-generic-args     cmd-args)
+         (set-variable 'browse-url-browser-function 'browse-url-generic)))
+     #+end_src
 *** ローカル
     #+begin_src emacs-lisp
     (let ((private-config (expand-file-name "config.el" e:private-directory)))

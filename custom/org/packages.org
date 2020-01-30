@@ -275,6 +275,12 @@
       (interactive)
       (display-line-numbers-mode 0)))
   #+end_src
+* eaw
+  #+begin_src emacs-lisp
+  (use-package eaw
+    :config
+    (eaw-fullwidth))
+  #+end_src
 * ediff
   #+begin_src emacs-lisp
   (use-package ediff

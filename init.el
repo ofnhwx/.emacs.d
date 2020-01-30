@@ -38,7 +38,7 @@
   (define-advice spacemacs/set-default-font (:after (&rest _) japanese-font-setting)
     (set-fontset-font t 'unicode (font-spec :family e:font-name))
     (set-variable 'face-font-rescale-alist (list e:font-name e:font-rescale))
-    (when (require 'eaw nil t)
+    (when (fboundp 'eaw-fullwidth)
       (eaw-fullwidth))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

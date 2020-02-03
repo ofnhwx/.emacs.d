@@ -31,7 +31,9 @@
 ;; フォント設定
 (progn
   (defvar e:font-name "Cica")
-  (defvar e:font-size 14)
+  (defvar e:font-size (cond
+                       ((eq system-type 'darwin) 14)
+                        (t 16)))
   (defvar e:font-rescale 1.00)
   (defun e:font ()
     (list e:font-name :size e:font-size))

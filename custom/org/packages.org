@@ -86,6 +86,7 @@
 *** パスワード関連
     #+begin_src emacs-lisp
     (progn
+      (set-variable 'epa-pinentry-mode 'loopback)
       (set-variable 'password-cache-expiry 3600)
       (set-variable 'plstore-encoded t))
     #+end_src
@@ -165,13 +166,6 @@
     :config
     (atomic-chrome-start-server))
   #+end_src
-* auth-source
-  #+begin_src emacs-lisp
-  (use-package auth-source
-    :defer t
-    :init
-    (set-variable 'auth-sources (list (expand-file-name "authinfo.plist" e:private-directory))))
-  #+end_src
 * avy
   #+begin_src emacs-lisp
   (use-package avy
@@ -216,7 +210,7 @@
   (use-package codic
     :defer t
     :config
-    (set-variable 'codic-api-token (e:auth-source-get 'api-token :app "codic")))
+    (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic")))
   #+end_src
 * dired
   #+begin_src emacs-lisp
@@ -664,9 +658,10 @@
   (use-package open-by-jetbrains-ide
     :load-path "custom/lisp"
     :init
-    (set-variable 'jetbrains/use-toolbox-mode t)
-    (set-variable 'jetbrains/ide-pstorm "phpstorm")
-    (set-variable 'jetbrains/ide-mine   "rubymine")
+    (when (spacemacs/system-is-mac)
+     (set-variable 'jetbrains/use-toolbox-mode t)
+     (set-variable 'jetbrains/ide-pstorm "phpstorm")
+     (set-variable 'jetbrains/ide-mine   "rubymine"))
     :config
     (spacemacs/declare-prefix "aj" "jetbrains")
     (spacemacs/set-leader-keys

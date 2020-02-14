@@ -39,6 +39,7 @@
        ;; +intl
        japanese
        ;; +lang
+       csharp
        csv
        emacs-lisp
        html

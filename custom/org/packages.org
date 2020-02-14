@@ -663,6 +663,13 @@
       "ajw" '("WebStorm" . jetbrains/open-by-wstorm)
       ))
   #+end_src
+* open-junk-file
+  #+begin_src emacs-lisp
+  (use-package open-junk-file
+    :defer t
+    :init
+    (set-variable 'open-junk-file-format (expand-file-name "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))
+  #+end_src
 * org
   #+begin_src emacs-lisp
   (use-package org

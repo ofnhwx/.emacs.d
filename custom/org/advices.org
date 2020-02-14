@@ -38,13 +38,6 @@
         (push (format "/ssh:%s|sudo:%s:/" host host) result))
       (-distinct (reverse result))))
   #+end_src
-* magit-todos
-** TODOの表示でエラーがでないように調整
-   #+begin_src emacs-lisp
-   (with-eval-after-load 'magit-todos
-     (define-advice magit-todos--line-item (:around (fn &rest args) ignore-errors)
-       (ignore-errors (apply fn args))))
-   #+end_src
 * notmuch
 ** 終了時にレイアウトを削除
    #+begin_src emacs-lisp

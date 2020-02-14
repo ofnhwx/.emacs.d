@@ -97,7 +97,6 @@
        evil-owl
        helm-tramp
        helpful
-       magit-todos
        persistent-scratch
        poly-org
        visual-regexp

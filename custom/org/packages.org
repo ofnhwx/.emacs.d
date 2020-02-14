@@ -587,21 +587,6 @@
                     (list (cons (e:shell-command-to-string "ghq root") 3))))
     (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
   #+end_src
-* magit-todos
-  #+begin_src emacs-lisp
-  (use-package magit-todos
-    :hook (magit-status-mode . e:magit-todos-mode-on)
-    :init
-    (put 'magit-todos-exclude-globs
-         'safe-local-variable
-         '(lambda (v)
-            (and (listp v)
-                 (--all? (stringp it) v))))
-    :config
-    (defun e:magit-todos-mode-on ()
-      (let ((inhibit-message t))
-        (magit-todos-mode 1))))
-  #+end_src
 * notmuch
   #+begin_src emacs-lisp
   (use-package notmuch

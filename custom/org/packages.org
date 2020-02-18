@@ -30,7 +30,14 @@
      "^" 'ace-window)
    (bind-keys
     :map global-map
-    ("C-;" . spacemacs/default-pop-shell))
+    ("C-;" . spacemacs/default-pop-shell)
+    :map ctl-x-map
+    ("C-c" . helm-M-x))
+   #+end_src
+** 別名を追加
+   #+begin_src emacs-lisp
+   (defalias 'exit 'save-buffers-kill-terminal)
+   (defalias 'yes-or-no-p 'y-or-n-p)
    #+end_src
 ** ヘッダーライン
 *** バッファーの種類毎に振分け

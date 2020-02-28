@@ -595,6 +595,12 @@
                     (list (cons (e:shell-command-to-string "ghq root") 3))))
     (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
   #+end_src
+* markdown-mode
+  #+begin_src emacs-lisp
+  (use-package markdown-mode
+    :init
+    (set-variable 'markdown-command "pandoc"))
+  #+end_src
 * notmuch
   #+begin_src emacs-lisp
   (use-package notmuch

@@ -586,6 +586,7 @@
     :init
     (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
     (set-variable 'magit-diff-refine-hunk 'all)
+    (set-variable 'magit-diff-refine-ignore-whitespace t)
     (set-variable 'smerge-refine-ignore-whitespace nil)
     :config
     (magit-add-section-hook 'magit-status-sections-hook #'magit-insert-skip-worktree-files nil t)

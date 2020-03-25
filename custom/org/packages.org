@@ -592,7 +592,8 @@
     (magit-add-section-hook 'magit-status-sections-hook #'magit-insert-skip-worktree-files nil t)
     (when (executable-find "ghq")
       (set-variable 'magit-repository-directories
-                    (list (cons (e:shell-command-to-string "ghq root") 3))))
+                    (->> (e:shell-command-to-list "ghq root --all")
+                         (--map (cons it 3)))))
     (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
   #+end_src
 * markdown-mode

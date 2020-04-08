@@ -150,6 +150,13 @@
         (set-variable 'browse-url-generic-args     cmd-args)
         (set-variable 'browse-url-browser-function 'browse-url-generic)))
     #+end_src
+*** DISPLAY環境変数の設定
+    #+begin_src emacs-lisp
+    (when (and (spacemacs/system-is-linux)
+               (executable-find "cmd.exe"))
+      (let ((ip (e:shell-command-to-string "cat /etc/resolv.conf | grep nameserver | awk '{print $2}'")))
+        (setenv "DISPLAY" (format "%s:0.0" ip))))
+    #+end_src
 ** ローカル設定の読込み
    #+begin_src emacs-lisp
    (let ((private-config (expand-file-name "config.el" e:private-directory)))

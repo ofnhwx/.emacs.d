@@ -82,82 +82,80 @@
       (spacemacs|diminish which-key-mode)
       (spacemacs|diminish yas-minor-mode))
     #+end_src
-** 雑多なやつ
-*** shell の設定
+** shell の設定
+   #+begin_src emacs-lisp
+   (set-variable 'shell-file-name
+                 (or (executable-find "zsh")
+                     (executable-find "bash")
+                     (executable-find "sh")))
+   #+end_src
+** パスワード関連
+   #+begin_src emacs-lisp
+   (progn
+     (set-variable 'epa-pinentry-mode 'loopback)
+     (set-variable 'password-cache-expiry 3600)
+     (set-variable 'plstore-encoded t))
+   #+end_src
+** 折り返さない
+   #+begin_src emacs-lisp
+   (progn
+     (setq-default truncate-lines t)
+     (set-variable 'truncate-partial-width-windows nil))
+   #+end_src
+** 最終行の改行は EditorConfig で管理する
+   #+begin_src emacs-lisp
+   (progn
+     (set-variable 'mode-require-final-newline nil)
+     (set-variable 'require-final-newline nil))
+   #+end_src
+** ロックファイルを作成しない
+   #+begin_src emacs-lisp
+   (set-variable 'create-lockfiles nil)
+   #+end_src
+** 右から左に読む言語に対応しない
+   #+begin_src emacs-lisp
+   (setq-default bidi-display-reordering nil)
+   #+end_src
+** 特定のバッファを消させない
+   #+begin_src emacs-lisp
+   (dolist (buffer '("*scratch*" "*Messages*"))
+     (with-current-buffer buffer
+       (emacs-lock-mode 'kill)))
+   #+end_src
+** 【環境設定】Mac
+*** タイトルバー
     #+begin_src emacs-lisp
-    (set-variable 'shell-file-name
-                  (or (executable-find "zsh")
-                      (executable-find "bash")
-                      (executable-find "sh")))
+    (let ((items '((ns-transparent-titlebar . t)
+                   (ns-appearance . dark))))
+      (dolist (item items)
+        (assq-delete-all (car item) initial-frame-alist)
+        (assq-delete-all (car item) default-frame-alist)
+        (add-to-list 'initial-frame-alist item)
+        (add-to-list 'default-frame-alist item)))
     #+end_src
-*** パスワード関連
+*** キーボード入力(option, command関連)
     #+begin_src emacs-lisp
-    (progn
-      (set-variable 'epa-pinentry-mode 'loopback)
-      (set-variable 'password-cache-expiry 3600)
-      (set-variable 'plstore-encoded t))
+    (when (spacemacs/system-is-mac)
+      (set-variable 'ns-command-modifier 'meta)
+      (set-variable 'ns-right-command-modifier 'super)
+      (set-variable 'ns-alternate-modifier 'none))
     #+end_src
-*** 折り返さない
+** 【環境設定】WSL
+*** Windows側のブラウザを起動
     #+begin_src emacs-lisp
-    (progn
-      (setq-default truncate-lines t)
-      (set-variable 'truncate-partial-width-windows nil))
+    (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+          (cmd-args '("/c" "start")))
+      (when (file-exists-p cmd-exe)
+        (set-variable 'browse-url-generic-program  cmd-exe)
+        (set-variable 'browse-url-generic-args     cmd-args)
+        (set-variable 'browse-url-browser-function 'browse-url-generic)))
     #+end_src
-*** 最終行の改行は EditorConfig で管理する
-    #+begin_src emacs-lisp
-    (progn
-      (set-variable 'mode-require-final-newline nil)
-      (set-variable 'require-final-newline nil))
-    #+end_src
-*** ロックファイルを作成しない
-    #+begin_src emacs-lisp
-    (set-variable 'create-lockfiles nil)
-    #+end_src
-*** 右から左に読む言語に対応しない
-    #+begin_src emacs-lisp
-    (setq-default bidi-display-reordering nil)
-    #+end_src
-*** 特定のバッファを消させない
-    #+begin_src emacs-lisp
-    (dolist (buffer '("*scratch*" "*Messages*"))
-      (with-current-buffer buffer
-        (emacs-lock-mode 'kill)))
-    #+end_src
-** 個別設定
-*** Mac
-**** タイトルバー
-     #+begin_src emacs-lisp
-     (let ((items '((ns-transparent-titlebar . t)
-                    (ns-appearance . dark))))
-       (dolist (item items)
-         (assq-delete-all (car item) initial-frame-alist)
-         (assq-delete-all (car item) default-frame-alist)
-         (add-to-list 'initial-frame-alist item)
-         (add-to-list 'default-frame-alist item)))
-     #+end_src
-**** キーボード入力(option, command関連)
-     #+begin_src emacs-lisp
-     (when (spacemacs/system-is-mac)
-       (set-variable 'ns-command-modifier 'meta)
-       (set-variable 'ns-right-command-modifier 'super)
-       (set-variable 'ns-alternate-modifier 'none))
-     #+end_src
-*** WSL
-**** Windows側のブラウザを起動
-     #+begin_src emacs-lisp
-     (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
-           (cmd-args '("/c" "start")))
-       (when (file-exists-p cmd-exe)
-         (set-variable 'browse-url-generic-program  cmd-exe)
-         (set-variable 'browse-url-generic-args     cmd-args)
-         (set-variable 'browse-url-browser-function 'browse-url-generic)))
-     #+end_src
-*** ローカル
-    #+begin_src emacs-lisp
-    (let ((private-config (expand-file-name "config.el" e:private-directory)))
-      (when (file-exists-p private-config)
-        (load-file private-config)))
-    #+end_src
+** ローカル設定の読込み
+   #+begin_src emacs-lisp
+   (let ((private-config (expand-file-name "config.el" e:private-directory)))
+     (when (file-exists-p private-config)
+       (load-file private-config)))
+   #+end_src
 * ace-window
   #+begin_src emacs-lisp
   (use-package ace-window

@@ -170,7 +170,8 @@
     (:map global-map
           ("C-^" . ace-window))
     :init
-    (set-variable 'aw-keys (number-sequence ?1 ?9)))
+    (set-variable 'aw-keys (number-sequence ?1 ?9))
+    (set-variable 'aw-scope 'frame))
   #+end_src
 * atomic-chrome
   #+begin_src emacs-lisp

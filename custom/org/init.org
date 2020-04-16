@@ -42,6 +42,7 @@
        csharp
        csv
        emacs-lisp
+       go
        html
        java
        javascript

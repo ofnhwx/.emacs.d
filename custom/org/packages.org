@@ -2,26 +2,6 @@
 #+STARTUP: overview
 
 * spacemacs
-** 日本語環境
-*** 言語環境
-    #+begin_src emacs-lisp
-    (set-language-environment "Japanese")
-    #+end_src
-*** エンコーディング
-    #+begin_src emacs-lisp
-    (let ((coding-system 'utf-8))
-      (prefer-coding-system          coding-system)
-      (set-default-coding-systems    coding-system)
-      (set-buffer-file-coding-system coding-system)
-      (set-terminal-coding-system    coding-system)
-      (set-keyboard-coding-system    coding-system))
-    #+end_src
-*** ロケール
-    #+begin_src emacs-lisp
-    (progn
-      (setenv "LANG" "ja_JP.UTF-8")
-      (setenv "LC_ALL" "ja_JP.UTF-8"))
-    #+end_src
 ** キーバインドの追加
    #+begin_src emacs-lisp
    (spacemacs/set-leader-keys
@@ -163,31 +143,6 @@
      (when (file-exists-p private-config)
        (load-file private-config)))
    #+end_src
-* ace-window
-  #+begin_src emacs-lisp
-  (use-package ace-window
-    :bind
-    (:map global-map
-          ("C-^" . ace-window))
-    :init
-    (set-variable 'aw-keys (number-sequence ?1 ?9))
-    (set-variable 'aw-scope 'frame))
-  #+end_src
-* atomic-chrome
-  #+begin_src emacs-lisp
-  (use-package atomic-chrome
-    :config
-    (atomic-chrome-start-server))
-  #+end_src
-* avy
-  #+begin_src emacs-lisp
-  (use-package avy
-    :defer t
-    :init
-    (set-variable 'avy-keys (number-sequence ?a ?z))
-    (set-variable 'avy-all-windows nil)
-    (set-variable 'avy-all-windows-alt t))
-  #+end_src
 * company
   #+begin_src emacs-lisp
   (use-package company
@@ -217,13 +172,6 @@
     (spacemacs|add-company-backends
       :backends company-tabnine
       :modes haml-mode js2-mode php-mode ruby-mode))
-  #+end_src
-* codic
-  #+begin_src emacs-lisp
-  (use-package codic
-    :defer t
-    :config
-    (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic")))
   #+end_src
 * dired
   #+begin_src emacs-lisp
@@ -838,12 +786,6 @@
         (e:prodigy-start-service "google-ime-skk"))
       (e:prodigy:google-ime-skk)))
   #+end_src
-* so-long
-  #+begin_src emacs-lisp
-  (use-package so-long
-    :config
-    (global-so-long-mode 1))
-  #+end_src
 * tramp
   #+begin_src emacs-lisp
   (use-package tramp
@@ -862,70 +804,4 @@
       (--each '("ssh" "scp")
         (let ((new-functions (-union (tramp-get-completion-function it) functions)))
           (tramp-set-completion-function it new-functions)))))
-  #+end_src
-* transient
-  #+begin_src emacs-lisp
-  (use-package transient
-    :no-require
-    :init
-    (set-variable 'transient-default-level 7))
-  #+end_src
-* treemacs
-  #+begin_src emacs-lisp
-  (use-package treemacs
-    :defer t
-    :init
-    (set-variable 'treemacs-persist-file (expand-file-name "treemacs-persist" spacemacs-cache-directory))
-    (set-variable 'treemacs-last-error-persist-file (expand-file-name "treemacs-persist-at-last-error" spacemacs-cache-directory)))
-  #+end_src
-* url-cache
-  #+begin_src emacs-lisp
-  (use-package url-cache
-    :defer t
-    :init
-    (set-variable 'url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory)))
-  #+end_src
-* url-cookie
-  #+begin_src emacs-lisp
-  (use-package url-cookie
-    :defer t
-    :init
-    (set-variable 'url-cookie-file (expand-file-name "url/cookies" spacemacs-cache-directory)))
-  #+end_src
-* visual-regexp
-  #+begin_src emacs-lisp
-  (use-package visual-regexp
-    :bind
-    (:map global-map
-          ([remap query-replace] . vr/query-replace)))
-  #+end_src
-* whitespace
-  #+begin_src emacs-lisp
-  (use-package whitespace
-    :hook ((find-file . e:whitespace-mode-on)
-           (prog-mode . e:whitespace-mode-on))
-    :init
-    (set-variable 'whitespace-style
-                  '(face
-                    trailing
-                    tabs
-                    tab-mark
-                    spaces
-                    space-mark
-                    newline
-                    newline-mark))
-    (set-variable 'whitespace-space-regexp "\\(\u3000+\\)")
-    (set-variable 'whitespace-display-mappings
-                  '((space-mark   ?\u3000 [?\u30ed])
-                    (tab-mark     ?\t     [?\t])
-                    (newline-mark ?\n     [?\u0024 ?\n])))
-    :config
-    (set-face-attribute 'whitespace-trailing nil :background "#800000")
-    (let ((color "#595D63"))
-      (set-face-attribute 'whitespace-tab      nil :foreground color :strike-through t)
-      (set-face-attribute 'whitespace-space    nil :foreground color)
-      (set-face-attribute 'whitespace-newline  nil :foreground color))
-    (defun e:whitespace-mode-on ()
-      (interactive)
-      (whitespace-mode 1)))
   #+end_src

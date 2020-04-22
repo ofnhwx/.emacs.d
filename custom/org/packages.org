@@ -518,21 +518,6 @@
       "hdds" 'helpful-symbol
       "hddv" 'helpful-variable))
   #+end_src
-* lsp-mode
-  #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :defer t
-    :init
-    (set-variable 'lsp-session-file (expand-file-name ".lsp-session-v1" spacemacs-cache-directory)))
-  #+end_src
-* lsp-java
-  #+begin_src emacs-lisp
-  (use-package lsp-java
-    :defer t
-    :init
-    (set-variable 'lsp-java-server-install-dir (expand-file-name "java/lsp" spacemacs-cache-directory))
-    (set-variable 'lsp-java-workspace-dir (expand-file-name "java/workspace" spacemacs-cache-directory)))
-  #+end_src
 * magit
   #+begin_src emacs-lisp
   (use-package magit
@@ -639,22 +624,6 @@
     :init
     (set-variable 'open-junk-file-format (expand-file-name "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))
   #+end_src
-* org
-  #+begin_src emacs-lisp
-  (use-package org
-    :no-require
-    :after (org)
-    :init
-    (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
-    (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
-    (set-variable 'org-agenda-files (-union (list org-default-notes-file)
-                                            (directory-files-recursively org-directory org-agenda-file-regexp)))
-    (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3)))
-    (set-variable 'org-todo-keywords
-                  '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-                    (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c@)")))
-    (set-variable 'org-edit-src-content-indentation 0))
-  #+end_src
 * ob-restclient
   #+begin_src emacs-lisp
   (use-package ob-restclient
@@ -688,46 +657,6 @@
     :init
     (set-variable 'persp-kill-foreign-buffer-behaviour nil))
   #+end_src
-* php-mode
-  #+begin_src emacs-lisp
-  (use-package php-mode
-    :defer t
-    :init
-    (spacemacs|add-company-backends :modes php-mode))
-  #+end_src
-* prodigy
-  #+begin_src emacs-lisp
-  (use-package prodigy
-    :commands (e:prodigy-start-service)
-    :config
-    (defun e:prodigy-start-service (name)
-      (let ((service (prodigy-find-service name)))
-        (when service
-          (prodigy-start-service service)))))
-  #+end_src
-* recentf
-  #+begin_src emacs-lisp
-  (use-package recentf
-    :defer t
-    :init
-    (set-variable 'recentf-max-menu-items 20)
-    (set-variable 'recentf-max-saved-items 3000)
-    (set-variable 'recentf-filename-handlers '(abbreviate-file-name)))
-  #+end_src
-* rubocopfmt
-  #+begin_src emacs-lisp
-  (use-package rubocopfmt
-    :defer t
-    :init
-    (set-variable 'rubocopfmt-use-bundler-when-possible nil))
-  #+end_src
-* ruby-mode
-  #+begin_src emacs-lisp
-  (use-package ruby-mode
-    :defer t
-    :init
-    (set-variable 'ruby-insert-encoding-magic-comment nil))
-  #+end_src
 * shr
   #+begin_src emacs-lisp
   (use-package shr
@@ -735,73 +664,4 @@
     :init
     (set-variable 'shr-use-colors nil)
     (set-variable 'shr-max-image-proportion 0.6))
-  #+end_src
-* skk
-  #+begin_src emacs-lisp
-  (use-package skk
-    :hook ((evil-hybrid-state-entry . e:skk-mode)
-           (evil-hybrid-state-exit  . skk-mode-exit))
-    :bind
-    (:map global-map
-          ([remap toggle-input-method] . skk-mode)
-          ("C-¥" . skk-mode))
-    :init
-    (set-variable 'default-input-method "japanese-skk")
-    (progn
-      (set-variable 'skk-user-directory (expand-file-name "ddskk" e:private-directory))
-      (set-variable 'skk-large-jisyo (expand-file-name "dic-mirror/SKK-JISYO.L" e:external-directory)))
-    (progn
-      (set-variable 'skk-preload t)
-      (set-variable 'skk-egg-like-newline t)
-      (set-variable 'skk-share-private-jisyo t)
-      (set-variable 'skk-show-annotation t)
-      (set-variable 'skk-show-inline 'vertical)
-      (set-variable 'skk-sticky-key ";")
-      (set-variable 'skk-use-jisx0201-input-method t))
-    (when (executable-find "google-ime-skk")
-      (set-variable 'skk-server-prog (executable-find "google-ime-skk"))
-      (set-variable 'skk-server-inhibit-startup-server t)
-      (set-variable 'skk-server-host "127.0.0.1")
-      (set-variable 'skk-server-portnum 55100))
-    :config
-    ;; skk の有効化で半角英数入力にする
-    (defun e:skk-mode ()
-      (interactive)
-      (if (bound-and-true-p skk-mode)
-          (skk-latin-mode-on)
-        (let ((skk-mode-hook (-union skk-mode-hook '(skk-latin-mode-on))))
-          (skk-mode))))
-    ;; skk-study を有効化
-    (require 'skk-study nil t)
-    ;; google-ime-skk を起動
-    (when (and (executable-find "google-ime-skk")
-               (require 'prodigy nil t))
-      (prodigy-define-service
-        :name "google-ime-skk"
-        :command "google-ime-skk"
-        :tags '(general)
-        :kill-signal 'sigkill)
-      (defun e:prodigy:google-ime-skk ()
-        (interactive)
-        (e:prodigy-start-service "google-ime-skk"))
-      (e:prodigy:google-ime-skk)))
-  #+end_src
-* tramp
-  #+begin_src emacs-lisp
-  (use-package tramp
-    :defer t
-    :init
-    (set-variable 'tramp-default-host "localhost"))
-  #+end_src
-* tramp-sh
-  #+begin_src emacs-lisp
-  (use-package tramp-sh
-    :after (tramp)
-    :config
-    ;; ssh/conf.d の内容を接続先に追加
-    (let ((functions (->> (ignore-errors (f-files "~/.ssh/conf.d/hostsa" nil t))
-                          (--map (list #'tramp-parse-sconfig it)))))
-      (--each '("ssh" "scp")
-        (let ((new-functions (-union (tramp-get-completion-function it) functions)))
-          (tramp-set-completion-function it new-functions)))))
   #+end_src

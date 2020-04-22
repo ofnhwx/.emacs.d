@@ -20,6 +20,26 @@
       (setenv "LANG" value)
       (setenv "LC_ALL" value))))
 
+(leaf general
+  :config
+  (leaf e:place-in-cache
+    :config
+    (defmacro e:place-in-cache (variable path)
+      `(set-variable ',variable (expand-file-name ,path spacemacs-cache-directory))))
+  (leaf advice-auto-reset-mode-line-colors
+    :doc "テスト成否によるモードラインの色の変更を一定時間で戻す"
+    :config
+    (defvar e:mode-line-foreground (face-foreground 'mode-line))
+    (defvar e:mode-line-background (face-background 'mode-line))
+    (define-advice set-face-attribute (:around (fn &rest args) auto-reset-mode-line-colors)
+      (apply fn args)
+      (when (eq (car args) 'mode-line)
+        (let ((inhibit-quit t))
+          (sit-for 3)
+          (funcall fn 'mode-line nil
+                   :foreground e:mode-line-foreground
+                   :background e:mode-line-background))))))
+
 (leaf ace-window
   :bind (("C-^" . ace-window))
   :config
@@ -28,7 +48,7 @@
 
 (leaf atomic-chrome
   :config
-  (atomic-chrome-start-server))
+  (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server))
 
 (leaf avy
   :config
@@ -41,12 +61,70 @@
   :config
   (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic")))
 
+(leaf evil
+  :config
+  (leaf e:evil-force-normal-state
+    :config
+    (defun e:evil-force-normal-state ()
+      (cond
+       ((eq evil-state 'visual)
+        (evil-exit-visual-state))
+       ((member evil-state '(insert hybrid))
+        (evil-force-normal-state)))))
+  (leaf evil-advice
+    :doc "保存時等にノーマルステートに戻す"
+    :config
+    (define-advice save-buffer (:after (&rest _) evil-force-normal-state)
+      (e:evil-force-normal-state))
+    (define-advice keyboard-quit (:before (&rest _) evil-force-normal-state)
+      (e:evil-force-normal-state))))
+
+(leaf helm
+  :config
+  (leaf helm-tramp
+    :config
+    (leaf helm-tramp-advice
+      :after helm-tramp
+      :require tramp
+      :doc "ssh の設定ファイルから候補を追加"
+      :config
+      (define-advice helm-tramp--candidates (:filter-return (result) add-candidates-from-ssh-config)
+        (let ((items (->> (tramp-get-completion-function "ssh")
+                          (-map #'eval)
+                          (-flatten)
+                          (--filter (not (string-equal it tramp-default-host)))
+                          (--map (list (format "/%s:%s:" tramp-default-method it)
+                                       (format "/ssh:%s|sudo:%s:/" it it)))
+                          (-flatten))))
+          (-distinct (-union result items)))))))
+
 (leaf leaf
   :config
   (leaf leaf-tree
     :config
     (set-variable 'imenu-list-size 30)
     (set-variable 'imenu-list-position 'left)))
+
+(leaf lang
+  :config
+  (leaf php
+    :config
+    (spacemacs|add-company-backends :modes php-mode))
+  (leaf ruby
+    :config
+    (set-variable 'ruby-insert-encoding-magic-comment nil)
+    (leaf rubocopfmt
+      :config
+      (set-variable 'rubocopfmt-use-bundler-when-possible nil)))
+  (leaf lsp
+    :config
+    (leaf lsp-mode
+      :config
+      (e:place-in-cache lsp-session-file ".lsp-session-v1"))
+    (leaf lsp-java
+      :config
+      (e:place-in-cache lsp-java-server-install-dir "java/lsp")
+      (e:place-in-cache lsp-java-workspace-dir "java/workspace"))))
 
 (leaf magit
   :config
@@ -73,24 +151,142 @@
                   (e:remove-nth 2 args))))
           (spacemacs-buffer/warning "`avy-migemo' was updated."))))))
 
+(leaf notmuch
+  :config
+  (leaf notmuch-advice
+    :after notmuch
+    :doc "終了時にレイアウトを削除"
+    :config
+    (define-advice notmuch-bury-or-kill-this-buffer (:around (fn) kill-layout)
+      (let ((kill (eq (e:major-mode) 'notmuch-hello-mode)))
+        (prog1
+            (funcall fn)
+          (if kill
+              (persp-kill notmuch-spacemacs-layout-name)))))))
+
+(leaf org
+  :config
+  (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
+  (when (f-directory? org-directory)
+    (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
+    (set-variable 'org-agenda-files (-union (list org-default-notes-file)
+                                            (directory-files-recursively org-directory org-agenda-file-regexp)))
+    (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3))))
+  (set-variable 'org-todo-keywords
+                '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
+                  (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c@)")))
+  (set-variable 'org-edit-src-content-indentation 0))
+
+(leaf skk
+  :config
+  (leaf skk
+    :hook ((evil-hybrid-state-entry-hook . e:skk-mode)
+           (evil-hybrid-state-exit-hook  . skk-mode-exit))
+    :bind (([remap toggle-input-method] . skk-mode)
+           ("C-¥" . skk-mode))
+    :init
+    (set-variable 'default-input-method "japanese-skk")
+    (set-variable 'skk-user-directory (expand-file-name "ddskk" e:private-directory))
+    (set-variable 'skk-large-jisyo (expand-file-name "dic-mirror/SKK-JISYO.L" e:external-directory))
+    (set-variable 'skk-preload t)
+    (set-variable 'skk-egg-like-newline t)
+    (set-variable 'skk-share-private-jisyo t)
+    (set-variable 'skk-show-annotation t)
+    (set-variable 'skk-show-inline 'vertical)
+    (set-variable 'skk-sticky-key ";")
+    (set-variable 'skk-use-jisx0201-input-method t))
+  (leaf e:skk-mode
+    :config
+    (defun e:skk-mode ()
+      "skk の有効化で半角英数入力にする"
+      (interactive)
+      (if (bound-and-true-p skk-mode)
+          (skk-latin-mode-on)
+        (let ((skk-mode-hook (-union skk-mode-hook '(skk-latin-mode-on))))
+          (skk-mode)))))
+  (leaf e:prodigy:google-ime-skk
+    :config
+    (defun e:prodigy:google-ime-skk ()
+      (interactive)
+      (let ((service "google-ime-skk"))
+        (unless (prodigy-find-service service)
+          (prodigy-define-service
+            :name service
+            :command "google-ime-skk"
+            :tags '(general)
+            :kill-signal 'sigkill))
+        (e:prodigy-start-service service))))
+  (leaf google-ime-skk
+    :if (executable-find "google-ime-skk")
+    :require prodigy
+    :doc "設定"
+    :config
+    (set-variable 'skk-server-prog (executable-find "google-ime-skk"))
+    (set-variable 'skk-server-inhibit-startup-server t)
+    (set-variable 'skk-server-host "127.0.0.1")
+    (set-variable 'skk-server-portnum 55100)
+    :doc "起動"
+    :config
+    (spacemacs/defer-until-after-user-config  #'e:prodigy:google-ime-skk)))
+
+(leaf prodigy
+  :commands (e:prodigy-start-service)
+  :config
+  (leaf e:prodigy-start-service
+    :config
+    (defun e:prodigy-start-service (name)
+      (let ((service (prodigy-find-service name)))
+        (when service
+          (prodigy-start-service service))))))
+
 (leaf so-long
   :require t
   :config
   (global-so-long-mode 1))
 
+(leaf recentf
+  :config
+  (set-variable 'recentf-max-menu-items 20)
+  (set-variable 'recentf-max-saved-items 3000)
+  (set-variable 'recentf-filename-handlers '(abbreviate-file-name))
+  (leaf recentf-advice
+    :after recentf
+    :doc "存在しないファイルを履歴から削除する"
+    :config
+    (define-advice recentf-save-list (:before (&rest _) remove-non-existing-files)
+      (setq recentf-list
+            (->> recentf-list
+                 (-map 'f-short)
+                 (-distinct)
+                 (--filter (or (file-remote-p it)
+                               (f-exists? it))))))))
+
+(leaf tramp
+  :require t
+  :config
+  (set-variable 'tramp-default-host "localhost")
+  (leaf tramp-sh
+    :doc "ssh/conf.d の中身から接続先を追加"
+    :config
+    (let ((functions (->> (ignore-errors (f-files "~/.ssh/conf.d/hosts" nil t))
+                          (--map (list #'tramp-parse-sconfig it)))))
+      (--each '("ssh" "scp")
+        (let ((new-functions (-union (tramp-get-completion-function it) functions)))
+          (tramp-set-completion-function it new-functions))))))
+
 (leaf treemacs
   :config
-  (set-variable 'treemacs-persist-file (expand-file-name "treemacs-persist" spacemacs-cache-directory))
-  (set-variable 'treemacs-last-error-persist-file (expand-file-name "treemacs-persist-at-last-error" spacemacs-cache-directory)))
+  (e:place-in-cache treemacs-persist-file "treemacs-persist")
+  (e:place-in-cache treemacs-last-error-persist-file "treemacs-persist-at-last-error"))
 
 (leaf url
   :config
   (leaf url-cache
     :config
-    (set-variable 'url-cache-directory (expand-file-name "url/cache" spacemacs-cache-directory)))
+    (e:place-in-cache url-cache-directory "url/cache"))
   (leaf url-cookie
     :config
-    (set-variable 'url-cookie-file (expand-file-name "url/cookies" spacemacs-cache-directory))))
+    (e:place-in-cache url-cookie-file "url/cookies")))
 
 (leaf visual-regexp
   :bind (([remap query-replace] . vr/query-replace)))

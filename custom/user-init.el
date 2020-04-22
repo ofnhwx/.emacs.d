@@ -6,6 +6,7 @@
     (defvar e:dotspacemacs-excluded-packages nil)
     (defvar e:system-type-darwin-p (eq system-type 'darwin))
     (defvar e:enable-cmigemo-p (executable-find "cmigemo"))
+    (defvar e:enable-java-p    (executable-find "java"))
     (defvar e:enable-notmuch-p (executable-find "notmuch"))
     (defvar e:enable-vagrant-p (executable-find "vagrant")))
   (progn ;; +distributions/spacemacs-bootstrap
@@ -45,7 +46,8 @@
     (add-to-list 'e:dotspacemacs-configuration-layers 'html)
     (progn ;; java
       (add-to-list 'e:dotspacemacs-configuration-layers 'java)
-      (set-variable 'java-backend 'meghanada))
+      (when e:enable-java-p
+        (set-variable 'java-backend 'meghanada)))
     (add-to-list 'e:dotspacemacs-configuration-layers 'javascript)
     (add-to-list 'e:dotspacemacs-configuration-layers 'kotlin)
     (add-to-list 'e:dotspacemacs-configuration-layers 'markdown)

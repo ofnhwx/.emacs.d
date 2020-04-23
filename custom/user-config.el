@@ -63,6 +63,85 @@
 
 (leaf evil
   :config
+  (set-variable 'evil-cross-lines t)
+  (set-variable 'evil-move-cursor-back nil)
+  (leaf evil-keybind
+    :config
+    (setq evil-disable-insert-state-bindings t)
+    (bind-keys
+     ;; モーションモード(motion -> normal -> visual)
+     :map evil-motion-state-map
+     ("C-^" . nil) ;; evil-buffer
+     ;; 通常モード
+     :map evil-normal-state-map
+     ("<down>" . evil-next-visual-line)
+     ("<up>" . evil-previous-visual-line)
+     ("j" . evil-next-visual-line)
+     ("k" . evil-previous-visual-line)
+     ("gj" . evil-avy-goto-line-below)
+     ("gk" . evil-avy-goto-line-above)
+     ("S" . evil-avy-goto-char-timer)
+     ;; ビジュアルモード
+     :map evil-visual-state-map
+     ;; 挿入モード
+     :map evil-insert-state-map
+     ;; オペレーターモード
+     :map evil-operator-state-map
+     ;; 置き換えモード
+     :map evil-replace-state-map
+     ;; Emacsモード
+     :map evil-emacs-state-map))
+  (leaf evil-easymotion
+    :config
+    (leaf e:evil-em-command
+      :config
+      (define-prefix-command 'e:evil-em-command)
+      (bind-keys
+       :map e:evil-em-command
+       ("w"  . ("em/forward-word-begin"        . evilem-motion-forward-word-begin))
+       ("W"  . ("em/forward-WORD-begin"        . evilem-motion-forward-WORD-begin))
+       ("e"  . ("em/forward-word-end"          . evilem-motion-forward-word-end))
+       ("E"  . ("em/forward-WORD-end"          . evilem-motion-forward-WORD-end))
+       ("b"  . ("em/backward-word-begin"       . evilem-motion-backward-word-begin))
+       ("B"  . ("em/backward-WORD-begin"       . evilem-motion-backward-WORD-begin))
+       ("j"  . ("em/next-visual-line"          . evilem-motion-next-visual-line))
+       ("J"  . ("em/next-line"                 . evilem-motion-next-line))
+       ("k"  . ("em/previous-visual-line"      . evilem-motion-previous-visual-line))
+       ("K"  . ("em/previous-line"             . evilem-motion-previous-line))
+       ("g"  . ("em/backward-word/WORD-end"))
+       ("ge" . ("em/backward-word-end"         . evilem-motion-backward-word-end))
+       ("gE" . ("em/backward-WORD-end"         . evilem-motion-backward-WORD-end))
+       ("t"  . ("em/find-char-to"              . evilem-motion-find-char-to))
+       ("T"  . ("em/find-char-to-backward"     . evilem-motion-find-char-to-backward))
+       ("f"  . ("em/find-char"                 . evilem-motion-find-char))
+       ("F"  . ("em/find-char-backward"        . evilem-motion-find-char-backward))
+       ("["  . ("em/backward-section"))
+       ("[[" . ("em/backward-section-begin"    . evilem-motion-backward-section-begin))
+       ("[]" . ("em/backward-section-end"      . evilem-motion-backward-section-end))
+       ("]"  . ("em/forward-section"))
+       ("]]" . ("em/forward-section-begin"     . evilem-motion-forward-section-begin))
+       ("][" . ("em/forward-section-end"       . evilem-motion-forward-section-end))
+       ("("  . ("em/backward-section-begin"    . evilem-motion-backward-sentence-begin))
+       (")"  . ("em/forward-section-begin"     . evilem-motion-forward-sentence-begin))
+       ("n"  . ("em/search-next"               . evilem-motion-search-next))
+       ("N"  . ("em/search-previous"           . evilem-motion-search-previous))
+       ("*"  . ("em/search-word-forward"       . evilem-motion-search-word-forward))
+       ("#"  . ("em/search-word-backward"      . evilem-motion-search-word-backward))
+       ("-"  . ("em/pres-line-first-non-blank" . evilem-motion-previous-line-first-non-blank))
+       ("+"  . ("em/next-line-first-non-blank" . evilem-motion-next-line-first-non-blank))
+       ("s"  . evil-avy-goto-char-timer))
+      (bind-key "s" 'e:evil-em-command evil-normal-state-map)
+      (bind-key "x" 'e:evil-em-command evil-visual-state-map)
+      (bind-key "x" 'e:evil-em-command evil-operator-state-map)))
+  (leaf evil-little-word
+    :config
+    (ignore-errors
+      (require 'evil-little-word nil t)))
+  (leaf evil-textobj-between
+    :require t)
+  (leaf evil-owl
+    :config
+    (evil-owl-mode 1))
   (leaf e:evil-force-normal-state
     :config
     (defun e:evil-force-normal-state ()
@@ -88,6 +167,7 @@
       :require tramp
       :doc "ssh の設定ファイルから候補を追加"
       :config
+      (eval-when-compile (require 'helm-tramp))
       (define-advice helm-tramp--candidates (:filter-return (result) add-candidates-from-ssh-config)
         (let ((items (->> (tramp-get-completion-function "ssh")
                           (-map #'eval)
@@ -152,11 +232,13 @@
           (spacemacs-buffer/warning "`avy-migemo' was updated."))))))
 
 (leaf notmuch
+  :if e:enable-notmuch-p
   :config
   (leaf notmuch-advice
     :after notmuch
     :doc "終了時にレイアウトを削除"
     :config
+    (eval-when-compile 'notmuch-lib)
     (define-advice notmuch-bury-or-kill-this-buffer (:around (fn) kill-layout)
       (let ((kill (eq (e:major-mode) 'notmuch-hello-mode)))
         (prog1

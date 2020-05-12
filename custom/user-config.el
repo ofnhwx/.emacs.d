@@ -22,6 +22,15 @@
 
 (leaf general
   :config
+  (leaf dotspacemacs-frame-title-format
+    :config
+    (when (executable-find "uname")
+      (let ((uname (e:shell-command-to-string "uname -a")))
+        (cond
+         ((s-index-of "microsoft-standard" uname)
+          (set-variable 'dotspacemacs-frame-title-format "(WSL2) %I@%S"))
+         ((s-index-of "Microsoft" uname)
+          (set-variable 'dotspacemacs-frame-title-format "(WSL1) %I@%S"))))))
   (leaf e:place-in-cache
     :config
     (defmacro e:place-in-cache (variable path)

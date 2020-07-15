@@ -35,6 +35,13 @@
     :config
     (defmacro e:place-in-cache (variable path)
       `(set-variable ',variable (expand-file-name ,path spacemacs-cache-directory))))
+  (leaf e:toggle-indent-tabs-mode
+    :config
+    (defun e:toggle-indent-tabs-mode ()
+      (interactive)
+      (setq indent-tabs-mode (not indent-tabs-mode))
+      (message "indent-tabs-mode: %s" indent-tabs-mode))
+    (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode))
   (leaf advice-auto-reset-mode-line-colors
     :doc "テスト成否によるモードラインの色の変更を一定時間で戻す"
     :config

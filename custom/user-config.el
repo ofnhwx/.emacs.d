@@ -48,15 +48,7 @@
     (spacemacs|diminish smartparens-mode)
     (spacemacs|diminish which-key-mode)
     (spacemacs|diminish yas-minor-mode))
-  (leaf shell-file-name
-    (set-variable 'shell-file-name
-                  (or (executable-find "zsh")
-                      (executable-find "bash")
-                      (executable-find "sh")))))
-
-(leaf general
-  :config
-  (leaf dotspacemacs-frame-title-format
+  (leaf frame-title-format
     :config
     (when (executable-find "uname")
       (let ((uname (e:shell-command-to-string "uname -a")))
@@ -64,7 +56,61 @@
          ((s-index-of "microsoft-standard" uname)
           (set-variable 'dotspacemacs-frame-title-format "(WSL2) %I@%S"))
          ((s-index-of "Microsoft" uname)
-          (set-variable 'dotspacemacs-frame-title-format "(WSL1) %I@%S"))))))
+          (set-variable 'dotspacemacs-frame-title-format "(WSL1) %I@%S")))))))
+
+(leaf general
+  :config
+  (leaf key-bind
+    :config
+    (spacemacs/set-leader-keys
+      "%" 'query-replace
+      "&" 'async-shell-command
+      "^" 'ace-window)
+    (bind-keys
+     :map global-map
+     ("C-;" . spacemacs/default-pop-shell)
+     :map ctl-x-map
+     ("C-c" . helm-M-x)))
+  (leaf aliases
+    :config
+    (defalias 'exit 'save-buffers-kill-terminal)
+    (defalias 'yes-or-no-p 'y-or-n-p))
+  (leaf header-line
+    :config
+    (defun e:setup-header-line ()
+      "ヘッダーラインをなるべくいい感じに設定する"
+      (cl-loop for buffer in (--filter (not (buffer-local-value 'header-line-format it))
+                                       (-map #'window-buffer (window-list)))
+               do (with-current-buffer buffer
+                    (cond
+                     ((e:current-buffer-file-name)
+                      (e:setup-header-line-for-files))))))
+    (run-with-timer 1.0 1.0 'e:setup-header-line))
+  (leaf misc
+    :config
+    ;; シェルの設定
+    (set-variable 'shell-file-name
+                  (or (executable-find "zsh")
+                      (executable-find "bash")
+                      (executable-find "sh")))
+    ;; パスワード関連
+    (set-variable 'epa-pinentry-mode 'loopback)
+    (set-variable 'password-cache-expiry 3600)
+    (set-variable 'plstore-encoded t)
+    ;; 折り返さない
+    (setq-default truncate-lines t)
+    (set-variable 'truncate-partial-width-windows nil)
+    ;; 最終行の改行は EditorConfig で管理
+    (set-variable 'mode-require-final-newline nil)
+    (set-variable 'require-final-newline nil)
+    ;; ロックファイルを使用しない
+    (set-variable 'create-lockfiles nil)
+    ;; 右から左に読む言語に対応しない
+    (setq-default bidi-display-reordering nil)
+    ;; 特定のバッファを消去しない
+    (dolist (buffer '("*scratch*" "*Messages*"))
+      (with-current-buffer buffer
+        (emacs-lock-mode 'kill))))
   (leaf e:place-in-cache
     :config
     (defmacro e:place-in-cache (variable path)
@@ -89,6 +135,38 @@
           (funcall fn 'mode-line nil
                    :foreground e:mode-line-foreground
                    :background e:mode-line-background))))))
+
+(leaf environment
+  :config
+  (leaf mac
+    :config
+    ;; タイトルバー
+    (let ((items '((ns-transparent-titlebar . t)
+                   (ns-appearance . dark))))
+      (dolist (item items)
+        (assq-delete-all (car item) initial-frame-alist)
+        (assq-delete-all (car item) default-frame-alist)
+        (add-to-list 'initial-frame-alist item)
+        (add-to-list 'default-frame-alist item)))
+    ;; キーボード入力(option, command関連)
+    (when (spacemacs/system-is-mac)
+      (set-variable 'ns-command-modifier 'meta)
+      (set-variable 'ns-right-command-modifier 'super)
+      (set-variable 'ns-alternate-modifier 'none)))
+  (leaf wsl
+    :config
+    ;; Windows側のブラウザを起動
+    (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+          (cmd-args '("/c" "start")))
+      (when (file-exists-p cmd-exe)
+        (set-variable 'browse-url-generic-program  cmd-exe)
+        (set-variable 'browse-url-generic-args     cmd-args)
+        (set-variable 'browse-url-browser-function 'browse-url-generic))))
+  (leaf local-config
+    :config
+    (let ((private-config (expand-file-name "config.el" e:private-directory)))
+      (when (file-exists-p private-config)
+        (load-file private-config)))))
 
 (leaf ace-window
   :bind (("C-^" . ace-window))

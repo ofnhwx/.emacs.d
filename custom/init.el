@@ -31,7 +31,7 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
 
    ;; List of configuration layers to load.
-   dotspacemacs-configuration-layers (e:dotspacemacs-configuration-layers)
+   dotspacemacs-configuration-layers e:dotspacemacs-configuration-layers
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -40,13 +40,13 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages (e:dotspacemacs-additional-packages)
+   dotspacemacs-additional-packages e:dotspacemacs-additional-packages
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages (e:dotspacemacs-excluded-packages)
+   dotspacemacs-excluded-packages e:dotspacemacs-excluded-packages
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -439,7 +439,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (org-babel-load-file (expand-file-name "org/init.org" e:custom-directory)))
+  (load (expand-file-name "user-init" e:custom-directory)))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -455,9 +455,7 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
   (org-babel-load-file (expand-file-name "org/features.org" e:custom-directory))
-  (org-babel-load-file (expand-file-name "org/packages.org" e:custom-directory))
-  (org-babel-load-file (expand-file-name "org/advices.org"  e:custom-directory))
-  (org-babel-load-file (expand-file-name "org/patches.org"  e:custom-directory)))
+  (load (expand-file-name "user-config" e:custom-directory)))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

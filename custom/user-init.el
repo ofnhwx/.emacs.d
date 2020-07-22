@@ -37,7 +37,8 @@
         javascript
         markdown
         php
-        ruby
+        (ruby :variables
+              ruby-backend 'lsp)
         shell-scripts
         sql
         vimscript
@@ -69,7 +70,6 @@
 (defvar e:dotspacemacs-additional-packages nil)
 (setq e:dotspacemacs-additional-packages
       '(
-        (evil-plugins :location (recipe :fetcher github :repo "tarao/evil-plugins"))
         (helm-fzf     :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
         (locale-eaw   :location (recipe :fetcher github :repo "hamano/locale-eaw"))
         atomic-chrome

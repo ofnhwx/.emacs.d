@@ -1,12 +1,12 @@
 (eval-and-compile
   (require 'leaf))
 
-(leaf japanese-environment
+(leaf 日本語環境に関する設定
   :config
-  (leaf language-environment
+  (leaf 日本語環境に設定
     :config
     (set-language-environment "Japanese"))
-  (leaf encoding
+  (leaf エンコーディング
     :config
     (let ((coding-system 'utf-8))
       (prefer-coding-system          coding-system)
@@ -14,155 +14,192 @@
       (set-buffer-file-coding-system coding-system)
       (set-terminal-coding-system    coding-system)
       (set-keyboard-coding-system    coding-system)))
-  (leaf locale
+  (leaf ロケール
     :config
     (let ((value "ja_JP.UTF-8"))
       (setenv "LANG" value)
       (setenv "LC_ALL" value))))
 
-(leaf spacemacs
+(leaf 見た目
   :config
-  (leaf define-segment
-    (spaceline-define-segment buffer-encoding-abbrev
-      "The line ending convention used in the buffer."
-      (let ((buf-coding (format "%s" buffer-file-coding-system)))
-        (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
-              (concat (and (string-match "with-signature" buf-coding) "ⓑ")
-                      (and (string-match "unix"           buf-coding) "ⓤ")
-                      (and (string-match "dos"            buf-coding) "ⓓ")
-                      (and (string-match "mac"            buf-coding) "ⓜ")
-                      )))
-      :separator " "))
-  (leaf diminish
+  (leaf フレームタイトル
     :config
-    (spacemacs|diminish company-mode)
-    (spacemacs|diminish company-box-mode)
-    (spacemacs|diminish emoji-cheat-sheet-plus-display-mode)
-    (spacemacs|diminish evil-owl-mode)
-    (spacemacs|diminish helm-ff-cache-mode)
-    (spacemacs|diminish helm-migemo-mode)
-    (spacemacs|diminish hybrid-mode)
-    (spacemacs|diminish projectile-rails-mode)
-    (spacemacs|diminish rubocop-mode)
-    (spacemacs|diminish ruby-refactor-mode)
-    (spacemacs|diminish smartparens-mode)
-    (spacemacs|diminish which-key-mode)
-    (spacemacs|diminish yas-minor-mode))
-  (leaf frame-title-format
+    (leaf WSLの情報を表示
+      :config
+      (when (executable-find "uname")
+        (let ((uname (e:shell-command-to-string "uname -a")))
+          (cond
+           ((s-index-of "microsoft-standard" uname)
+            (set-variable 'dotspacemacs-frame-title-format "(WSL2) %I@%S"))
+           ((s-index-of "Microsoft" uname)
+            (set-variable 'dotspacemacs-frame-title-format "(WSL1) %I@%S")))))))
+  (leaf ヘッダーライン
     :config
-    (when (executable-find "uname")
-      (let ((uname (e:shell-command-to-string "uname -a")))
-        (cond
-         ((s-index-of "microsoft-standard" uname)
-          (set-variable 'dotspacemacs-frame-title-format "(WSL2) %I@%S"))
-         ((s-index-of "Microsoft" uname)
-          (set-variable 'dotspacemacs-frame-title-format "(WSL1) %I@%S")))))))
+    (leaf ファイル名等をいい感じに表示
+      :config
+      (defun e:setup-header-line ()
+        "ヘッダーラインをなるべくいい感じに設定する"
+        (cl-loop for buffer in (--filter (not (buffer-local-value 'header-line-format it))
+                                         (-map #'window-buffer (window-list)))
+                 do (with-current-buffer buffer
+                      (cond
+                       ((e:current-buffer-file-name)
+                        (e:setup-header-line-for-files))))))
+      (run-with-timer 1.0 1.0 'e:setup-header-line)))
+  (leaf モードライン
+    :config
+    (leaf ファイルエンコーディング
+      :config
+      (spaceline-define-segment buffer-encoding-abbrev
+        "The line ending convention used in the buffer."
+        (let ((buf-coding (format "%s" buffer-file-coding-system)))
+          (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
+                (concat (and (string-match "with-signature" buf-coding) "ⓑ")
+                        (and (string-match "unix"           buf-coding) "ⓤ")
+                        (and (string-match "dos"            buf-coding) "ⓓ")
+                        (and (string-match "mac"            buf-coding) "ⓜ")
+                        )))
+        :separator " "))
+    (leaf マイナーモードの表示
+      :config
+      (spacemacs|diminish company-mode)
+      (spacemacs|diminish company-box-mode)
+      (spacemacs|diminish emoji-cheat-sheet-plus-display-mode)
+      (spacemacs|diminish evil-owl-mode)
+      (spacemacs|diminish helm-ff-cache-mode)
+      (spacemacs|diminish helm-migemo-mode)
+      (spacemacs|diminish hybrid-mode)
+      (spacemacs|diminish projectile-rails-mode)
+      (spacemacs|diminish rubocop-mode)
+      (spacemacs|diminish ruby-refactor-mode)
+      (spacemacs|diminish smartparens-mode)
+      (spacemacs|diminish which-key-mode)
+      (spacemacs|diminish yas-minor-mode))))
 
-(leaf general
+(leaf 全般的な設定
   :config
-  (leaf key-bind
-    :config
-    (spacemacs/set-leader-keys
-      "%" 'query-replace
-      "&" 'async-shell-command
-      "^" 'ace-window)
-    (bind-keys
-     :map global-map
-     ("C-;" . spacemacs/default-pop-shell)
-     :map ctl-x-map
-     ("C-c" . helm-M-x)))
-  (leaf aliases
+  (leaf エイリアス
     :config
     (defalias 'exit 'save-buffers-kill-terminal)
     (defalias 'yes-or-no-p 'y-or-n-p))
-  (leaf header-line
+  (leaf キーバインディング
     :config
-    (defun e:setup-header-line ()
-      "ヘッダーラインをなるべくいい感じに設定する"
-      (cl-loop for buffer in (--filter (not (buffer-local-value 'header-line-format it))
-                                       (-map #'window-buffer (window-list)))
-               do (with-current-buffer buffer
-                    (cond
-                     ((e:current-buffer-file-name)
-                      (e:setup-header-line-for-files))))))
-    (run-with-timer 1.0 1.0 'e:setup-header-line))
-  (leaf misc
+    (leaf spacemacs
+      :config
+      (spacemacs/set-leader-keys
+        "%" 'query-replace
+        "&" 'async-shell-command
+        "^" 'ace-window))
+    (leaf normal
+      :config
+      (bind-keys*
+       :map global-map
+       ("C-;" . spacemacs/default-pop-shell)
+       :map ctl-x-map
+       ("C-c" . helm-M-x))))
+  (leaf 細かいやつ
     :config
-    ;; シェルの設定
-    (set-variable 'shell-file-name
-                  (or (executable-find "zsh")
-                      (executable-find "bash")
-                      (executable-find "sh")))
-    ;; パスワード関連
-    (set-variable 'epa-pinentry-mode 'loopback)
-    (set-variable 'password-cache-expiry 3600)
-    (set-variable 'plstore-encoded t)
-    ;; 折り返さない
-    (setq-default truncate-lines t)
-    (set-variable 'truncate-partial-width-windows nil)
-    ;; 最終行の改行は EditorConfig で管理
-    (set-variable 'mode-require-final-newline nil)
-    (set-variable 'require-final-newline nil)
-    ;; ロックファイルを使用しない
-    (set-variable 'create-lockfiles nil)
-    ;; 右から左に読む言語に対応しない
-    (setq-default bidi-display-reordering nil)
-    ;; 特定のバッファを消去しない
-    (dolist (buffer '("*scratch*" "*Messages*"))
-      (with-current-buffer buffer
-        (emacs-lock-mode 'kill))))
-  (leaf e:place-in-cache
+    (leaf シェルの設定
+      :config
+      (set-variable 'shell-file-name
+                    (or (executable-find "zsh")
+                        (executable-find "bash")
+                        (executable-find "sh"))))
+    (leaf パスワード関連
+      :config
+      (set-variable 'epa-pinentry-mode 'loopback)
+      (set-variable 'password-cache-expiry 3600)
+      (set-variable 'plstore-encoded t))
+    (leaf 折り返し
+      :config
+      (setq-default truncate-lines t)
+      (set-variable 'truncate-partial-width-windows nil))
+    (leaf 最終行の改行
+      :config
+      (set-variable 'mode-require-final-newline nil)
+      (set-variable 'require-final-newline nil))
+    (leaf ロックファイルを使用しない
+      :config
+      (set-variable 'create-lockfiles nil))
+    (leaf 右から左に読む言語に対応しない
+      :config
+      (setq-default bidi-display-reordering nil))
+    (leaf コマンド履歴の重複を排除
+      :config
+      (set-variable 'history-delete-duplicates t))
+    (leaf 特定のバッファを消去しない
+      :config
+      (dolist (buffer '("*scratch*" "*Messages*"))
+        (with-current-buffer buffer
+          (emacs-lock-mode 'kill))))))
+
+(leaf 便利な関数
+  :config
+  (leaf ファイルをキャッシュに設定
     :config
     (defmacro e:place-in-cache (variable path)
       `(set-variable ',variable (expand-file-name ,path spacemacs-cache-directory))))
-  (leaf e:toggle-indent-tabs-mode
+  (leaf マイナーモードのON/OFFを用意
+    :config
+    (defmacro e:define-on/off-function (name)
+      `(progn
+         (defun ,(intern (format "e:%s-on" name)) ()
+           (interactive)
+           (,(intern (format "%s" name)) 1))
+         (defun ,(intern (format "e:%s-off" name)) ()
+           (,(intern (format "%s" name)) 0)))))
+  (leaf インデントのモードを切替え
     :config
     (defun e:toggle-indent-tabs-mode ()
       (interactive)
       (setq indent-tabs-mode (not indent-tabs-mode))
       (message "indent-tabs-mode: %s" indent-tabs-mode))
-    (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode))
-  (leaf advice-auto-reset-mode-line-colors
-    :doc "テスト成否によるモードラインの色の変更を一定時間で戻す"
-    :config
-    (defvar e:mode-line-foreground (face-foreground 'mode-line))
-    (defvar e:mode-line-background (face-background 'mode-line))
-    (define-advice set-face-attribute (:around (fn &rest args) auto-reset-mode-line-colors)
-      (apply fn args)
-      (when (eq (car args) 'mode-line)
-        (let ((inhibit-quit t))
-          (sit-for 3)
-          (funcall fn 'mode-line nil
-                   :foreground e:mode-line-foreground
-                   :background e:mode-line-background))))))
+    (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode)))
 
-(leaf environment
+(leaf advice-auto-reset-mode-line-colors
+  :doc "テスト成否によるモードラインの色の変更を一定時間で戻す"
   :config
-  (leaf mac
+  (defvar e:mode-line-foreground (face-foreground 'mode-line))
+  (defvar e:mode-line-background (face-background 'mode-line))
+  (define-advice set-face-attribute (:around (fn &rest args) auto-reset-mode-line-colors)
+    (apply fn args)
+    (when (eq (car args) 'mode-line)
+      (let ((inhibit-quit t))
+        (sit-for 3)
+        (funcall fn 'mode-line nil
+                 :foreground e:mode-line-foreground
+                 :background e:mode-line-background)))))
+
+(leaf 環境毎の設定
+  :config
+  (leaf Mac
     :config
-    ;; タイトルバー
-    (let ((items '((ns-transparent-titlebar . t)
-                   (ns-appearance . dark))))
-      (dolist (item items)
-        (assq-delete-all (car item) initial-frame-alist)
-        (assq-delete-all (car item) default-frame-alist)
-        (add-to-list 'initial-frame-alist item)
-        (add-to-list 'default-frame-alist item)))
-    ;; キーボード入力(option, command関連)
-    (when (spacemacs/system-is-mac)
-      (set-variable 'ns-command-modifier 'meta)
-      (set-variable 'ns-right-command-modifier 'super)
-      (set-variable 'ns-alternate-modifier 'none)))
-  (leaf wsl
+    (leaf タイトルバーの見た目
+      :config
+      (let ((items '((ns-transparent-titlebar . t)
+                     (ns-appearance . dark))))
+        (dolist (item items)
+          (assq-delete-all (car item) initial-frame-alist)
+          (assq-delete-all (car item) default-frame-alist)
+          (add-to-list 'initial-frame-alist item)
+          (add-to-list 'default-frame-alist item))))
+    (leaf 特殊キーの設定
+      :config
+      (when (spacemacs/system-is-mac)
+        (set-variable 'ns-command-modifier 'meta)
+        (set-variable 'ns-right-command-modifier 'super)
+        (set-variable 'ns-alternate-modifier 'none))))
+  (leaf WSL
     :config
-    ;; Windows側のブラウザを起動
-    (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
-          (cmd-args '("/c" "start")))
-      (when (file-exists-p cmd-exe)
-        (set-variable 'browse-url-generic-program  cmd-exe)
-        (set-variable 'browse-url-generic-args     cmd-args)
-        (set-variable 'browse-url-browser-function 'browse-url-generic))))
-  (leaf local-config
+    (leaf Windows側のブラウザを起動
+      :config
+      (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+            (cmd-args '("/c" "start")))
+        (when (file-exists-p cmd-exe)
+          (set-variable 'browse-url-generic-program  cmd-exe)
+          (set-variable 'browse-url-generic-args     cmd-args)
+          (set-variable 'browse-url-browser-function 'browse-url-generic)))))
+  (leaf ローカルの設定ファイルを読込み
     :config
     (let ((private-config (expand-file-name "config.el" e:private-directory)))
       (when (file-exists-p private-config)
@@ -179,52 +216,49 @@
   (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server))
 
 (leaf avy
-  :config
+  :defer-config
   (set-variable 'avy-keys (number-sequence ?a ?z))
   (set-variable 'avy-all-windows nil)
   (set-variable 'avy-all-windows-alt t))
 
 (leaf codic
-  :after codic
-  :config
+  :defer-config
   (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic")))
 
 (leaf company
-  :after company
   :config
-  (bind-keys :map company-active-map
-             ("<escape>" . company-abort))
+  (leaf company
+    :bind (:company-active-map
+           :package company
+           ("C-g" . company-abort)
+           ("<escape>" . company-abort)))
   (leaf company-tabnine
     :after company
+    :require t
     :config
-    (set-variable 'company-tabnine-binaries-folder (expand-file-name "tabnine" e:private-directory))
-    (spacemacs|add-company-backends
-      :backends company-tabnine
-      :modes haml-mode js2-mode php-mode ruby-mode))
+    (set-variable 'company-tabnine-binaries-folder (expand-file-name "tabnine" e:private-directory)))
   (leaf company-try-hard
-    :after company
-    :config
-    (bind-keys :map global-map
-               ("C-z" . company-try-hard)
-               :map company-active-map
-               ("C-z" . company-try-hard))))
+    :bind (("C-z" . company-try-hard)
+           (:company-active-map
+            :package company
+            ("C-z" . company-try-hard)))))
 
 (leaf dired
-  :init
-  (set-variable 'dired-dwim-target t)
-  (set-variable 'dired-listing-switches "-Ahl")
-  (set-variable 'dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.DS_Store")
-  (set-variable 'dired-recursive-copies 'always)
-  (set-variable 'dired-recursive-deletes 'always)
   :config
   (leaf dired
-    :after dired
-    :config
-    (bind-keys
-     :map dired-mode-map
-     ("C-c C-e" . wdired-change-to-wdired-mode)))
+    :bind ((:dired-mode-map
+            ("C-c C-e" . wdired-change-to-wdired-mode)))
+    :defer-config
+    (set-variable 'dired-dwim-target t)
+    (set-variable 'dired-listing-switches "-Ahl")
+    (set-variable 'dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.DS_Store")
+    (set-variable 'dired-recursive-copies 'always)
+    (set-variable 'dired-recursive-deletes 'always))
+  (leaf dired-filter
+    :hook (dired-mode-hook . dired-filter-mode))
   (leaf ls-lisp
     :after dired
+    :require t
     :config
     (set-variable 'ls-lisp-dirs-first t)
     (set-variable 'ls-lisp-format-time-list '("%Y-%m-%d %H:%M:%S" "%Y-%m-%d %H:%M:%S"))
@@ -233,9 +267,8 @@
     (set-variable 'ls-lisp-use-localized-time-format t)
     (set-variable 'ls-lisp-verbosity '(uid gid)))
   (leaf ls-lisp-extension
-    :after ls-lisp)
-  (leaf dired-filter
-    :hook (dired-mode-hook . dired-filter-mode)))
+    :after ls-lisp
+    :require t))
 
 (leaf display-line-numbers
   :hook ((find-file-hook . e:display-line-numbers-mode-on)
@@ -243,14 +276,7 @@
          (html-mode-hook . e:display-line-numbers-mode-on))
   :config
   (setq-default display-line-numbers-width 4)
-  (defun e:display-line-numbers-mode-on ()
-    "`display-line-numbers-mode'を有効化."
-    (interactive)
-    (display-line-numbers-mode 1))
-  (defun e:display-line-numbers-mode-off ()
-    "`display-line-numbers-mode'を無効化."
-    (interactive)
-    (display-line-numbers-mode 0)))
+  (e:define-on/off-function display-line-numbers-mode))
 
 (leaf eaw
   :require t
@@ -261,6 +287,7 @@
   :commands (e:ediff)
   :config
   (defun e:ediff ()
+    "画面分割されている場合にいい感じに EDIFF する."
     (interactive)
     (let ((files (->> (window-list (selected-frame))
                       (-map #'window-buffer)
@@ -283,39 +310,33 @@
          ("C-j" . nil)))
 
 (leaf eshell
-  :config
+  :defer-config
   (set-variable 'eshell-history-size 100000))
 
 (leaf evil
+  :require t
   :config
-  (set-variable 'evil-cross-lines t)
-  (set-variable 'evil-move-cursor-back nil)
-  (leaf evil-keybind
+  (leaf evil
+    :bind (;; motion → normal → visual
+           (:evil-motion-state-map
+            ("C-^" . nil))
+           (:evil-normal-state-map
+            ("<down>" . evil-next-visual-line)
+            ("<up>" . evil-previous-visual-line)
+            ("j" . evil-next-visual-line)
+            ("k" . evil-previous-visual-line)
+            ("gj" . evil-avy-goto-line-below)
+            ("gk" . evil-avy-goto-line-above)
+            ("S" . evil-avy-goto-char-timer))
+           (:evil-visual-state-map)
+           (:evil-insert-state-map)
+           (:evil-operator-state-map)
+           (:evil-replace-state-map)
+           (:evil-emacs-state-map))
     :config
-    (setq evil-disable-insert-state-bindings t)
-    (bind-keys
-     ;; モーションモード(motion -> normal -> visual)
-     :map evil-motion-state-map
-     ("C-^" . nil) ;; evil-buffer
-     ;; 通常モード
-     :map evil-normal-state-map
-     ("<down>" . evil-next-visual-line)
-     ("<up>" . evil-previous-visual-line)
-     ("j" . evil-next-visual-line)
-     ("k" . evil-previous-visual-line)
-     ("gj" . evil-avy-goto-line-below)
-     ("gk" . evil-avy-goto-line-above)
-     ("S" . evil-avy-goto-char-timer)
-     ;; ビジュアルモード
-     :map evil-visual-state-map
-     ;; 挿入モード
-     :map evil-insert-state-map
-     ;; オペレーターモード
-     :map evil-operator-state-map
-     ;; 置き換えモード
-     :map evil-replace-state-map
-     ;; Emacsモード
-     :map evil-emacs-state-map))
+    (set-variable 'evil-cross-lines t)
+    (set-variable 'evil-disable-insert-state-bindings t)
+    (set-variable 'evil-move-cursor-back nil))
   (leaf evil-easymotion
     :config
     (leaf e:evil-em-command
@@ -358,30 +379,20 @@
       (bind-key "s" 'e:evil-em-command evil-normal-state-map)
       (bind-key "x" 'e:evil-em-command evil-visual-state-map)
       (bind-key "x" 'e:evil-em-command evil-operator-state-map)))
-  (leaf evil-little-word
-    :config
-    (ignore-errors
-      (require 'evil-little-word nil t)))
-  (leaf evil-textobj-between
-    :require t)
   (leaf evil-owl
     :config
     (evil-owl-mode 1))
-  (leaf e:evil-force-normal-state
+  (leaf 保存時等にノーマルステートに戻す
+    :advice
+    (:after  save-buffer   e:evil-force-normal-state)
+    (:before keyboard-quit e:evil-force-normal-state)
     :config
-    (defun e:evil-force-normal-state ()
+    (defun e:evil-force-normal-state (&rest _)
       (cond
        ((eq evil-state 'visual)
         (evil-exit-visual-state))
        ((member evil-state '(insert hybrid))
-        (evil-force-normal-state)))))
-  (leaf evil-advice
-    :doc "保存時等にノーマルステートに戻す"
-    :config
-    (define-advice save-buffer (:after (&rest _) evil-force-normal-state)
-      (e:evil-force-normal-state))
-    (define-advice keyboard-quit (:before (&rest _) evil-force-normal-state)
-      (e:evil-force-normal-state))))
+        (evil-force-normal-state))))))
 
 (leaf eww
   :config
@@ -395,34 +406,35 @@
       (persp-kill e:eww-spacemacs-layout-name))))
 
 (leaf flycheck
-  :config
+  :defer-config
   (set-variable 'flycheck-idle-buffer-switch-delay 3.0)
   (set-variable 'flycheck-idle-change-delay 3.0))
 
 (leaf git-gutter
+  :config
   (leaf git-gutter
-    :config
+    :defer-config
     (dolist (face '(git-gutter:added
                     git-gutter:deleted
                     git-gutter:modified))
       (set-face-attribute face nil :background (face-attribute face :foreground))))
   (leaf git-gutter+
-    :config
+    :defer-config
     (dolist (face '(git-gutter+-added
                     git-gutter+-deleted
                     git-gutter+-modified))
       (set-face-attribute face nil :background (face-attribute face :foreground)))))
 
 (leaf google-translate
-  :config
+  :defer-config
   (set-variable 'google-translate-default-source-language nil)
   (set-variable 'google-translate-default-target-language "ja"))
 
 (leaf helm
   :config
   (leaf helm
-    :config
-    (bind-key [remap eval-expression] 'helm-eval-expression)
+    :bind (([remap eval-expression] . helm-eval-expression))
+    :defer-config
     (set-variable 'helm-buffer-max-length nil))
   (leaf helm-fzf
     :config
@@ -432,7 +444,6 @@
       "pz" 'helm-fzf-project-root))
   (leaf helm-migemo
     :if (executable-find "cmigemo")
-    :after helm
     :config
     (helm-migemo-mode))
   (leaf helm-tramp
@@ -525,7 +536,7 @@
 (leaf magit
   :config
   (leaf magit
-    :config
+    :defer-config
     (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
     (set-variable 'magit-diff-refine-hunk 'all)
     (set-variable 'magit-diff-refine-ignore-whitespace t)
@@ -537,11 +548,11 @@
                          (--map (cons it 3)))))
     (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
   (leaf transient
-    :config
+    :defer-config
     (set-variable 'transient-default-level 7)))
 
 (leaf markdown-mode
-  :config
+  :defer-config
   (set-variable 'markdown-command "pandoc"))
 
 (leaf migemo
@@ -581,16 +592,15 @@
     "ajm" '("RubyMine" . jetbrains/open-by-mine)
     "ajp" '("PhpStorm" . jetbrains/open-by-pstorm)
     "ajs" '("Android Studio" . jetbrains/open-by-studio)
-    "ajw" '("WebStorm" . jetbrains/open-by-wstorm)
-    ))
+    "ajw" '("WebStorm" . jetbrains/open-by-wstorm)))
 
 (leaf open-junk-file
-  :config
+  :defer-config
   (set-variable 'open-junk-file-format (expand-file-name "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))
 
 (leaf org
   :config
-  (leaf org-variables
+  (leaf org
     :config
     (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
     (when (f-directory? org-directory)
@@ -662,8 +672,7 @@
     (spacemacs/defer-until-after-user-config  #'e:prodigy:google-ime-skk)))
 
 (leaf paradox-github
-  :after paradox-github
-  :config
+  :defer-config
   (set-variable 'paradox-github-token (e:auth-source-get 'token :host "paradox")))
 
 (leaf prodigy
@@ -677,16 +686,16 @@
           (prodigy-start-service service))))))
 
 (leaf persistent-scratch
-  :config
+  :defer-config
   (set-variable 'persistent-scratch-save-file (expand-file-name "scratch" e:private-directory))
   (persistent-scratch-setup-default))
 
 (leaf persp-mode
-  :config
+  :defer-config
   (set-variable 'persp-kill-foreign-buffer-behaviour nil))
 
 (leaf shr
-  :config
+  :defer-config
   (set-variable 'shr-use-colors nil)
   (set-variable 'shr-max-image-proportion 0.6))
 
@@ -697,9 +706,11 @@
 
 (leaf recentf
   :config
-  (set-variable 'recentf-max-menu-items 20)
-  (set-variable 'recentf-max-saved-items 3000)
-  (set-variable 'recentf-filename-handlers '(abbreviate-file-name))
+  (leaf recentf
+    :defer-config
+    (set-variable 'recentf-max-menu-items 20)
+    (set-variable 'recentf-max-saved-items 3000)
+    (set-variable 'recentf-filename-handlers '(abbreviate-file-name)))
   (leaf recentf-advice
     :after recentf
     :doc "存在しないファイルを履歴から削除する"
@@ -715,9 +726,12 @@
 (leaf tramp
   :require t
   :config
-  (set-variable 'tramp-default-host "localhost")
+  (leaf tramp
+    :config
+    (set-variable 'tramp-default-host "localhost"))
   (leaf tramp-sh
     :doc "ssh/conf.d の中身から接続先を追加"
+    :if (f-exists? "~/.ssh/conf.d/hosts")
     :config
     (let ((functions (->> (ignore-errors (f-files "~/.ssh/conf.d/hosts" nil t))
                           (--map (list #'tramp-parse-sconfig it)))))
@@ -726,17 +740,17 @@
           (tramp-set-completion-function it new-functions))))))
 
 (leaf treemacs
-  :config
+  :defer-config
   (e:place-in-cache treemacs-persist-file "treemacs-persist")
   (e:place-in-cache treemacs-last-error-persist-file "treemacs-persist-at-last-error"))
 
 (leaf url
   :config
   (leaf url-cache
-    :config
+    :defer-config
     (e:place-in-cache url-cache-directory "url/cache"))
   (leaf url-cookie
-    :config
+    :defer-config
     (e:place-in-cache url-cookie-file "url/cookies")))
 
 (leaf visual-regexp
@@ -744,32 +758,24 @@
 
 (leaf whitespace
   :hook ((find-file-hook prog-mode-hook) . e:whitespace-mode-on)
-  :config
-  (leaf whitespace-variables
-    :config
-    (set-variable 'whitespace-style
-                  '(face
-                    trailing
-                    tabs
-                    tab-mark
-                    spaces
-                    space-mark
-                    newline
-                    newline-mark))
-    (set-variable 'whitespace-space-regexp "\\(\u3000+\\)")
-    (set-variable 'whitespace-display-mappings
-                  '((space-mark   ?\u3000 [?\u30ed])
-                    (tab-mark     ?\t     [?\t])
-                    (newline-mark ?\n     [?\u0024 ?\n]))))
-  (leaf whitespace-faces
-    :config
-    (set-face-attribute 'whitespace-trailing nil :background "#800000")
-    (let ((color "#595D63"))
-      (set-face-attribute 'whitespace-tab      nil :foreground color :strike-through t)
-      (set-face-attribute 'whitespace-space    nil :foreground color)
-      (set-face-attribute 'whitespace-newline  nil :foreground color)))
-  (leaf e:whitespace-mode-on
-    :config
-    (defun e:whitespace-mode-on ()
-      (interactive)
-      (whitespace-mode 1))))
+  :defer-config
+  (set-variable 'whitespace-style
+                '(face
+                  trailing
+                  tabs
+                  tab-mark
+                  spaces
+                  space-mark
+                  newline
+                  newline-mark))
+  (set-variable 'whitespace-space-regexp "\\(\u3000+\\)")
+  (set-variable 'whitespace-display-mappings
+                '((space-mark   ?\u3000 [?\u30ed])
+                  (tab-mark     ?\t     [?\t])
+                  (newline-mark ?\n     [?\u0024 ?\n])))
+  (set-face-attribute 'whitespace-trailing nil :background "#800000")
+  (let ((color "#595D63"))
+    (set-face-attribute 'whitespace-tab      nil :foreground color :strike-through t)
+    (set-face-attribute 'whitespace-space    nil :foreground color)
+    (set-face-attribute 'whitespace-newline  nil :foreground color))
+  (e:define-on/off-function whitespace-mode))

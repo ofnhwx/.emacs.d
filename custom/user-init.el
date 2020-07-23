@@ -95,6 +95,8 @@
 (defvar e:dotspacemacs-excluded-packages nil)
 (setq e:dotspacemacs-excluded-packages
       '(
+        ;; +spacemacs/spacemacs-evil
+        evil-escape
         ;; +intl/japanese
         pangu-spacing
         ;; +lang/php

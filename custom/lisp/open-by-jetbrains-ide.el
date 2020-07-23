@@ -1,6 +1,7 @@
 
-(require 'cl-lib)
-(require 'dash)
+(eval-and-compile
+  (require 'cl-lib)
+  (require 'dash))
 
 
 

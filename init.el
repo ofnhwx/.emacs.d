@@ -21,12 +21,11 @@
   (defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory))
   (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory)))
 
-;; org ファイルをロードする設定
+;; 最新の org を使用する
 (let ((dir (expand-file-name "org-mode" e:external-directory)))
   (when (file-directory-p dir)
     (add-to-list 'load-path (expand-file-name "lisp" dir))
-    (add-to-list 'load-path (expand-file-name "contrib" dir))
-    (require 'org)))
+    (add-to-list 'load-path (expand-file-name "contrib" dir))))
 
 ;; フォント設定
 (progn

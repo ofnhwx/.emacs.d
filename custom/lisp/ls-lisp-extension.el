@@ -1,5 +1,5 @@
 
-(eval-when-compile
+(eval-and-compile
   (require 'ls-lisp)
   (require 'f)
   (require 's))

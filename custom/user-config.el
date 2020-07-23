@@ -1,5 +1,11 @@
+
 (eval-and-compile
   (require 'leaf))
+
+(leaf convenient-features
+  :require t
+  :config
+  (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode))
 
 (leaf 日本語環境に関する設定
   :config
@@ -36,16 +42,9 @@
   (leaf ヘッダーライン
     :config
     (leaf ファイル名等をいい感じに表示
+      :require convenient-header-line
       :config
-      (defun e:setup-header-line ()
-        "ヘッダーラインをなるべくいい感じに設定する"
-        (cl-loop for buffer in (--filter (not (buffer-local-value 'header-line-format it))
-                                         (-map #'window-buffer (window-list)))
-                 do (with-current-buffer buffer
-                      (cond
-                       ((e:current-buffer-file-name)
-                        (e:setup-header-line-for-files))))))
-      (run-with-timer 1.0 1.0 'e:setup-header-line)))
+      (e:convenient-header-line-start)))
   (leaf モードライン
     :config
     (leaf ファイルエンコーディング
@@ -62,8 +61,6 @@
         :separator " "))
     (leaf マイナーモードの表示
       :config
-      (spacemacs|diminish company-mode)
-      (spacemacs|diminish company-box-mode)
       (spacemacs|diminish emoji-cheat-sheet-plus-display-mode)
       (spacemacs|diminish evil-owl-mode)
       (spacemacs|diminish helm-ff-cache-mode)
@@ -72,9 +69,7 @@
       (spacemacs|diminish projectile-rails-mode)
       (spacemacs|diminish rubocop-mode)
       (spacemacs|diminish ruby-refactor-mode)
-      (spacemacs|diminish smartparens-mode)
-      (spacemacs|diminish which-key-mode)
-      (spacemacs|diminish yas-minor-mode))))
+      (spacemacs|diminish which-key-mode))))
 
 (leaf 全般的な設定
   :config
@@ -132,29 +127,6 @@
       (dolist (buffer '("*scratch*" "*Messages*"))
         (with-current-buffer buffer
           (emacs-lock-mode 'kill))))))
-
-(leaf 便利な関数
-  :config
-  (leaf ファイルをキャッシュに設定
-    :config
-    (defmacro e:place-in-cache (variable path)
-      `(set-variable ',variable (expand-file-name ,path spacemacs-cache-directory))))
-  (leaf マイナーモードのON/OFFを用意
-    :config
-    (defmacro e:define-on/off-function (name)
-      `(progn
-         (defun ,(intern (format "e:%s-on" name)) ()
-           (interactive)
-           (,(intern (format "%s" name)) 1))
-         (defun ,(intern (format "e:%s-off" name)) ()
-           (,(intern (format "%s" name)) 0)))))
-  (leaf インデントのモードを切替え
-    :config
-    (defun e:toggle-indent-tabs-mode ()
-      (interactive)
-      (setq indent-tabs-mode (not indent-tabs-mode))
-      (message "indent-tabs-mode: %s" indent-tabs-mode))
-    (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode)))
 
 (leaf advice-auto-reset-mode-line-colors
   :doc "テスト成否によるモードラインの色の変更を一定時間で戻す"
@@ -231,7 +203,12 @@
     :bind (:company-active-map
            :package company
            ("C-g" . company-abort)
-           ("<escape>" . company-abort)))
+           ("<escape>" . company-abort))
+    :config
+    (spacemacs|diminish company-mode))
+  (leaf company-box
+    :config
+    (spacemacs|diminish company-box-mode))
   (leaf company-tabnine
     :after company
     :require t
@@ -442,8 +419,9 @@
     (spacemacs/set-leader-keys
       "fz" 'helm-fzf
       "pz" 'helm-fzf-project-root))
-  (leaf helm-migemo
+  (leaf helm-multi-match
     :if (executable-find "cmigemo")
+    :require t
     :config
     (helm-migemo-mode))
   (leaf helm-tramp
@@ -601,7 +579,7 @@
 (leaf org
   :config
   (leaf org
-    :config
+    :defer-config
     (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
     (when (f-directory? org-directory)
       (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
@@ -699,6 +677,10 @@
   (set-variable 'shr-use-colors nil)
   (set-variable 'shr-max-image-proportion 0.6))
 
+(leaf smartparens
+  :defer-config
+  (spacemacs|diminish smartparens-mode))
+
 (leaf so-long
   :require t
   :config
@@ -779,3 +761,7 @@
     (set-face-attribute 'whitespace-space    nil :foreground color)
     (set-face-attribute 'whitespace-newline  nil :foreground color))
   (e:define-on/off-function whitespace-mode))
+
+(leaf yasnippet
+  :defer-config
+  (spacemacs|diminish yas-minor-mode))

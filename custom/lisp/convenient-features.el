@@ -96,6 +96,7 @@
        (interactive)
        (,(intern (format "%s" name)) 1))
      (defun ,(intern (format "e:%s-off" name)) ()
+       (interactive)
        (,(intern (format "%s" name)) 0))))
 
 (defun e:toggle-indent-tabs-mode ()

@@ -531,7 +531,8 @@
 
 (leaf markdown-mode
   :defer-config
-  (set-variable 'markdown-command "pandoc"))
+  (set-variable 'markdown-command "pandoc")
+  (remove-hook 'markdown-mode-hook #'orgtbl-mode))
 
 (leaf migemo
   :if (executable-find "cmigemo")

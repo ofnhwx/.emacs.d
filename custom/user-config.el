@@ -503,6 +503,13 @@
       (set-variable 'rubocopfmt-use-bundler-when-possible nil)))
   (leaf lsp
     :config
+    (leaf with-tabnine
+      :config
+      (define-advice lsp (:after (&rest _) with-tabnine)
+        (case (e:major-mode)
+          (ruby-mode
+           (setq company-backends
+                 '((company-capf company-tabnine)))))))
     (leaf lsp-mode
       :config
       (e:place-in-cache lsp-session-file ".lsp-session-v1"))

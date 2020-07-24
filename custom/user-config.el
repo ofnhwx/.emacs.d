@@ -220,6 +220,10 @@
             :package company
             ("C-z" . company-try-hard)))))
 
+(leaf dap-mode
+  :defer-config
+  (e:place-in-cache dap-breakpoints-file "dap-breakpoints"))
+
 (leaf dired
   :config
   (leaf dired

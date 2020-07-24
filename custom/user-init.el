@@ -60,6 +60,7 @@
         restclient
         (shell :variables
                shell-enable-smart-eshell t
+               shell-default-height 60
                shell-default-shell 'vterm)
         vagrant
         ;; +web-services
@@ -73,7 +74,6 @@
         (helm-fzf     :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
         (locale-eaw   :location (recipe :fetcher github :repo "hamano/locale-eaw"))
         atomic-chrome
-        basic-mode
         codic
         company-tabnine
         company-try-hard

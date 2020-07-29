@@ -61,18 +61,7 @@
                         (and (string-match "dos"            buf-coding) "ⓓ")
                         (and (string-match "mac"            buf-coding) "ⓜ")
                         )))
-        :separator " "))
-    (leaf マイナーモードの表示
-      :config
-      (spacemacs|diminish emoji-cheat-sheet-plus-display-mode)
-      (spacemacs|diminish evil-owl-mode)
-      (spacemacs|diminish helm-ff-cache-mode)
-      (spacemacs|diminish helm-migemo-mode)
-      (spacemacs|diminish hybrid-mode)
-      (spacemacs|diminish projectile-rails-mode)
-      (spacemacs|diminish rubocop-mode)
-      (spacemacs|diminish ruby-refactor-mode)
-      (spacemacs|diminish which-key-mode))))
+        :separator " "))))
 
 (leaf 全般的な設定
   :config
@@ -179,6 +168,8 @@
     (let ((private-config (expand-file-name "config.el" e:private-directory)))
       (when (file-exists-p private-config)
         (load-file private-config)))))
+
+
 
 (leaf ace-window
   :bind (("C-^" . ace-window))
@@ -328,6 +319,7 @@
            (:evil-replace-state-map)
            (:evil-emacs-state-map))
     :config
+    (spacemacs|diminish hybrid-mode)
     (set-variable 'evil-cross-lines t)
     (set-variable 'evil-disable-insert-state-bindings t)
     (set-variable 'evil-move-cursor-back nil))
@@ -375,7 +367,8 @@
       (bind-key "x" 'e:evil-em-command evil-operator-state-map)))
   (leaf evil-owl
     :config
-    (evil-owl-mode 1))
+    (evil-owl-mode 1)
+    (spacemacs|diminish evil-owl-mode))
   (leaf 保存時等にノーマルステートに戻す
     :advice
     (:after  save-buffer   e:evil-force-normal-state)
@@ -440,7 +433,8 @@
     :if (executable-find "cmigemo")
     :require t
     :config
-    (helm-migemo-mode))
+    (helm-migemo-mode)
+    (spacemacs|diminish helm-migemo-mode))
   (leaf helm-tramp
     :config
     (leaf helm-tramp-advice
@@ -506,34 +500,6 @@
     :config
     (set-variable 'imenu-list-size 40)
     (set-variable 'imenu-list-position 'left)))
-
-(leaf lang
-  :config
-  (leaf php
-    :config
-    (spacemacs|add-company-backends :modes php-mode))
-  (leaf ruby
-    :config
-    (set-variable 'ruby-insert-encoding-magic-comment nil)
-    (leaf rubocopfmt
-      :config
-      (set-variable 'rubocopfmt-use-bundler-when-possible nil)))
-  (leaf lsp
-    :config
-    (leaf with-tabnine
-      :config
-      (define-advice lsp (:after (&rest _) with-tabnine)
-        (case (e:major-mode)
-          (ruby-mode
-           (setq company-backends
-                 '((company-capf company-tabnine)))))))
-    (leaf lsp-mode
-      :config
-      (e:place-in-cache lsp-session-file ".lsp-session-v1"))
-    (leaf lsp-java
-      :config
-      (e:place-in-cache lsp-java-server-install-dir "java/lsp")
-      (e:place-in-cache lsp-java-workspace-dir "java/workspace"))))
 
 (leaf magit
   :config
@@ -763,9 +729,14 @@
 (leaf visual-regexp
   :bind (([remap query-replace] . vr/query-replace)))
 
+(leaf which-key-mode
+  :config
+  (spacemacs|diminish which-key-mode))
+
 (leaf whitespace
   :hook ((find-file-hook prog-mode-hook) . e:whitespace-mode-on)
   :defer-config
+  (spacemacs|diminish whitespace-mode)
   (set-variable 'whitespace-style
                 '(face
                   trailing
@@ -790,3 +761,42 @@
 (leaf yasnippet
   :defer-config
   (spacemacs|diminish yas-minor-mode))
+
+
+
+(leaf php
+  :defer-config
+  (spacemacs|add-company-backends :modes php-mode))
+
+(leaf ruby
+  :config
+  (leaf ruby
+    :defer-config
+    (set-variable 'ruby-insert-encoding-magic-comment nil))
+  (leaf ruby-refactor
+    :defer-config
+    (spacemacs|diminish ruby-refactor-mode))
+  (leaf ruby-tools
+    :bind (:ruby-tools-mode-map
+           ("C-;" . nil)))
+  (leaf rubocop
+    :defer-config
+    (spacemacs|diminish rubocop-mode))
+  (leaf rubocopfmt
+    :defer-config
+    (set-variable 'rubocopfmt-use-bundler-when-possible nil)))
+
+(leaf lsp
+  :config
+  (leaf lsp-mode
+    :defer-config
+    (e:place-in-cache lsp-session-file ".lsp-session-v1"))
+  (leaf tabnine
+    :after lsp
+    :config
+    (define-advice lsp (:after (&rest _) with-tabnine)
+      (case (e:major-mode)
+        (ruby-mode
+         (setq company-backends
+               '((company-capf company-tabnine)
+                 company-dabbrev)))))))

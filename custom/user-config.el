@@ -663,6 +663,10 @@
   :defer-config
   (set-variable 'persp-kill-foreign-buffer-behaviour nil))
 
+(leaf shell-pop
+  :defer-config
+  (set-variable 'shell-pop-autocd-to-working-dir nil))
+
 (leaf shr
   :defer-config
   (set-variable 'shr-use-colors nil)
@@ -729,6 +733,19 @@
 (leaf visual-regexp
   :bind (([remap query-replace] . vr/query-replace)))
 
+(leaf vterm
+  :defer-config
+  (set-variable 'vterm-max-scrollback 10000)
+  (set-face-attribute 'vterm-color-default nil :foreground "#839496" :background "#002b36")
+  (set-face-attribute 'vterm-color-black   nil :foreground "#073642" :background "#002b36")
+  (set-face-attribute 'vterm-color-red     nil :foreground "#dc322f" :background "#cb4b16")
+  (set-face-attribute 'vterm-color-green   nil :foreground "#859900" :background "#586e75")
+  (set-face-attribute 'vterm-color-yellow  nil :foreground "#b58900" :background "#657b83")
+  (set-face-attribute 'vterm-color-blue    nil :foreground "#268bd2" :background "#839496")
+  (set-face-attribute 'vterm-color-magenta nil :foreground "#d33682" :background "#6c71c4")
+  (set-face-attribute 'vterm-color-cyan    nil :foreground "#2aa198" :background "#93a1a1")
+  (set-face-attribute 'vterm-color-white   nil :foreground "#eee8d5" :background "#fdf6e3"))
+
 (leaf which-key-mode
   :config
   (spacemacs|diminish which-key-mode))
@@ -792,7 +809,7 @@
     :defer-config
     (e:place-in-cache lsp-session-file ".lsp-session-v1"))
   (leaf tabnine
-    :after lsp
+    :after lsp-mode
     :config
     (define-advice lsp (:after (&rest _) with-tabnine)
       (case (e:major-mode)

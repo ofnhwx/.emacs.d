@@ -47,6 +47,9 @@
       (e:convenient-header-line-start)))
   (leaf モードライン
     :config
+    (leaf バージョンコントロール
+      :config
+      (spacemacs/defer-until-after-user-config #'spacemacs/toggle-mode-line-version-control-off))
     (leaf ファイルエンコーディング
       :config
       (spaceline-define-segment buffer-encoding-abbrev

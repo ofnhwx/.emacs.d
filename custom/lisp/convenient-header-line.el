@@ -23,6 +23,11 @@
 (defvar e:header-line-for-files-cache (make-hash-table :test 'equal)
   "ファイル用のヘッダーラインのフォーマットのキャッシュ.")
 
+(defun e:header-line-for-files-cache-clear ()
+  "ファイル用のヘッダーラインのフォーマットのキャッシュをクリアする."
+  (interactive)
+  (setq e:header-line-for-files-cache (make-hash-table :test 'equal)))
+
 (defun e:header-line-for-files-format--internal (path &optional refname)
   "ファイル用のヘッダーラインのフォーマットを作成する内部処理"
   (let* ((separator-left  #'powerline-wave-right)

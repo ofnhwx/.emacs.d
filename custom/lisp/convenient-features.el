@@ -36,8 +36,11 @@
 
 (defun e:current-buffer-refname ()
   "現在のバッファーの refname をいい感じに取得する"
-  (if (bound-and-true-p magit-buffer-refname)
-      (format "<%s>" magit-buffer-refname)))
+  (let* ((path   (e:current-buffer-file-name))
+         (remote (ignore-errors (file-remote-p path))))
+    (or (and remote (string-trim-right remote ":"))
+        (and vc-mode (s-trim (e:unpropertize vc-mode)))
+        (bound-and-true-p magit-buffer-refname))))
 
 
 
@@ -50,6 +53,12 @@
   (s-split "\n" (e:shell-command-to-string command)))
 
 
+
+(defun e:unpropertize (text)
+  "TEXT からテキストプロパティを除いた文字列を取得する."
+  (let ((s (s-concat text)))
+    (set-text-properties 0 (length s) nil s)
+    s))
 
 (defun e:auth-source-get (property &rest spec)
   "認証情報から SPEC に一致する項目の PROPERTY を取得する."

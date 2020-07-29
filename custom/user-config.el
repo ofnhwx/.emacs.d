@@ -207,8 +207,18 @@
     :config
     (spacemacs|diminish company-mode))
   (leaf company-box
+    :after company
     :config
     (spacemacs|diminish company-box-mode))
+  (leaf company-statistics
+    :after company
+    :commands (company-sort-by-statistics)
+    :config
+    (set-variable 'company-transformers
+                  '(spacemacs//company-transformer-cancel
+                    company-sort-by-statistics
+                    company-sort-by-backend-importance
+                    -uniq)))
   (leaf company-tabnine
     :after company
     :require t

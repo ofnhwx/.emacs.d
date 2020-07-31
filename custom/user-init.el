@@ -37,7 +37,8 @@
         html
         javascript
         markdown
-        php
+        (php :variables
+             php-backend 'lsp)
         (ruby :variables
               ruby-backend 'lsp)
         shell-scripts

@@ -211,8 +211,7 @@
     (set-variable 'company-transformers
                   '(spacemacs//company-transformer-cancel
                     company-sort-by-statistics
-                    company-sort-by-backend-importance
-                    -uniq)))
+                    company-sort-by-backend-importance)))
   (leaf company-tabnine
     :after company
     :require t
@@ -812,8 +811,10 @@
     :after lsp-mode
     :config
     (define-advice lsp (:after (&rest _) with-tabnine)
-      (case (e:major-mode)
-        (ruby-mode
+      (cond
+        ((member (e:major-mode) '(ruby-mode php-mode))
          (setq company-backends
-               '((company-capf company-tabnine)
+               '((company-capf :with company-tabnine)
+                 company-dabbrev-code
+                 company-files
                  company-dabbrev)))))))

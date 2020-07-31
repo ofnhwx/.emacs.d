@@ -73,27 +73,6 @@
       (cdr list)
     (cons (car list) (e:remove-nth (1- n) (cdr list)))))
 
-(defun e:shorten (path &optional max separator omit)
-  "指定された FILENAME を MAX 以下の長さに短縮する.
-  パスの区切り文字は SEPARATOR, 短縮時の省略表示を OMIT で指定する."
-  (let* ((max (or max (window-width)))
-         (separator (or separator "/"))
-         (omit (or omit "..."))
-         (parts (split-string (abbreviate-file-name path) separator))
-         (length (length (abbreviate-file-name path)))
-         (target (if (string-empty-p (car parts)) 3 2))
-         (min-parts (+ target 3)))
-    (when (and (> length max)
-               (> (length parts) min-parts))
-      (setq length (+ length (length omit) (- (length (nth target parts)))))
-      (setf (nth target parts) omit)
-      (setq target (+ target 1))
-      (while (and (> length max)
-                  (> (length parts) min-parts))
-        (setq length (- length (length (nth target parts)) 1))
-        (setq parts (e:remove-nth target parts))))
-    (string-join parts separator)))
-
 (defmacro e:place-in-cache (variable path)
   "VARIABLE のファイルを PATH に指定した名称でキャッシュディレクトリに設定する."
   `(set-variable ',variable (expand-file-name ,path spacemacs-cache-directory)))

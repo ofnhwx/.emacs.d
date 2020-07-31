@@ -114,6 +114,17 @@
   (setq indent-tabs-mode (not indent-tabs-mode))
   (message "indent-tabs-mode: %s" indent-tabs-mode))
 
+(defun e:default-pop-shell ()
+  "ターミナルを開くやつ"
+  (interactive)
+  (let* ((key (read-event (format "open %s(0-9): " shell-default-shell) nil 0.8))
+         (current-prefix-arg (if (member key (number-sequence ?0 ?9))
+                                 (- key ?0)
+                               current-prefix-arg))
+         (current-buffer-name (buffer-name)))
+    (call-interactively #'spacemacs/default-pop-shell)
+    (message "%s → %s" current-buffer-name (buffer-name))))
+
 
 
 (provide 'convenient-features)

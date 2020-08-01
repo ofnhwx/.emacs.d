@@ -303,6 +303,7 @@
   (leaf evil
     :bind (;; motion → normal → visual
            (:evil-motion-state-map
+            ("C-\\" . ignore)
             ("C-^" . nil))
            (:evil-normal-state-map
             ("<down>" . evil-next-visual-line)
@@ -733,6 +734,8 @@
   :bind (([remap query-replace] . vr/query-replace)))
 
 (leaf vterm
+  :bind (:vterm-mode-map
+         ("C-g" . vterm--self-insert))
   :defer-config
   (set-variable 'vterm-max-scrollback 10000)
   (set-face-attribute 'vterm-color-default nil :foreground "#839496" :background "#002b36")

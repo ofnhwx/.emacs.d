@@ -20,55 +20,53 @@
 
 
 
-(defvar e:header-line-for-files-cache (make-hash-table :test 'equal)
-  "ファイル用のヘッダーラインのフォーマットのキャッシュ.")
-
-(defun e:header-line-for-files-cache-clear ()
-  "ファイル用のヘッダーラインのフォーマットのキャッシュをクリアする."
-  (interactive)
-  (setq e:header-line-for-files-cache (make-hash-table :test 'equal)))
-
-(defun e:header-line-for-files-format--internal (path &optional refname)
-  "ファイル用のヘッダーラインのフォーマットを作成する内部処理"
-  (let* ((separator-left  #'powerline-wave-right)
-         (separator-right #'powerline-wave-left)
-         (tramp (file-remote-p path))
-         (proot (e:project-root path))
-         (pname (and proot (e:project-name proot)))
-         (file  (f-filename path))
-         (dir   (f-short (file-name-directory path)))
-         (lhs nil)
-         (rhs nil))
-    (when proot
-      (setq dir (s-replace proot "" dir))
-      (setq lhs (-snoc lhs
-                       (powerline-raw (concat pname " ") 'powerline-active1 'l)
-                       (funcall separator-left 'powerline-active1 'powerline-inactive1))))
+(defun e:header-line-for-files-format ()
+  "ファイル用のヘッダーラインのフォーマット."
+  (let ((path (f-short (e:current-buffer-file-name)))
+        (cache '(:path nil :project-root nil :project-name nil)))
+    (unless (and (local-variable-p 'convenient-header-line--cache)
+                 (s-equals? path (plist-get 'convenient-header-line--cache :path)))
+      (plist-put cache :path path)
+      (plist-put cache :project-root (e:project-root path))
+      (plist-put cache :project-name (and (plist-get cache :project-root)
+                                          (e:project-name (plist-get cache :project-root))))
+      (setq-local convenient-header-line--cache cache)))
+  (let* ((separator-l #'powerline-wave-right)
+         (separator-r #'powerline-wave-left)
+         (active (powerline-selected-window-active))
+         (face0 (if active 'powerline-active0 'powerline-inactive0))
+         (face1 (if active 'powerline-active1 'powerline-inactive1))
+         (face2 (if active 'powerline-active2 'powerline-inactive2))
+         (file   (file-name-nondirectory (plist-get convenient-header-line--cache :path)))
+         (dir    (file-name-directory    (plist-get convenient-header-line--cache :path)))
+         (remote (file-remote-p          (plist-get convenient-header-line--cache :path)))
+         (project-root (plist-get convenient-header-line--cache :project-root))
+         (project-name (plist-get convenient-header-line--cache :project-name))
+         (refname (e:current-buffer-refname))
+         lhs rhs)
+    ;; Left
+    (when project-root
+      (setq dir (s-replace project-root "" dir))
+      (setq lhs (-snoc lhs (powerline-raw (concat project-name " ") face2 'l))))
+    (when lhs
+      (setq lhs (-snoc lhs (funcall separator-l face2 face0))))
+    ;; Right
     (cond
-     (tramp
-      (setq dir (s-replace tramp "" dir))
-      (setq rhs (-snoc rhs
-                       (funcall separator-right 'powerline-inactive1 'powerline-active1)
-                       (powerline-raw (concat " " (string-trim-right tramp ":")) 'powerline-active1 'r))))
+     (remote
+      (setq dir (s-replace remote "" dir))
+      (setq rhs (-snoc rhs (powerline-raw (concat " " (string-trim-right remote ":")) face2 'r))))
      (refname
-      (setq rhs (-snoc rhs
-                       (funcall separator-right 'powerline-inactive1 'powerline-active1)
-                       (powerline-raw (concat " " refname) 'powerline-active1 'r)))))
+      (setq rhs (-snoc rhs (powerline-raw (concat " " refname) face2 'r)))))
+    (when rhs
+      (push (funcall separator-r face0 face2) rhs))
+    ;; Center
     (setq lhs (-snoc lhs
-                     (powerline-raw dir 'mode-line 'l)
+                     (powerline-raw dir face0 'l)
                      (powerline-raw file 'font-lock-keyword-face)))
+    ;;
     (concat (powerline-render lhs)
             (powerline-fill 'mode-line (powerline-width rhs))
             (powerline-render rhs))))
-
-(defun e:header-line-for-files-format ()
-  "ファイル用のヘッダーラインのフォーマット."
-  (let* ((path    (or (f-long (e:current-buffer-file-name)) ""))
-         (refname (e:current-buffer-refname))
-         (key     (concat path (or refname ""))))
-    (or (gethash key e:header-line-for-files-cache)
-        (puthash key (e:header-line-for-files-format--internal path refname)
-                 e:header-line-for-files-cache))))
 
 (defun e:setup-header-line-for-files ()
   "ファイル用のヘッダーラインの設定."

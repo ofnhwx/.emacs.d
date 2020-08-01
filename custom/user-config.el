@@ -81,7 +81,7 @@
       :config
       (bind-keys*
        :map global-map
-       ("C-;" . e:default-pop-shell)
+       ("C-;" . spacemacs/default-pop-shell)
        :map ctl-x-map
        ("C-c" . helm-M-x))))
   (leaf 細かいやつ

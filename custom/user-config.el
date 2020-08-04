@@ -785,7 +785,8 @@
 
 (leaf php
   :defer-config
-  (spacemacs|add-company-backends :modes php-mode))
+  (with-no-warnings
+    (spacemacs|add-company-backends :modes php-mode)))
 
 (leaf ruby
   :config

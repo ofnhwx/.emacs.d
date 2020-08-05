@@ -812,7 +812,8 @@
   :config
   (leaf lsp-mode
     :defer-config
-    (e:place-in-cache lsp-session-file ".lsp-session-v1"))
+    (e:place-in-cache lsp-session-file "lsp-session-v1")
+    (e:place-in-cache lsp-intelephense-storage-path "lsp-cache"))
   (leaf tabnine
     :after lsp-mode
     :config

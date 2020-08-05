@@ -613,10 +613,11 @@
     (defun e:skk-mode ()
       "skk の有効化で半角英数入力にする"
       (interactive)
-      (if (bound-and-true-p skk-mode)
-          (skk-latin-mode-on)
-        (let ((skk-mode-hook (-union skk-mode-hook '(skk-latin-mode-on))))
-          (skk-mode)))))
+      (unless (member major-mode '(vterm-mode))
+        (if (bound-and-true-p skk-mode)
+            (skk-latin-mode-on)
+          (let ((skk-mode-hook (-union skk-mode-hook '(skk-latin-mode-on))))
+            (skk-mode))))))
   (leaf e:prodigy:google-ime-skk
     :config
     (defun e:prodigy:google-ime-skk ()
@@ -737,8 +738,14 @@
 
 (leaf vterm
   :bind (:vterm-mode-map
-         ("C-g" . vterm--self-insert))
+         ("C-g" . vterm--self-insert)
+         ("C-j" . e:vterm-input-something))
   :defer-config
+  (defun e:vterm-input-something ()
+    (interactive)
+    (let ((input (read-string "input: ")))
+      (kill-new input)
+      (vterm-yank)))
   (set-variable 'vterm-max-scrollback 10000)
   (set-face-attribute 'vterm-color-default nil :foreground "#839496" :background "#002b36")
   (set-face-attribute 'vterm-color-black   nil :foreground "#073642" :background "#002b36")

@@ -502,6 +502,8 @@
     (set-variable 'imenu-list-position 'left)))
 
 (leaf magit
+  :init
+  (add-to-list 'load-path (f-expand "libegit2" e:external-directory))
   :config
   (leaf magit
     :defer-config

@@ -87,6 +87,7 @@
         helpful
         leaf
         leaf-tree
+        magit-libgit
         persistent-scratch
         poly-org
         visual-regexp

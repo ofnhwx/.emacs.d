@@ -738,15 +738,17 @@
 
 (leaf vterm
   :bind (:vterm-mode-map
-         ("C-g" . vterm--self-insert)
+         ("C-c C-g" . keyboard-quit)
+         ("C-g" . vterm-send-C-g)
          ("C-j" . e:vterm-input-something))
   :defer-config
+  (evil-define-key 'hybrid vterm-mode-map (kbd "<escape>") #'vterm-send-escape)
   (defun e:vterm-input-something ()
     (interactive)
     (let ((input (read-string "input: ")))
       (kill-new input)
       (vterm-yank)))
-  (set-variable 'vterm-max-scrollback 10000)
+  (set-variable 'vterm-max-scrollback 20000)
   (set-face-attribute 'vterm-color-default nil :foreground "#839496" :background "#002b36")
   (set-face-attribute 'vterm-color-black   nil :foreground "#073642" :background "#002b36")
   (set-face-attribute 'vterm-color-red     nil :foreground "#dc322f" :background "#cb4b16")

@@ -658,7 +658,7 @@
           (prodigy-start-service service))))))
 
 (leaf persistent-scratch
-  :defer-config
+  :config
   (set-variable 'persistent-scratch-save-file (expand-file-name "scratch" e:private-directory))
   (persistent-scratch-setup-default))
 

@@ -823,6 +823,12 @@
     :defer-config
     (e:place-in-cache lsp-session-file "lsp-session-v1")
     (e:place-in-cache lsp-intelephense-storage-path "lsp-cache"))
+  (leaf lsp-ui-doc
+    :defer-config
+    (define-advice lsp-ui-doc--mv-at-point (:filter-args (args) adjust-y)
+      (let ((start-y (nth 4 args)))
+        (setf (nth 4 args) (+ start-y (window-header-line-height)))
+        args)))
   (leaf tabnine
     :after lsp-mode
     :config

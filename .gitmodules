@@ -4,9 +4,6 @@
 [submodule "external/libegit2"]
 	path = external/libegit2
 	url = https://github.com/magit/libegit2.git
-[submodule "external/org-mode"]
-	path = external/org-mode
-	url = https://code.orgmode.org/bzg/org-mode.git
 [submodule "external/spacemacs"]
 	path = external/spacemacs
 	url = https://github.com/syl20bnr/spacemacs.git

@@ -8,6 +8,8 @@
 !/.editorconfig
 !/.gitignore
 !/README.md
+!/custom-paths.el
+!/early-init.el
 !/init.el
 !/custom/
 !/external/

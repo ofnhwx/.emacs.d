@@ -827,7 +827,9 @@
   (leaf lsp-mode
     :defer-config
     (e:place-in-cache lsp-session-file "lsp-session-v1")
-    (e:place-in-cache lsp-intelephense-storage-path "lsp-cache"))
+    (e:place-in-cache lsp-intelephense-storage-path "lsp-cache")
+    ;; 2020-08-11 読込み時にエラーが出るのでとりあえず対策
+    (provide 'lsp-lua))
   (leaf lsp-ui-doc
     :defer-config
     (define-advice lsp-ui-doc--mv-at-point (:filter-args (args) adjust-y)

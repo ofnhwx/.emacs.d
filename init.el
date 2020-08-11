@@ -17,12 +17,6 @@
   (require 'custom-paths (expand-file-name "custom-paths.el" dir))
   (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory)))
 
-;; 最新の org を使用する
-(let ((dir (expand-file-name "org-mode" e:external-directory)))
-  (when (file-directory-p dir)
-    (add-to-list 'load-path (expand-file-name "lisp" dir))
-    (add-to-list 'load-path (expand-file-name "contrib" dir))))
-
 ;; フォント設定
 (progn
   (defvar e:font-name "Cica")
@@ -44,7 +38,7 @@
 
 (let ((user-emacs-directory (expand-file-name "spacemacs/" e:external-directory)))
   (setenv "SPACEMACSDIR" e:custom-directory)
-  (load-file (expand-file-name "init.el" user-emacs-directory)))
+  (load (expand-file-name "init" user-emacs-directory)))
 
 (provide 'init)
 ;;; init.el ends here

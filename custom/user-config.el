@@ -2,6 +2,8 @@
 (eval-and-compile
   (require 'leaf))
 
+
+
 (leaf convenient-features
   :require t
   :config
@@ -165,9 +167,10 @@
           (set-variable 'browse-url-browser-function 'browse-url-generic)))))
   (leaf ローカルの設定ファイルを読込み
     :config
-    (let ((private-config (expand-file-name "config.el" e:private-directory)))
-      (when (file-exists-p private-config)
-        (load-file private-config)))))
+    (let ((private-config (expand-file-name "config" e:private-directory)))
+      (condition-case err
+          (load private-config)
+        (error (message "Error: %s" err))))))
 
 
 

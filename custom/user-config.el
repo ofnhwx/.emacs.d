@@ -795,9 +795,14 @@
 
 
 (leaf php
-  :defer-config
-  (with-no-warnings
-    (spacemacs|add-company-backends :modes php-mode)))
+  :config
+  (leaf php
+    :defer-config
+    (with-no-warnings
+      (spacemacs|add-company-backends :modes php-mode)))
+  (leaf drupal/phpcs
+    :defer-config
+    (set-variable 'drupal/phpcs-standard "Drupal,DrupalPractice")))
 
 (leaf ruby
   :config

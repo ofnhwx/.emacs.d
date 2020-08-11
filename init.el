@@ -14,8 +14,11 @@
 
 ;; パス関連の設定
 (let ((dir (file-name-directory (or load-file-name buffer-file-name))))
-  (require 'custom-paths (expand-file-name "custom-paths.el" dir))
-  (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory)))
+  (setq user-emacs-directory (abbreviate-file-name dir)))
+(defvar e:custom-directory   (expand-file-name "custom/"   user-emacs-directory))
+(defvar e:external-directory (expand-file-name "external/" user-emacs-directory))
+(defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
 
 ;; フォント設定
 (progn

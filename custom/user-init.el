@@ -73,6 +73,7 @@
 (defvar e:dotspacemacs-additional-packages nil)
 (setq e:dotspacemacs-additional-packages
       '(
+        (lsp-mode     :location (recipe :fetcher github :repo "emacs-lsp/lsp-mode" :commit "dc09fe0b94194e360272653768cf8ff3438346f8"))
         (helm-fzf     :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
         (locale-eaw   :location (recipe :fetcher github :repo "hamano/locale-eaw"))
         atomic-chrome

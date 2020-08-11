@@ -240,6 +240,9 @@
     (set-variable 'dired-recursive-deletes 'always))
   (leaf dired-filter
     :hook (dired-mode-hook . dired-filter-mode))
+  (leaf image-dired
+    :defer-config
+    (e:place-in-cache image-dired-dir "image-dired"))
   (leaf ls-lisp
     :after dired
     :require t
@@ -382,15 +385,17 @@
         (evil-force-normal-state))))))
 
 (leaf eww
-  :config
+  :init
   (defvar e:eww-spacemacs-layout-name "@Eww")
   (defvar e:eww-spacemacs-layout-binding "w")
+  :config
   (spacemacs|define-custom-layout e:eww-spacemacs-layout-name
     :binding e:eww-spacemacs-layout-binding
     :body
     (eww "https://www.google.com/")
-    (define-advice quit-window (:after (&rest _) kill-layout)
-      (persp-kill e:eww-spacemacs-layout-name))))
+    (eval-and-compile
+      (define-advice quit-window (:after (&rest _) kill-layout)
+        (persp-kill e:eww-spacemacs-layout-name)))))
 
 (leaf flycheck
   :defer-config
@@ -506,6 +511,7 @@
   (add-to-list 'load-path (f-expand "libegit2" e:external-directory))
   :config
   (leaf magit
+    :commands (magit-insert-skip-worktree-files)
     :defer-config
     (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
     (set-variable 'magit-diff-refine-hunk 'all)
@@ -573,6 +579,7 @@
   :config
   (leaf org
     :defer-config
+    (eval-when-compile (require 'org))
     (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
     (when (f-directory? org-directory)
       (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
@@ -737,6 +744,7 @@
   :bind (([remap query-replace] . vr/query-replace)))
 
 (leaf vterm
+  :commands (vterm-yank)
   :bind (:vterm-mode-map
          ("C-c C-g" . keyboard-quit)
          ("C-g" . vterm-send-C-g)
@@ -832,18 +840,23 @@
     (provide 'lsp-lua))
   (leaf lsp-ui-doc
     :defer-config
-    (define-advice lsp-ui-doc--mv-at-point (:filter-args (args) adjust-y)
-      (let ((start-y (nth 4 args)))
-        (setf (nth 4 args) (+ start-y (window-header-line-height)))
-        args)))
+    (eval-and-compile
+      (define-advice lsp-ui-doc--mv-at-point (:filter-args (args) adjust-y)
+        (let ((start-y (nth 4 args)))
+          (setf (nth 4 args) (+ start-y (window-header-line-height)))
+          args))))
+  (leaf dap-mode
+    :defer-config
+    (e:place-in-cache dap-utils-extension-path "extension"))
   (leaf tabnine
     :after lsp-mode
     :config
-    (define-advice lsp (:after (&rest _) with-tabnine)
-      (cond
-        ((member (e:major-mode) '(ruby-mode php-mode))
-         (setq company-backends
-               '((company-capf :with company-tabnine)
-                 company-dabbrev-code
-                 company-files
-                 company-dabbrev)))))))
+    (eval-and-compile
+      (define-advice lsp (:after (&rest _) with-tabnine)
+        (cond
+         ((member (e:major-mode) '(ruby-mode php-mode))
+          (setq company-backends
+                '((company-capf :with company-tabnine)
+                  company-dabbrev-code
+                  company-files
+                  company-dabbrev))))))))

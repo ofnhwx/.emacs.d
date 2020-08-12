@@ -201,11 +201,11 @@
            :package company
            ("C-g" . company-abort)
            ("<escape>" . company-abort))
-    :config
+    :defer-config
     (spacemacs|diminish company-mode))
   (leaf company-box
     :after company
-    :config
+    :defer-config
     (spacemacs|diminish company-box-mode))
   (leaf company-statistics
     :after company
@@ -267,6 +267,10 @@
   :config
   (setq-default display-line-numbers-width 4)
   (e:define-on/off-function display-line-numbers-mode))
+
+(leaf drupal-mode
+  :defer-config
+  (spacemacs|diminish drupal-mode ""))
 
 (leaf eaw
   :require t
@@ -771,7 +775,7 @@
   (set-face-attribute 'vterm-color-white   nil :foreground "#eee8d5" :background "#fdf6e3"))
 
 (leaf which-key-mode
-  :config
+  :defer-config
   (spacemacs|diminish which-key-mode))
 
 (leaf whitespace

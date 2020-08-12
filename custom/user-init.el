@@ -35,7 +35,8 @@
         csv
         emacs-lisp
         html
-        javascript
+        (javascript :variables
+                    javascript-backend 'lsp)
         markdown
         (php :variables
              php-backend 'lsp)

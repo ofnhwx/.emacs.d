@@ -8,6 +8,7 @@
 !/.editorconfig
 !/.gitignore
 !/README.md
+!/dump-init.el
 !/early-init.el
 !/init.el
 !/custom/

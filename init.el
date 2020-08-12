@@ -20,6 +20,11 @@
 (defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
 
+;; ダンプ処理用の小細工
+(and (boundp 'spacemacs-dump-mode)
+     (eq spacemacs-dump-mode 'dumping)
+     (load (expand-file-name "user-init" e:custom-directory)))
+
 ;; フォント設定
 (progn
   (defvar e:font-name "Cica")

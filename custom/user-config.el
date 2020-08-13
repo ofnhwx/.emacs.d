@@ -530,6 +530,11 @@
                     (->> (e:shell-command-to-list "ghq root --all")
                          (--map (cons it 3)))))
     (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
+  (leaf magit-delta
+    :if (executable-find "delta")
+    :after magit
+    :config
+    (magit-delta-mode 1))
   (leaf transient
     :defer-config
     (set-variable 'transient-default-level 7)))

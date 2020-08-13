@@ -88,6 +88,7 @@
         helpful
         leaf
         leaf-tree
+        magit-delta
         magit-libgit
         persistent-scratch
         poly-org

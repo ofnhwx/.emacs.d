@@ -34,7 +34,11 @@
         ;; +lang
         csv
         emacs-lisp
-        html
+        (html :variables
+              css-enable-lsp t
+              less-enable-lsp t
+              scss-enable-lsp t
+              html-enable-lsp t)
         (javascript :variables
                     javascript-backend 'lsp)
         markdown

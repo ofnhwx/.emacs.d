@@ -219,7 +219,7 @@
     :after company
     :require t
     :config
-    (set-variable 'company-tabnine-binaries-folder (expand-file-name "tabnine" e:private-directory)))
+    (e:place-in-cache company-tabnine-binaries-folder "tabnine"))
   (leaf company-try-hard
     :bind (("C-z" . company-try-hard)
            (:company-active-map

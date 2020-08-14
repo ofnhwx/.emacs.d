@@ -534,6 +534,7 @@
     :if (executable-find "delta")
     :after magit
     :config
+    (spacemacs|diminish magit-delta-mode)
     (magit-delta-mode 1))
   (leaf transient
     :defer-config

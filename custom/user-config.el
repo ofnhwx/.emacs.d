@@ -174,6 +174,15 @@
 
 
 
+(leaf spacemacs
+  :config
+  (leaf core-dumper
+    :doc "ダンプ処理に小細工を仕掛けていろいろ上手く調整"
+    :defer-config
+    (define-advice spacemacs/dump-emacs (:around (fn &rest args) trick)
+      (let ((spacemacs-start-directory user-emacs-directory))
+        (apply fn args)))))
+
 (leaf ace-window
   :bind (("C-^" . ace-window))
   :config

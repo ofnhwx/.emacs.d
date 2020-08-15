@@ -45,7 +45,10 @@
         (php :variables
              php-backend 'lsp)
         (ruby :variables
-              ruby-backend 'lsp)
+              ruby-backend 'lsp
+              ruby-enable-enh-ruby-mode t
+              ruby-test-runner 'rspec
+              ruby-highlight-debugger-keywords t)
         shell-scripts
         sql
         vimscript

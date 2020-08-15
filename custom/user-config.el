@@ -181,7 +181,12 @@
     :defer-config
     (define-advice spacemacs/dump-emacs (:around (fn &rest args) trick)
       (let ((spacemacs-start-directory user-emacs-directory))
-        (apply fn args)))))
+        (apply fn args))))
+  (leaf spaceline-segments
+    :doc "不要な表示をしない"
+    :defer-config
+    (set-variable 'spaceline-line-column-p nil)
+    (set-variable 'spaceline-selection-info-p nil)))
 
 (leaf ace-window
   :bind (("C-^" . ace-window))
@@ -210,6 +215,12 @@
            :package company
            ("C-g" . company-abort)
            ("<escape>" . company-abort))
+    :init
+    (defun e:setup-company-backends (backends)
+      (let ((default '(company-dabbrev-code
+                       company-files
+                       company-dabbrev)))
+        (setq-local company-backends (-concat (list backends) default))))
     :defer-config
     (spacemacs|diminish company-mode))
   (leaf company-box
@@ -832,28 +843,77 @@
 
 (leaf ruby
   :config
-  (leaf ruby
+  (leaf ruby-mode
+    :hook ((enh-ruby-mode-hook ruby-mode-hook) . e:setup-flycheck-rubocop)
     :defer-config
-    (set-variable 'ruby-insert-encoding-magic-comment nil))
+    (set-variable 'ruby-insert-encoding-magic-comment nil)
+    (defun e:setup-flycheck-rubocop ()
+      (when (zerop (call-process-shell-command "bundle info rubocop"))
+        (setq-local flycheck-command-wrapper-function
+                    (lambda (command)
+                      (append '("bundle" "exec") command))))))
   (leaf ruby-refactor
     :defer-config
     (spacemacs|diminish ruby-refactor-mode))
   (leaf ruby-tools
     :bind (:ruby-tools-mode-map
            ("C-;" . nil)))
+  (leaf robe
+    :hook (enh-ruby-mode-hook ruby-mode-hook)
+    :config
+    (spacemacs|diminish robe-mode)
+    (--each '(enh-ruby-mode ruby-mode)
+      (spacemacs/declare-prefix-for-mode it "mr" "refactor/robe")
+      (spacemacs/declare-prefix-for-mode it "mrs" "robe")
+      (spacemacs/set-leader-keys-for-major-mode it
+        "rs'" #'robe-start
+        "rsa" #'robe-ask
+        "rsd" #'robe-doc
+        "rsj" #'robe-jump
+        "rsm" #'robe-jump-to-module
+        "rsr" #'robe-rails-refresh)))
   (leaf rubocop
     :defer-config
-    (spacemacs|diminish rubocop-mode))
+    (spacemacs|diminish rubocop-mode)
+    (--each '(enh-ruby-mode ruby-mode)
+      (spacemacs/set-leader-keys-for-major-mode it
+        "RF" 'rubocop-autocorrect-current-file)))
   (leaf rubocopfmt
     :defer-config
-    (set-variable 'rubocopfmt-use-bundler-when-possible nil)))
+    (set-variable 'rubocopfmt-use-bundler-when-possible t))
+  (leaf lsp-solargraph
+    :defer-config
+    (let ((dirs (-filter #'f-exists? lsp-solargraph-library-directories))
+          (rbenv-root (getenv "RBENV_ROOT")))
+      (and rbenv-root
+           (f-exists? rbenv-root)
+           (pushnew (f-slash (f-short rbenv-root)) dirs))
+      (set-variable 'lsp-solargraph-library-directories dirs))))
+
+(leaf haml-mode
+  :hook (haml-mode-hook . e:setup-haml-mode)
+  :config
+  (defun e:setup-haml-mode ()
+    (e:setup-company-backends 'company-tabnine)
+    (company-mode-on)))
 
 (leaf lsp
   :config
   (leaf lsp-mode
     :defer-config
     (e:place-in-cache lsp-session-file "lsp-session-v1")
-    (e:place-in-cache lsp-intelephense-storage-path "lsp-cache"))
+    (e:place-in-cache lsp-intelephense-storage-path "lsp-cache")
+    (defun e:setup-lsp-after-open ()
+      (case major-mode
+        ;; for Ruby
+        ((enh-ruby-mode ruby-mode)
+         (e:setup-company-backends '(company-capf company-robe :with company-tabnine))
+         (flycheck-select-checker 'ruby-rubocop))
+        ;; for PHP
+        ((php-mode)
+         (e:setup-company-backends '(company-capf :with company-tabnine))
+         (flycheck-select-checker 'php))))
+    (add-hook 'lsp-after-open-hook #'e:setup-lsp-after-open))
   (leaf lsp-ui-doc
     :defer-config
     (eval-and-compile
@@ -863,16 +923,4 @@
           args))))
   (leaf dap-mode
     :defer-config
-    (e:place-in-cache dap-utils-extension-path "extension"))
-  (leaf tabnine
-    :after lsp-mode
-    :config
-    (eval-and-compile
-      (define-advice lsp (:after (&rest _) with-tabnine)
-        (cond
-         ((member (e:major-mode) '(ruby-mode php-mode))
-          (setq company-backends
-                '((company-capf :with company-tabnine)
-                  company-dabbrev-code
-                  company-files
-                  company-dabbrev))))))))
+    (e:place-in-cache dap-utils-extension-path "extension")))

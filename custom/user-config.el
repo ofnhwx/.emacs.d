@@ -864,6 +864,7 @@
     :hook (enh-ruby-mode-hook ruby-mode-hook)
     :config
     (spacemacs|diminish robe-mode)
+    (eval-when-compile (require 'robe))
     (--each '(enh-ruby-mode ruby-mode)
       (spacemacs/declare-prefix-for-mode it "mr" "refactor/robe")
       (spacemacs/declare-prefix-for-mode it "mrs" "robe")
@@ -885,6 +886,7 @@
     (set-variable 'rubocopfmt-use-bundler-when-possible t))
   (leaf lsp-solargraph
     :defer-config
+    (defvar lsp-solargraph-library-directories nil)
     (let ((dirs (-filter #'f-exists? lsp-solargraph-library-directories))
           (rbenv-root (getenv "RBENV_ROOT")))
       (and rbenv-root
@@ -905,16 +907,17 @@
     :defer-config
     (e:place-in-cache lsp-session-file "lsp-session-v1")
     (e:place-in-cache lsp-intelephense-storage-path "lsp-cache")
-    (defun e:setup-lsp-after-open ()
-      (case major-mode
-        ;; for Ruby
-        ((enh-ruby-mode ruby-mode)
-         (e:setup-company-backends '(company-capf company-robe :with company-tabnine))
-         (flycheck-select-checker 'ruby-rubocop))
-        ;; for PHP
-        ((php-mode)
-         (e:setup-company-backends '(company-capf :with company-tabnine))
-         (flycheck-select-checker 'php))))
+    (eval-and-compile
+      (defun e:setup-lsp-after-open ()
+        (case major-mode
+          ;; for Ruby
+          ((enh-ruby-mode ruby-mode)
+           (e:setup-company-backends '(company-capf company-robe :with company-tabnine))
+           (flycheck-select-checker 'ruby-rubocop))
+          ;; for PHP
+          ((php-mode)
+           (e:setup-company-backends '(company-capf :with company-tabnine))
+           (flycheck-select-checker 'php)))))
     (add-hook 'lsp-after-open-hook #'e:setup-lsp-after-open))
   (leaf lsp-ui-doc
     :defer-config

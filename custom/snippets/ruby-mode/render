@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: render
+# key: render
+# group: controller
+# --
+render '$0'

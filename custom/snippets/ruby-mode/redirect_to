@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: redirect_to
+# key: redirect_to
+# group: controller
+# --
+redirect_to $0

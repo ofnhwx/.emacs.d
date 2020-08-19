@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: =begin ... =end
+# group: ruby
+# --
+=begin
+$0
+=end

@@ -123,3 +123,14 @@
   (set-variable 'which-key-enable-extended-define-key t)
   (set-variable 'which-key-show-early-on-C-h t)
   )
+
+;; yasnippet で余計なものを読込ませないための対策
+(progn
+  (defvar e:yas-snippet-dirs (list (expand-file-name "snippets" e:custom-directory)))
+  (--each e:yas-snippet-dirs
+    (unless (file-exists-p it)
+      (make-directory it)))
+  (with-eval-after-load "yasnippet"
+    (define-advice yas-reload-all (:around (fn &rest args) only-custom-snippets)
+      (when (equal yas-snippet-dirs e:yas-snippet-dirs)
+        (funcall fn args)))))

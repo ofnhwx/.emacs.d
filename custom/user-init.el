@@ -12,6 +12,7 @@
 (setq e:dotspacemacs-configuration-layers
       `(
         ;; +checkers
+        spell-checking
         syntax-checking
         ;; +completion
         (auto-completion :variables

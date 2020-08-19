@@ -424,6 +424,10 @@
       (define-advice quit-window (:after (&rest _) kill-layout)
         (persp-kill e:eww-spacemacs-layout-name)))))
 
+(leaf flyspell
+  :bind (:flyspell-mode-map
+         ("C-;" . nil)))
+
 (leaf flycheck
   :defer-config
   (set-variable 'flycheck-idle-buffer-switch-delay 3.0)

@@ -47,7 +47,7 @@
              php-backend 'lsp)
         (ruby :variables
               ruby-backend 'lsp
-              ruby-enable-enh-ruby-mode t
+              ruby-enable-enh-ruby-mode nil
               ruby-test-runner 'rspec
               ruby-highlight-debugger-keywords t)
         shell-scripts

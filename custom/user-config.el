@@ -849,6 +849,7 @@
 
 (leaf ruby
   :config
+  (defvar e:ruby-modes '(enh-ruby-mode ruby-mode))
   (leaf ruby-mode
     :hook ((enh-ruby-mode-hook ruby-mode-hook) . e:setup-flycheck-rubocop)
     :defer-config
@@ -869,7 +870,7 @@
     :config
     (spacemacs|diminish robe-mode)
     (eval-when-compile (require 'robe))
-    (--each '(enh-ruby-mode ruby-mode)
+    (--each e:ruby-modes
       (spacemacs/declare-prefix-for-mode it "mr" "refactor/robe")
       (spacemacs/declare-prefix-for-mode it "mrs" "robe")
       (spacemacs/set-leader-keys-for-major-mode it
@@ -882,15 +883,20 @@
   (leaf rubocop
     :defer-config
     (spacemacs|diminish rubocop-mode)
-    (--each '(enh-ruby-mode ruby-mode)
+    (--each e:ruby-modes
       (spacemacs/set-leader-keys-for-major-mode it
         "RF" 'rubocop-autocorrect-current-file)))
   (leaf rubocopfmt
+    :config
+    (--each e:ruby-modes
+      (spacemacs/set-leader-keys-for-major-mode it
+        "==" 'rubocopfmt))
     :defer-config
     (set-variable 'rubocopfmt-use-bundler-when-possible t))
   (leaf lsp-solargraph
     :defer-config
-    (defvar lsp-solargraph-library-directories nil)
+    (eval-when-compile
+      (defvar lsp-solargraph-library-directories nil))
     (let ((dirs (-filter #'f-exists? lsp-solargraph-library-directories))
           (rbenv-root (getenv "RBENV_ROOT")))
       (and rbenv-root

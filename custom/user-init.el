@@ -128,9 +128,9 @@
 ;; yasnippet で余計なものを読込ませないための対策
 (progn
   (defvar e:yas-snippet-dirs (list (expand-file-name "snippets" e:custom-directory)))
-  (--each e:yas-snippet-dirs
-    (unless (file-exists-p it)
-      (make-directory it)))
+  (dolist (dir e:yas-snippet-dirs)
+    (unless (file-exists-p dir)
+      (make-directory dir)))
   (with-eval-after-load "yasnippet"
     (define-advice yas-reload-all (:around (fn &rest args) only-custom-snippets)
       (when (equal yas-snippet-dirs e:yas-snippet-dirs)

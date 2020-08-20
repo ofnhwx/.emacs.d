@@ -804,7 +804,7 @@
   (set-face-attribute 'vterm-color-cyan    nil :foreground "#2aa198" :background "#93a1a1")
   (set-face-attribute 'vterm-color-white   nil :foreground "#eee8d5" :background "#fdf6e3"))
 
-(leaf which-key-mode
+(leaf which-key
   :defer-config
   (spacemacs|diminish which-key-mode))
 

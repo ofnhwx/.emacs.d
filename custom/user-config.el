@@ -940,7 +940,19 @@
       (define-advice lsp-ui-doc--mv-at-point (:filter-args (args) adjust-y)
         (let ((start-y (nth 4 args)))
           (setf (nth 4 args) (+ start-y (window-header-line-height)))
-          args))))
+          args)))))
+
+(leaf dap
+  :config
   (leaf dap-mode
     :defer-config
-    (e:place-in-cache dap-utils-extension-path "extension")))
+    (e:place-in-cache dap-utils-extension-path "extension"))
+  (leaf dap-php
+    :defer-config
+    (dap-register-debug-template
+     "Remote XDebug"
+     (list :name "Remote XDebug"
+           :type "php"
+           :request "launch"
+           :port 9000
+           :pathMappings (list :/var/www/html "${workspaceFolder}")))))

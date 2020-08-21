@@ -537,6 +537,11 @@
     (set-variable 'imenu-list-size 40)
     (set-variable 'imenu-list-position 'left)))
 
+(leaf logging-command
+  :require t
+  :config
+  (logging-command-on))
+
 (leaf magit
   :init
   (add-to-list 'load-path (f-expand "libegit2" e:external-directory))

@@ -100,6 +100,7 @@
         magit-libgit
         persistent-scratch
         poly-org
+        psysh
         visual-regexp
         vlf
         ))

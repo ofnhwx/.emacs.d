@@ -417,7 +417,7 @@
         (evil-force-normal-state))))))
 
 (leaf eww
-  :config
+  :init
   (eval-and-compile
     (defvar e:eww-spacemacs-layout-name "@Eww")
     (defvar e:eww-spacemacs-layout-binding "w"))

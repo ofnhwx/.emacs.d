@@ -712,7 +712,6 @@
   (spacemacs|diminish smartparens-mode))
 
 (leaf so-long
-  :require t
   :config
   (global-so-long-mode 1))
 

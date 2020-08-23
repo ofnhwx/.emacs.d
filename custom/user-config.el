@@ -9,6 +9,8 @@
   :config
   (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode))
 
+
+
 (leaf 日本語環境に関する設定
   :config
   (leaf 日本語環境に設定
@@ -122,20 +124,6 @@
         (with-current-buffer buffer
           (emacs-lock-mode 'kill))))))
 
-(leaf advice-auto-reset-mode-line-colors
-  :doc "テスト成否によるモードラインの色の変更を一定時間で戻す"
-  :config
-  (defvar e:mode-line-foreground (face-foreground 'mode-line))
-  (defvar e:mode-line-background (face-background 'mode-line))
-  (define-advice set-face-attribute (:around (fn &rest args) auto-reset-mode-line-colors)
-    (apply fn args)
-    (when (eq (car args) 'mode-line)
-      (let ((inhibit-quit t))
-        (sit-for 3)
-        (funcall fn 'mode-line nil
-                 :foreground e:mode-line-foreground
-                 :background e:mode-line-background)))))
-
 (leaf 環境毎の設定
   :config
   (leaf Mac
@@ -172,6 +160,21 @@
           (load private-config)
         (error (message "Error: %s" err))))))
 
+(leaf 特殊な設定
+  :config
+  (leaf テスト成否によるモードラインの色の変更を一定時間で戻す
+    :config
+    (defvar e:mode-line-foreground (face-foreground 'mode-line))
+    (defvar e:mode-line-background (face-background 'mode-line))
+    (define-advice set-face-attribute (:around (fn &rest args) auto-reset-mode-line-colors)
+      (apply fn args)
+      (when (eq (car args) 'mode-line)
+        (let ((inhibit-quit t))
+          (sit-for 3)
+          (funcall fn 'mode-line nil
+                   :foreground e:mode-line-foreground
+                   :background e:mode-line-background))))))
+
 
 
 (leaf spacemacs
@@ -187,6 +190,8 @@
     :defer-config
     (set-variable 'spaceline-line-column-p nil)
     (set-variable 'spaceline-selection-info-p nil)))
+
+
 
 (leaf ace-window
   :bind (("C-^" . ace-window))
@@ -488,34 +493,12 @@
                                        (format "/ssh:%s|sudo:%s:/" it it)))
                           (-flatten))))
           (-distinct (-union result items))))))
-  (leaf e:helm-git-log
+  (leaf helm-insert-git-log
     :after helm
-    :config
+    :commands (helm-insert-git-log)
+    :init
     (spacemacs/set-leader-keys
-      "igl" 'e:helm-git-log)
-    (defvar e:helm-git-log-source
-      (helm-build-in-buffer-source "Git log"
-        :data #'e:helm-git-log-source-data
-        :real-to-display #'e:helm-git-log-source-real-to-display
-        :action #'e:helm-git-log-source-action))
-    (defun e:helm-git-log-regexp ()
-      "\\(.+\\)\x0000\\(.+\\)")
-    (defun e:helm-git-log-source-data ()
-      (s-split "\n" (shell-command-to-string "git log --pretty=format:'%H%x00%s' --no-merges")))
-    (defun e:helm-git-log-source-real-to-display (candidate)
-      (let ((regexp (e:helm-git-log-regexp)))
-        (when (string-match regexp candidate)
-          (format "%s %s"
-                  (propertize (match-string 1 candidate) 'face 'font-lock-comment-face)
-                  (match-string 2 candidate)))))
-    (defun e:helm-git-log-source-action (candidate)
-      (let ((regexp (e:helm-git-log-regexp)))
-        (when (string-match regexp candidate)
-          (insert (match-string 2 candidate) "\n"))))
-    (defun e:helm-git-log ()
-      (interactive)
-      (helm :sources e:helm-git-log-source
-            :buffer "*HELM Git log*"))))
+      "igl" 'helm-insert-git-log)))
 
 (leaf helpful
   :config
@@ -872,9 +855,9 @@
            ("C-;" . nil)))
   (leaf robe
     :hook (enh-ruby-mode-hook ruby-mode-hook)
+    :commands (robe-start robe-ask robe-doc robe-jump robe-jump-to-module robe-rails-refresh)
     :config
     (spacemacs|diminish robe-mode)
-    (eval-when-compile (require 'robe))
     (--each e:ruby-modes
       (spacemacs/declare-prefix-for-mode it "mr" "refactor/robe")
       (spacemacs/declare-prefix-for-mode it "mrs" "robe")
@@ -916,6 +899,8 @@
     (e:setup-company-backends 'company-tabnine)
     (company-mode-on)))
 
+
+
 (leaf lsp
   :config
   (leaf lsp-mode
@@ -948,6 +933,7 @@
     :defer-config
     (e:place-in-cache dap-utils-extension-path "extension"))
   (leaf dap-php
+    :commands (dap-register-debug-template)
     :defer-config
     (dap-register-debug-template
      "Remote XDebug"

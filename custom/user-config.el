@@ -431,7 +431,9 @@
 
 (leaf flyspell
   :bind (:flyspell-mode-map
-         ("C-;" . nil)))
+         ("C-;" . nil))
+  :defer-config
+  (setq-default ispell-local-dictionary "en_US"))
 
 (leaf flycheck
   :defer-config

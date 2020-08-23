@@ -124,6 +124,7 @@
   (set-variable 'viper-mode nil)
   (set-variable 'which-key-enable-extended-define-key t)
   (set-variable 'which-key-show-early-on-C-h t)
+  (setq-default ispell-local-dictionary "en_US")
   )
 
 ;; yasnippet で余計なものを読込ませないための対策

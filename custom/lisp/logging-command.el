@@ -15,7 +15,7 @@
 (defun logging--start-process (name buffer program &rest args)
   (logging--output "start-process" (format "%s %s" program (s-join " " args))))
 
-(defun logging--call-process (program infile destination display &rest args)
+(defun logging--call-process (program &optional infile destination display &rest args)
   (logging--output "call-process" (format "%s %s" program (s-join " " args))))
 
 (defun logging-command-on ()

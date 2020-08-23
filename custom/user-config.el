@@ -90,6 +90,9 @@
        ("C-c" . helm-M-x))))
   (leaf 細かいやつ
     :config
+    (leaf マークを辿る
+      :config
+      (set-variable 'set-mark-command-repeat-pop t))
     (leaf シェルの設定
       :config
       (set-variable 'shell-file-name

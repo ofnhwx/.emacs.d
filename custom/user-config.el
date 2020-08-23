@@ -913,11 +913,13 @@
           ;; for Ruby
           ((enh-ruby-mode ruby-mode)
            (e:setup-company-backends '(company-capf company-robe :with company-tabnine))
-           (flycheck-select-checker 'ruby-rubocop))
+           (when (flycheck-may-enable-checker 'ruby-rubocop)
+             (flycheck-select-checker 'ruby-rubocop)))
           ;; for PHP
           ((php-mode)
            (e:setup-company-backends '(company-capf :with company-tabnine))
-           (flycheck-select-checker 'php)))))
+           (when (flycheck-may-enable-checker 'php)
+             (flycheck-select-checker 'php))))))
     (add-hook 'lsp-after-open-hook #'e:setup-lsp-after-open))
   (leaf lsp-ui-doc
     :defer-config

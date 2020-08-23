@@ -7,176 +7,172 @@
 (leaf e:convenient-features
   :require t
   :config
-  (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode))
+  (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode)
+  )
+
+(leaf e:logging-command
+  :require t
+  :config
+  (e:logging-command-on)
+  )
+
+(leaf e:convenient-header-line
+  :require t
+  :config
+  (e:convenient-header-line-start)
+  )
+
+(leaf e:auto-reset-mode-line-color
+  :require t
+  :config
+  (e:auto-reset-mode-line-color-on)
+  )
 
 
 
-(leaf 日本語環境に関する設定
+(leaf japanese-language-environment
+  :doc "言語環境を日本語に設定"
   :config
-  (leaf 日本語環境に設定
-    :config
-    (set-language-environment "Japanese"))
-  (leaf エンコーディング
-    :config
-    (let ((coding-system 'utf-8))
-      (prefer-coding-system          coding-system)
-      (set-default-coding-systems    coding-system)
-      (set-buffer-file-coding-system coding-system)
-      (set-terminal-coding-system    coding-system)
-      (set-keyboard-coding-system    coding-system)))
-  (leaf ロケール
-    :config
-    (let ((value "ja_JP.UTF-8"))
-      (setenv "LANG" value)
-      (setenv "LC_ALL" value))))
+  (set-language-environment "Japanese")
+  :doc "エンコーディングを設定"
+  :config
+  (let ((coding-system 'utf-8))
+    (prefer-coding-system          coding-system)
+    (set-default-coding-systems    coding-system)
+    (set-buffer-file-coding-system coding-system)
+    (set-terminal-coding-system    coding-system)
+    (set-keyboard-coding-system    coding-system))
+  :doc "ロケールを設定"
+  :config
+  (let ((value "ja_JP.UTF-8"))
+    (setenv "LANG" value)
+    (setenv "LC_ALL" value))
+  )
 
-(leaf 見た目
+(leaf appearance
   :config
-  (leaf フレームタイトル
+  (leaf mode-line
+    :doc "不要な表示をしない"
     :config
-    (leaf WSLの情報を表示
-      :config
-      (when (executable-find "uname")
-        (let ((uname (e:shell-command-to-string "uname -a")))
-          (cond
-           ((s-index-of "microsoft-standard" uname)
-            (set-variable 'dotspacemacs-frame-title-format "(WSL2) %I@%S"))
-           ((s-index-of "Microsoft" uname)
-            (set-variable 'dotspacemacs-frame-title-format "(WSL1) %I@%S")))))))
-  (leaf ヘッダーライン
+    (spacemacs/defer-until-after-user-config #'spacemacs/toggle-mode-line-version-control-off)
+    (set-variable 'spaceline-line-column-p nil)
+    (set-variable 'spaceline-selection-info-p nil)
+    :doc "ファイルエンコーディングの表示を改善"
     :config
-    (leaf ファイル名等をいい感じに表示
-      :require e:convenient-header-line
-      :config
-      (e:convenient-header-line-start)))
-  (leaf モードライン
-    :config
-    (leaf バージョンコントロール
-      :config
-      (spacemacs/defer-until-after-user-config #'spacemacs/toggle-mode-line-version-control-off))
-    (leaf ファイルエンコーディング
-      :config
-      (spaceline-define-segment buffer-encoding-abbrev
-        "The line ending convention used in the buffer."
-        (let ((buf-coding (format "%s" buffer-file-coding-system)))
-          (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
-                (concat (and (string-match "with-signature" buf-coding) "ⓑ")
-                        (and (string-match "unix"           buf-coding) "ⓤ")
-                        (and (string-match "dos"            buf-coding) "ⓓ")
-                        (and (string-match "mac"            buf-coding) "ⓜ")
-                        )))
-        :separator " "))))
+    (spaceline-define-segment buffer-encoding-abbrev
+      "The line ending convention used in the buffer."
+      (let ((buf-coding (format "%s" buffer-file-coding-system)))
+        (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
+              (concat (and (string-match "with-signature" buf-coding) "ⓑ")
+                      (and (string-match "unix"           buf-coding) "ⓤ")
+                      (and (string-match "dos"            buf-coding) "ⓓ")
+                      (and (string-match "mac"            buf-coding) "ⓜ")
+                      )))
+      :separator " ")
+    )
+  )
 
-(leaf 全般的な設定
+(leaf general
+  :doc "エイリアス"
   :config
-  (leaf エイリアス
-    :config
-    (defalias 'exit 'save-buffers-kill-terminal)
-    (defalias 'yes-or-no-p 'y-or-n-p))
-  (leaf キーバインディング
-    :config
-    (leaf spacemacs
-      :config
-      (spacemacs/set-leader-keys
-        "%" 'query-replace
-        "&" 'async-shell-command
-        "^" 'ace-window))
-    (leaf normal
-      :config
-      (bind-keys*
-       :map global-map
-       ("C-;" . spacemacs/default-pop-shell)
-       :map ctl-x-map
-       ("C-c" . helm-M-x))))
-  (leaf 細かいやつ
-    :config
-    (leaf マークを辿る
-      :config
-      (set-variable 'set-mark-command-repeat-pop t))
-    (leaf シェルの設定
-      :config
-      (set-variable 'shell-file-name
-                    (or (executable-find "zsh")
-                        (executable-find "bash")
-                        (executable-find "sh"))))
-    (leaf パスワード関連
-      :config
-      (set-variable 'epa-pinentry-mode 'loopback)
-      (set-variable 'password-cache-expiry 3600)
-      (set-variable 'plstore-encoded t))
-    (leaf 折り返し
-      :config
-      (setq-default truncate-lines t)
-      (set-variable 'truncate-partial-width-windows nil))
-    (leaf 最終行の改行
-      :config
-      (set-variable 'mode-require-final-newline nil)
-      (set-variable 'require-final-newline nil))
-    (leaf ロックファイルを使用しない
-      :config
-      (set-variable 'create-lockfiles nil))
-    (leaf 右から左に読む言語に対応しない
-      :config
-      (setq-default bidi-display-reordering nil))
-    (leaf コマンド履歴の重複を排除
-      :config
-      (set-variable 'history-delete-duplicates t))
-    (leaf 特定のバッファを消去しない
-      :config
-      (dolist (buffer '("*scratch*" "*Messages*"))
-        (with-current-buffer buffer
-          (emacs-lock-mode 'kill))))))
+  (defalias 'exit 'save-buffers-kill-terminal)
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  :doc "キーバインディング"
+  :config
+  (spacemacs/set-leader-keys
+    "%" 'query-replace
+    "&" 'async-shell-command
+    "^" 'ace-window)
+  (bind-keys*
+   :map global-map
+   ("C-;" . spacemacs/default-pop-shell)
+   :map ctl-x-map
+   ("C-c" . helm-M-x))
+  :doc "マークを辿る"
+  :config
+  (set-variable 'set-mark-command-repeat-pop t)
+  :doc "シェルの設定"
+  :config
+  (set-variable 'shell-file-name
+                (or (executable-find "zsh")
+                    (executable-find "bash")
+                    (executable-find "sh")))
+  :doc "パスワード関連"
+  :config
+  (set-variable 'epa-pinentry-mode 'loopback)
+  (set-variable 'password-cache-expiry 3600)
+  (set-variable 'plstore-encoded t)
+  :doc "折り返し"
+  :config
+  (setq-default truncate-lines t)
+  (set-variable 'truncate-partial-width-windows nil)
+  :doc "最終行の改行"
+  :config
+  (set-variable 'mode-require-final-newline nil)
+  (set-variable 'require-final-newline nil)
+  :doc "ロックファイルを使用しない"
+  :config
+  (set-variable 'create-lockfiles nil)
+  :doc "右から左に読む言語に対応しない"
+  :config
+  (setq-default bidi-display-reordering nil)
+  :doc "コマンド履歴の重複を排除"
+  :config
+  (set-variable 'history-delete-duplicates t)
+  :doc "特定のバッファを消去しない"
+  :config
+  (dolist (buffer '("*scratch*" "*Messages*"))
+    (with-current-buffer buffer
+      (emacs-lock-mode 'kill)))
+  )
 
-(leaf 環境毎の設定
-  :config
-  (leaf Mac
-    :config
-    (leaf タイトルバーの見た目
-      :config
-      (let ((items '((ns-transparent-titlebar . t)
-                     (ns-appearance . dark))))
-        (dolist (item items)
-          (assq-delete-all (car item) initial-frame-alist)
-          (assq-delete-all (car item) default-frame-alist)
-          (add-to-list 'initial-frame-alist item)
-          (add-to-list 'default-frame-alist item))))
-    (leaf 特殊キーの設定
-      :config
-      (when (spacemacs/system-is-mac)
-        (set-variable 'ns-command-modifier 'meta)
-        (set-variable 'ns-right-command-modifier 'super)
-        (set-variable 'ns-alternate-modifier 'none))))
-  (leaf WSL
-    :config
-    (leaf Windows側のブラウザを起動
-      :config
-      (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
-            (cmd-args '("/c" "start")))
-        (when (file-exists-p cmd-exe)
-          (set-variable 'browse-url-generic-program  cmd-exe)
-          (set-variable 'browse-url-generic-args     cmd-args)
-          (set-variable 'browse-url-browser-function 'browse-url-generic)))))
-  (leaf ローカルの設定ファイルを読込み
-    :config
-    (let ((private-config (expand-file-name "config" e:private-directory)))
-      (condition-case err
-          (load private-config)
-        (error (message "Error: %s" err))))))
+
 
-(leaf 特殊な設定
+(leaf configurations-for-Mac
+  :if (spacemacs/system-is-mac)
+  :doc "タイトルバーの見た目を変更"
   :config
-  (leaf テスト成否によるモードラインの色の変更を一定時間で戻す
-    :config
-    (defvar e:mode-line-foreground (face-foreground 'mode-line))
-    (defvar e:mode-line-background (face-background 'mode-line))
-    (define-advice set-face-attribute (:around (fn &rest args) auto-reset-mode-line-colors)
-      (apply fn args)
-      (when (eq (car args) 'mode-line)
-        (let ((inhibit-quit t))
-          (sit-for 3)
-          (funcall fn 'mode-line nil
-                   :foreground e:mode-line-foreground
-                   :background e:mode-line-background))))))
+  (let ((items '((ns-transparent-titlebar . t)
+                 (ns-appearance . dark))))
+    (dolist (item items)
+      (assq-delete-all (car item) initial-frame-alist)
+      (assq-delete-all (car item) default-frame-alist)
+      (add-to-list 'initial-frame-alist item)
+      (add-to-list 'default-frame-alist item)))
+  :doc "特殊キーの設定"
+  (set-variable 'ns-command-modifier 'meta)
+  (set-variable 'ns-right-command-modifier 'super)
+  (set-variable 'ns-alternate-modifier 'none)
+  :config
+  )
+
+(leaf configurations-for-WSL1/2
+  :doc "WSLの情報を表示"
+  :config
+  (when (executable-find "uname")
+    (let ((uname (e:shell-command-to-string "uname -a")))
+      (cond
+       ((s-index-of "microsoft-standard" uname)
+        (set-variable 'dotspacemacs-frame-title-format "(WSL2) %I@%S"))
+       ((s-index-of "Microsoft" uname)
+        (set-variable 'dotspacemacs-frame-title-format "(WSL1) %I@%S")))))
+  :doc "Windows側のブラウザを起動"
+  :config
+  (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
+        (cmd-args '("/c" "start")))
+    (when (file-exists-p cmd-exe)
+      (set-variable 'browse-url-generic-program  cmd-exe)
+      (set-variable 'browse-url-generic-args     cmd-args)
+      (set-variable 'browse-url-browser-function 'browse-url-generic)))
+  )
+
+(leaf load-local-configurations
+  :config
+  (let ((private-config (expand-file-name "config" e:private-directory)))
+    (condition-case err
+        (load private-config)
+      (error (message "Error: %s" err))))
+  )
 
 
 
@@ -187,12 +183,9 @@
     :defer-config
     (define-advice spacemacs/dump-emacs (:around (fn &rest args) trick)
       (let ((spacemacs-start-directory user-emacs-directory))
-        (apply fn args))))
-  (leaf spaceline-segments
-    :doc "不要な表示をしない"
-    :defer-config
-    (set-variable 'spaceline-line-column-p nil)
-    (set-variable 'spaceline-selection-info-p nil)))
+        (apply fn args)))
+    )
+  )
 
 
 
@@ -522,11 +515,6 @@
     :config
     (set-variable 'imenu-list-size 40)
     (set-variable 'imenu-list-position 'left)))
-
-(leaf e:logging-command
-  :require t
-  :config
-  (e:logging-command-on))
 
 (leaf magit
   :init

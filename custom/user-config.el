@@ -253,7 +253,7 @@
 
 (leaf dap-mode
   :defer-config
-  (e:place-in-cache dap-breakpoints-file "dap-breakpoints"))
+  (e:place-in-cache dap-breakpoints-file "dap/breakpoints"))
 
 (leaf dired
   :config
@@ -269,8 +269,8 @@
   (leaf dired-filter
     :hook (dired-mode-hook . dired-filter-mode))
   (leaf image-dired
-    :defer-config
-    (e:place-in-cache image-dired-dir "image-dired"))
+    :init
+    (e:place-in-cache image-dired-dir "dired/images"))
   (leaf ls-lisp
     :after dired
     :require t
@@ -752,8 +752,8 @@
 
 (leaf treemacs
   :defer-config
-  (e:place-in-cache treemacs-persist-file "treemacs-persist")
-  (e:place-in-cache treemacs-last-error-persist-file "treemacs-persist-at-last-error"))
+  (e:place-in-cache treemacs-persist-file "treemacs/persist")
+  (e:place-in-cache treemacs-last-error-persist-file "treemacs/persist-at-last-error"))
 
 (leaf url
   :config
@@ -904,8 +904,9 @@
   :config
   (leaf lsp-mode
     :defer-config
-    (e:place-in-cache lsp-session-file "lsp-session-v1")
-    (e:place-in-cache lsp-intelephense-storage-path "lsp-cache")
+    (e:place-in-cache lsp-server-install-dir "lsp/server")
+    (e:place-in-cache lsp-session-file "lsp/session.v1")
+    (e:place-in-cache lsp-intelephense-storage-path "lsp/cache")
     (eval-and-compile
       (defun e:setup-lsp-after-open ()
         (case major-mode
@@ -930,7 +931,7 @@
   :config
   (leaf dap-mode
     :defer-config
-    (e:place-in-cache dap-utils-extension-path "extension"))
+    (e:place-in-cache dap-utils-extension-path "dap/extensions"))
   (leaf dap-php
     :commands (dap-register-debug-template)
     :defer-config

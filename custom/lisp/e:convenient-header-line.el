@@ -1,6 +1,6 @@
 
 (eval-and-compile
-  (require 'convenient-features))
+  (require 'e:convenient-features))
 
 
 
@@ -77,4 +77,4 @@
 
 
 
-(provide 'convenient-header-line)
+(provide 'e:convenient-header-line)

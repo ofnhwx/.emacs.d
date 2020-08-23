@@ -54,6 +54,16 @@
 
 
 
+(defun e:message (format &rest args)
+  (let ((inhibit-read-only t))
+    (with-current-buffer (messages-buffer)
+      (goto-char (point-max))
+      (unless (bolp)
+        (insert "\n"))
+      (insert (apply #'format format args))
+      (unless (bolp)
+        (insert "\n")))))
+
 (defun e:unpropertize (text)
   "TEXT からテキストプロパティを除いた文字列を取得する."
   (let ((s (s-concat text)))
@@ -75,7 +85,10 @@
 
 (defmacro e:place-in-cache (variable path)
   "VARIABLE のファイルを PATH に指定した名称でキャッシュディレクトリに設定する."
-  `(set-variable ',variable (expand-file-name ,path spacemacs-cache-directory)))
+  `(let ((path (expand-file-name ,path spacemacs-cache-directory)))
+     (unless (f-exists? (f-parent path))
+       (make-directory (f-parent path) t))
+     (set-variable ',variable path)))
 
 (defmacro e:define-on/off-function (name)
   "NAME で指定されたマイナーモードをON/OFFする関数を作成する."
@@ -95,4 +108,4 @@
 
 
 
-(provide 'convenient-features)
+(provide 'e:convenient-features)

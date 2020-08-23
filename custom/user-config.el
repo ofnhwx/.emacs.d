@@ -4,7 +4,7 @@
 
 
 
-(leaf convenient-features
+(leaf e:convenient-features
   :require t
   :config
   (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode))
@@ -46,7 +46,7 @@
   (leaf ヘッダーライン
     :config
     (leaf ファイル名等をいい感じに表示
-      :require convenient-header-line
+      :require e:convenient-header-line
       :config
       (e:convenient-header-line-start)))
   (leaf モードライン
@@ -520,10 +520,10 @@
     (set-variable 'imenu-list-size 40)
     (set-variable 'imenu-list-position 'left)))
 
-(leaf logging-command
+(leaf e:logging-command
   :require t
   :config
-  (logging-command-on))
+  (e:logging-command-on))
 
 (leaf magit
   :init

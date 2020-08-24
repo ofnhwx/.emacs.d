@@ -929,8 +929,8 @@
     :commands (dap-register-debug-template)
     :defer-config
     (dap-register-debug-template
-     "Remote XDebug"
-     (list :name "Remote XDebug"
+     "Remote Xdebug"
+     (list :name "Remote Xdebug"
            :type "php"
            :request "launch"
            :port 9000

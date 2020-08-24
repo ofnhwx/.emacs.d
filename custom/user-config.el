@@ -897,21 +897,35 @@
     :defer-config
     (e:place-in-cache lsp-server-install-dir "lsp/server")
     (e:place-in-cache lsp-session-file "lsp/session.v1")
-    (e:place-in-cache lsp-intelephense-storage-path "lsp/cache")
-    (eval-and-compile
-      (defun e:setup-lsp-after-open ()
+    (e:place-in-cache lsp-intelephense-storage-path "lsp/cache"))
+  (leaf lsp-completion-config
+    :after lsp-mode
+    :config
+    (defun e:setup-lsp-completion-config ()
+      (when lsp-completion-mode
         (case major-mode
           ;; for Ruby
           ((enh-ruby-mode ruby-mode)
-           (e:setup-company-backends '(company-capf company-robe :with company-tabnine))
+           (e:setup-company-backends '(company-capf company-robe :with company-tabnine)))
+          ;; for PHP
+          ((php-mode)
+           (e:setup-company-backends '(company-capf :with company-tabnine))))))
+    (add-hook 'lsp-completion-mode-hook #'e:setup-lsp-completion-config))
+  (leaf lsp-diagnostics-config
+    :after lsp-mode
+    :config
+    (defun e:setup-lsp-diagnostics-config ()
+      (when lsp-diagnostics-mode
+        (case major-mode
+          ;; for Ruby
+          ((enh-ruby-mode ruby-mode)
            (when (flycheck-may-enable-checker 'ruby-rubocop)
              (flycheck-select-checker 'ruby-rubocop)))
           ;; for PHP
           ((php-mode)
-           (e:setup-company-backends '(company-capf :with company-tabnine))
            (when (flycheck-may-enable-checker 'php)
              (flycheck-select-checker 'php))))))
-    (add-hook 'lsp-after-open-hook #'e:setup-lsp-after-open))
+    (add-hook 'lsp-diagnostics-mode-hook #'e:setup-lsp-diagnostics-config))
   (leaf lsp-ui-doc
     :defer-config
     (eval-and-compile

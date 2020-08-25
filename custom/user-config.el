@@ -904,7 +904,8 @@
     :defer-config
     (e:place-in-cache lsp-server-install-dir "lsp/server")
     (e:place-in-cache lsp-session-file "lsp/session.v1")
-    (e:place-in-cache lsp-intelephense-storage-path "lsp/cache"))
+    (e:place-in-cache lsp-intelephense-storage-path "lsp/cache")
+    (set-variable 'lsp-file-watch-threshold 100000))
   (leaf lsp-completion-config
     :after lsp-mode
     :config
@@ -935,6 +936,18 @@
     (add-hook 'lsp-diagnostics-mode-hook #'e:setup-lsp-diagnostics-config))
   (leaf lsp-ui-doc
     :defer-config
+    (progn
+      (with-no-warnings
+        (defvar-local e:lsp-ui-doc-mode-enabled nil))
+      (defun e:lsp-ui-doc-mode-temporary-disable (&rest _)
+        (setq e:lsp-ui-doc-mode-enabled lsp-ui-doc-mode)
+        (lsp-ui-doc-mode 0))
+      (defun e:lsp-ui-doc-mode-restore (&rest _)
+        (when e:lsp-ui-doc-mode-enabled
+          (lsp-ui-doc-mode 1)))
+      (add-hook 'company-completion-started-hook   #'e:lsp-ui-doc-mode-temporary-disable)
+      (add-hook 'company-completion-finished-hook  #'e:lsp-ui-doc-mode-restore)
+      (add-hook 'company-completion-cancelled-hook #'e:lsp-ui-doc-mode-restore))
     (eval-and-compile
       (define-advice lsp-ui-doc--mv-at-point (:filter-args (args) adjust-y)
         (let ((start-y (nth 4 args)))

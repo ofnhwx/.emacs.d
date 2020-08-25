@@ -434,6 +434,10 @@
   (set-variable 'flycheck-idle-buffer-switch-delay 3.0)
   (set-variable 'flycheck-idle-change-delay 3.0))
 
+(leaf ggtags
+  :defer-config
+  (spacemacs|diminish ggtags-navigation-mode))
+
 (leaf git-gutter
   :config
   (leaf git-gutter
@@ -466,6 +470,9 @@
     (spacemacs/set-leader-keys
       "fz" 'helm-fzf
       "pz" 'helm-fzf-project-root))
+  (leaf helm-gtags
+    :defer-config
+    (spacemacs|diminish helm-gtags-mode))
   (leaf helm-multi-match
     :if (executable-find "cmigemo")
     :require t

@@ -453,9 +453,9 @@
                     git-gutter+-modified))
       (set-face-attribute face nil :background (face-attribute face :foreground)))))
 
-(leaf google-translate
+(leaf google-translate-default-ui
   :defer-config
-  (set-variable 'google-translate-default-source-language nil)
+  (set-variable 'google-translate-default-source-language "en")
   (set-variable 'google-translate-default-target-language "ja"))
 
 (leaf helm

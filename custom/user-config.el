@@ -7,26 +7,22 @@
 (leaf e:convenient-features
   :require t
   :config
-  (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode)
-  )
+  (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode))
 
 (leaf e:logging-command
   :require t
   :config
-  (e:logging-command-on)
-  )
+  (e:logging-command-on))
 
 (leaf e:convenient-header-line
   :require t
   :config
-  (e:convenient-header-line-start)
-  )
+  (e:convenient-header-line-start))
 
 (leaf e:auto-reset-mode-line-color
   :require t
   :config
-  (e:auto-reset-mode-line-color-on)
-  )
+  (e:auto-reset-mode-line-color-on))
 
 
 
@@ -46,8 +42,7 @@
   :config
   (let ((value "ja_JP.UTF-8"))
     (setenv "LANG" value)
-    (setenv "LC_ALL" value))
-  )
+    (setenv "LC_ALL" value)))
 
 (leaf appearance
   :config
@@ -68,9 +63,7 @@
                       (and (string-match "dos"            buf-coding) "ⓓ")
                       (and (string-match "mac"            buf-coding) "ⓜ")
                       )))
-      :separator " ")
-    )
-  )
+      :separator " ")))
 
 (leaf general
   :doc "エイリアス"
@@ -123,8 +116,7 @@
   :config
   (dolist (buffer '("*scratch*" "*Messages*"))
     (with-current-buffer buffer
-      (emacs-lock-mode 'kill)))
-  )
+      (emacs-lock-mode 'kill))))
 
 
 
@@ -140,11 +132,10 @@
       (add-to-list 'initial-frame-alist item)
       (add-to-list 'default-frame-alist item)))
   :doc "特殊キーの設定"
+  :config
   (set-variable 'ns-command-modifier 'meta)
   (set-variable 'ns-right-command-modifier 'super)
-  (set-variable 'ns-alternate-modifier 'none)
-  :config
-  )
+  (set-variable 'ns-alternate-modifier 'none))
 
 (leaf configurations-for-WSL1/2
   :doc "WSLの情報を表示"
@@ -163,16 +154,14 @@
     (when (file-exists-p cmd-exe)
       (set-variable 'browse-url-generic-program  cmd-exe)
       (set-variable 'browse-url-generic-args     cmd-args)
-      (set-variable 'browse-url-browser-function 'browse-url-generic)))
-  )
+      (set-variable 'browse-url-browser-function 'browse-url-generic))))
 
 (leaf load-local-configurations
   :config
   (let ((private-config (expand-file-name "config" e:private-directory)))
     (condition-case err
         (load private-config)
-      (error (message "Error: %s" err))))
-  )
+      (error (message "Error: %s" err)))))
 
 
 
@@ -183,9 +172,7 @@
     :defer-config
     (define-advice spacemacs/dump-emacs (:around (fn &rest args) trick)
       (let ((spacemacs-start-directory user-emacs-directory))
-        (apply fn args)))
-    )
-  )
+        (apply fn args)))))
 
 
 
@@ -209,7 +196,7 @@
   :defer-config
   (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic")))
 
-(leaf company
+(leaf *company
   :config
   (leaf company
     :bind (:company-active-map
@@ -251,7 +238,7 @@
   :defer-config
   (e:place-in-cache dap-breakpoints-file "dap/breakpoints"))
 
-(leaf dired
+(leaf *dired
   :config
   (leaf dired
     :bind ((:dired-mode-map
@@ -335,10 +322,10 @@
   :defer-config
   (set-variable 'eshell-history-size 100000))
 
-(leaf evil
-  :require t
+(leaf *evil
   :config
   (leaf evil
+    :require t
     :bind (;; motion → normal → visual
            (:evil-motion-state-map
             ("C-\\" . ignore)
@@ -432,7 +419,7 @@
   :defer-config
   (spacemacs|diminish ggtags-navigation-mode))
 
-(leaf git-gutter
+(leaf *git-gutter
   :config
   (leaf git-gutter
     :defer-config
@@ -452,7 +439,7 @@
   (set-variable 'google-translate-default-source-language "en")
   (set-variable 'google-translate-default-target-language "ja"))
 
-(leaf helm
+(leaf *helm
   :config
   (leaf helm
     :bind (([remap eval-expression] . helm-eval-expression))
@@ -510,14 +497,14 @@
     "hdds" 'helpful-symbol
     "hddv" 'helpful-variable))
 
-(leaf leaf
+(leaf *leaf
   :config
   (leaf leaf-tree
     :config
     (set-variable 'imenu-list-size 40)
     (set-variable 'imenu-list-position 'left)))
 
-(leaf magit
+(leaf *magit
   :init
   (add-to-list 'load-path (f-expand "libegit2" e:external-directory))
   :config
@@ -549,7 +536,7 @@
   (set-variable 'markdown-command "pandoc")
   (remove-hook 'markdown-mode-hook #'orgtbl-mode))
 
-(leaf migemo
+(leaf *migemo
   :if (executable-find "cmigemo")
   :config
   (leaf avy-migemo
@@ -592,7 +579,7 @@
   :defer-config
   (set-variable 'open-junk-file-format (expand-file-name "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))
 
-(leaf org
+(leaf *org
   :config
   (leaf org
     :defer-config
@@ -614,7 +601,7 @@
       (org-babel-do-load-languages 'org-babel-load-languages
                                    (append org-babel-load-languages '((restclient . t)))))))
 
-(leaf skk
+(leaf *skk
   :config
   (leaf skk
     :hook ((evil-hybrid-state-entry-hook . e:skk-mode)
@@ -707,7 +694,7 @@
   :config
   (global-so-long-mode 1))
 
-(leaf recentf
+(leaf *recentf
   :config
   (leaf recentf
     :defer-config
@@ -726,10 +713,10 @@
                  (--filter (or (file-remote-p it)
                                (f-exists? it))))))))
 
-(leaf tramp
-  :require t
+(leaf *tramp
   :config
   (leaf tramp
+    :require t
     :config
     (set-variable 'tramp-default-host "localhost"))
   (leaf tramp-sh
@@ -747,7 +734,7 @@
   (e:place-in-cache treemacs-persist-file "treemacs/persist")
   (e:place-in-cache treemacs-last-error-persist-file "treemacs/persist-at-last-error"))
 
-(leaf url
+(leaf *url
   :config
   (leaf url-cache
     :defer-config
@@ -820,15 +807,14 @@
 
 
 
-(leaf php
+(leaf *php
   :config
   (leaf drupal/phpcs
     :defer-config
     (set-variable 'drupal/phpcs-standard "Drupal,DrupalPractice")))
 
-(leaf ruby
+(leaf *ruby
   :config
-  (defvar e:ruby-modes '(enh-ruby-mode ruby-mode))
   (leaf ruby-mode
     :hook ((enh-ruby-mode-hook ruby-mode-hook) . e:setup-flycheck-rubocop)
     :defer-config
@@ -849,7 +835,7 @@
     :commands (robe-start robe-ask robe-doc robe-jump robe-jump-to-module robe-rails-refresh)
     :config
     (spacemacs|diminish robe-mode)
-    (--each e:ruby-modes
+    (--each '(enh-ruby-mode ruby-mode)
       (spacemacs/declare-prefix-for-mode it "mr" "refactor/robe")
       (spacemacs/declare-prefix-for-mode it "mrs" "robe")
       (spacemacs/set-leader-keys-for-major-mode it
@@ -862,12 +848,12 @@
   (leaf rubocop
     :defer-config
     (spacemacs|diminish rubocop-mode)
-    (--each e:ruby-modes
+    (--each '(enh-ruby-mode ruby-mode)
       (spacemacs/set-leader-keys-for-major-mode it
         "RF" 'rubocop-autocorrect-current-file)))
   (leaf rubocopfmt
     :config
-    (--each e:ruby-modes
+    (--each '(enh-ruby-mode ruby-mode)
       (spacemacs/set-leader-keys-for-major-mode it
         "==" 'rubocopfmt))
     :defer-config
@@ -892,7 +878,7 @@
 
 
 
-(leaf lsp
+(leaf *lsp
   :config
   (leaf lsp-mode
     :defer-config
@@ -949,7 +935,7 @@
           (setf (nth 4 args) (+ start-y (window-header-line-height)))
           args)))))
 
-(leaf dap
+(leaf *dap
   :config
   (leaf dap-mode
     :defer-config

@@ -412,19 +412,6 @@
        ((member evil-state '(insert hybrid))
         (evil-force-normal-state))))))
 
-(leaf eww
-  :init
-  (eval-and-compile
-    (defvar e:eww-spacemacs-layout-name "@Eww")
-    (defvar e:eww-spacemacs-layout-binding "w"))
-  (spacemacs|define-custom-layout e:eww-spacemacs-layout-name
-    :binding e:eww-spacemacs-layout-binding
-    :body
-    (eww "https://www.google.com/")
-    (eval-and-compile
-      (define-advice quit-window (:after (&rest _) kill-layout)
-        (persp-kill e:eww-spacemacs-layout-name)))))
-
 (leaf flyspell
   :bind (:flyspell-mode-map
          ("C-;" . nil)))

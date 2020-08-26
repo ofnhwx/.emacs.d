@@ -57,6 +57,8 @@
         ;; +misc
         copy-as-format
         multiple-cursors
+        ;; +reader
+        elfeed
         ;; +source-control
         (git :variables
              git-magit-status-fullscreen t)

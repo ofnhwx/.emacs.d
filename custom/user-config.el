@@ -909,36 +909,37 @@
   (leaf lsp-completion-config
     :after lsp-mode
     :config
-    (defun e:setup-lsp-completion-config ()
-      (when lsp-completion-mode
-        (case major-mode
-          ;; for Ruby
-          ((enh-ruby-mode ruby-mode)
-           (e:setup-company-backends '(company-capf company-robe :with company-tabnine)))
-          ;; for PHP
-          ((php-mode)
-           (e:setup-company-backends '(company-capf :with company-tabnine))))))
+    (eval-and-compile
+      (defun e:setup-lsp-completion-config ()
+        (when (bound-and-true-p lsp-completion-mode)
+          (case major-mode
+            ;; for Ruby
+            ((enh-ruby-mode ruby-mode)
+             (e:setup-company-backends '(company-capf company-robe :with company-tabnine)))
+            ;; for PHP
+            ((php-mode)
+             (e:setup-company-backends '(company-capf :with company-tabnine)))))))
     (add-hook 'lsp-completion-mode-hook #'e:setup-lsp-completion-config))
   (leaf lsp-diagnostics-config
     :after lsp-mode
     :config
-    (defun e:setup-lsp-diagnostics-config ()
-      (when lsp-diagnostics-mode
-        (case major-mode
-          ;; for Ruby
-          ((enh-ruby-mode ruby-mode)
-           (when (flycheck-may-enable-checker 'ruby-rubocop)
-             (flycheck-select-checker 'ruby-rubocop)))
-          ;; for PHP
-          ((php-mode)
-           (when (flycheck-may-enable-checker 'php)
-             (flycheck-select-checker 'php))))))
+    (eval-and-compile
+      (defun e:setup-lsp-diagnostics-config ()
+        (when (bound-and-true-p lsp-diagnostics-mode)
+          (case major-mode
+            ;; for Ruby
+            ((enh-ruby-mode ruby-mode)
+             (when (flycheck-may-enable-checker 'ruby-rubocop)
+               (flycheck-select-checker 'ruby-rubocop)))
+            ;; for PHP
+            ((php-mode)
+             (when (flycheck-may-enable-checker 'php)
+               (flycheck-select-checker 'php)))))))
     (add-hook 'lsp-diagnostics-mode-hook #'e:setup-lsp-diagnostics-config))
   (leaf lsp-ui-doc
     :defer-config
-    (progn
-      (with-no-warnings
-        (defvar-local e:lsp-ui-doc-mode-enabled nil))
+    (with-no-warnings
+      (defvar-local e:lsp-ui-doc-mode-enabled nil)
       (defun e:lsp-ui-doc-mode-temporary-disable (&rest _)
         (setq e:lsp-ui-doc-mode-enabled lsp-ui-doc-mode)
         (lsp-ui-doc-mode 0))

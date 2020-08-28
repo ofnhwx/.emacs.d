@@ -809,6 +809,12 @@
 
 (leaf *php
   :config
+  (leaf php-mode
+    :hook (php-mode-hook . e:setup-php-mode)
+    :config
+    (defun e:setup-php-mode ()
+      (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
+      (subword-mode 1)))
   (leaf drupal/phpcs
     :defer-config
     (set-variable 'drupal/phpcs-standard "Drupal,DrupalPractice")))

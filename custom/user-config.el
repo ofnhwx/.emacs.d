@@ -934,12 +934,7 @@
           (lsp-ui-doc-mode 1)))
       (add-hook 'company-completion-started-hook   #'e:lsp-ui-doc-mode-temporary-disable)
       (add-hook 'company-completion-finished-hook  #'e:lsp-ui-doc-mode-restore)
-      (add-hook 'company-completion-cancelled-hook #'e:lsp-ui-doc-mode-restore))
-    (eval-and-compile
-      (define-advice lsp-ui-doc--mv-at-point (:filter-args (args) adjust-y)
-        (let ((start-y (nth 4 args)))
-          (setf (nth 4 args) (+ start-y (window-header-line-height)))
-          args)))))
+      (add-hook 'company-completion-cancelled-hook #'e:lsp-ui-doc-mode-restore))))
 
 (leaf *dap
   :config

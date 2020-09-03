@@ -23,6 +23,8 @@
         ;; +emacs
         better-defaults
         org
+        ;; +email
+        notmuch
         ;; +filetree
         treemacs
         ;; +frameworks

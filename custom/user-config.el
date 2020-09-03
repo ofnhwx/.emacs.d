@@ -536,6 +536,50 @@
   (set-variable 'markdown-command "pandoc")
   (remove-hook 'markdown-mode-hook #'orgtbl-mode))
 
+(leaf notmuch
+  :defer-config
+  (eval-and-compile
+    (define-advice notmuch-bury-or-kill-this-buffer (:around (fn) kill-layout)
+      (let ((kill (eq (e:major-mode) 'notmuch-hello-mode)))
+        (prog1
+            (funcall fn)
+          (if kill
+              (persp-kill notmuch-spacemacs-layout-name))))))
+  (set-variable 'notmuch-archive-tags '("-inbox" "-unread"))
+  (set-variable 'notmuch-message-deleted-tags '("+trash" "-inbox"))
+  (set-variable 'notmuch-column-control 1.0)
+  (set-variable 'notmuch-hello-thousands-separator ",")
+  (set-variable 'notmuch-search-oldest-first nil)
+  (set-variable 'notmuch-show-empty-saved-searches nil)
+  (set-variable 'notmuch-show-logo nil)
+  (set-variable 'notmuch-hello-hide-tags
+                '(;; -------------------------
+                  "drafts"    ;; +下書き
+                  "flagged"   ;; +スター付き
+                  "important" ;; +重要
+                  "inbox"     ;; +受信トレイ
+                  "sent"      ;; +送信済み
+                  "spam"      ;; +迷惑メール
+                  "trash"     ;; +ごみ箱
+                  "unread"    ;; +未読
+                  ;; -------------------------
+                  "encrypted" ;; -暗号
+                  "new"       ;; -新規(notmuch)
+                  "signed"    ;; -署名
+                  ;; -------------------------
+                  ))
+  (set-variable 'notmuch-saved-searches
+                '((:name "すべて"     :query "*"             :key "a")
+                  (:name "受信トレイ" :query "tag:inbox"     :key "i")
+                  (:name "未読"       :query "tag:unread"    :key "u")
+                  (:name "スター付き" :query "tag:flagged"   :key "s")
+                  (:name "重要"       :query "tag:important" :key "m")
+                  (:name "送信済み"   :query "tag:sent"      :key "t")
+                  (:name "下書き"     :query "tag:draft"     :key "d")
+                  (:name "ごみ箱"     :query "tag:trash")
+                  (:name "迷惑メール" :query "tag:spam")))
+  (setenv "XAPIAN_CJK_NGRAM" "1"))
+
 (leaf *migemo
   :if (executable-find "cmigemo")
   :config

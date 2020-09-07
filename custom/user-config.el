@@ -926,6 +926,10 @@
     (e:setup-company-backends 'company-tabnine)
     (company-mode-on)))
 
+(leaf js2-mode
+  :defer-config
+  (set-face-attribute 'js2-external-variable nil :foreground "#ff0000" :underline t))
+
 
 
 (leaf *lsp

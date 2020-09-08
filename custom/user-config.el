@@ -859,6 +859,16 @@
     (defun e:setup-php-mode ()
       (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
       (subword-mode 1)))
+  (leaf drupal-mode
+    :hook (drupal-mode-hook . e:setup-drupal-mode)
+    :config
+    (defun e:setup-drupal-mode ()
+      (let* ((project-root (ignore-errors (e:project-root buffer-file-name)))
+             (eslint (f-expand "web/core/node_modules/.bin/eslint" project-root)))
+        (when (and project-root
+                   (f-exists? project-root)
+                   (f-exists? eslint))
+          (setq-local flycheck-javascript-eslint-executable eslint)))))
   (leaf drupal/phpcs
     :defer-config
     (set-variable 'drupal/phpcs-standard "Drupal,DrupalPractice")))
@@ -928,7 +938,13 @@
 
 (leaf js2-mode
   :defer-config
-  (set-face-attribute 'js2-external-variable nil :foreground "#ff0000" :underline t))
+  (set-face-attribute 'js2-external-variable nil :foreground "#ff0000" :underline t)
+  (defun e:eslint-fix ()
+    (interactive)
+    (let ((eslint (or flycheck-javascript-eslint-executable
+                      (executable-find "eslint"))))
+      (when eslint
+        (call-process eslint nil nil nil buffer-file-name "--fix")))))
 
 
 
@@ -968,7 +984,11 @@
             ;; for PHP
             ((php-mode)
              (when (flycheck-may-enable-checker 'php)
-               (flycheck-select-checker 'php)))))))
+               (flycheck-select-checker 'php)))
+            ;; for JS
+            ((js2-mode)
+             (when (flycheck-may-enable-checker 'javascript-eslint)
+               (flycheck-select-checker 'javascript-eslint)))))))
     (add-hook 'lsp-diagnostics-mode-hook #'e:setup-lsp-diagnostics-config))
   (leaf lsp-ui-doc
     :defer-config

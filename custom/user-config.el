@@ -347,6 +347,7 @@
     (spacemacs|diminish hybrid-mode)
     (set-variable 'evil-cross-lines t)
     (set-variable 'evil-disable-insert-state-bindings t)
+    (set-variable 'evil-move-beyond-eol t)
     (set-variable 'evil-move-cursor-back nil))
   (leaf evil-easymotion
     :config

@@ -793,6 +793,7 @@
 
 (leaf vterm
   :commands (vterm-yank)
+  :hook (vterm-mode-hook . e:vterm-auto-tmux)
   :bind (:vterm-mode-map
          ("C-c C-g" . keyboard-quit)
          ("C-g" . vterm-send-C-g)
@@ -802,8 +803,10 @@
   (defun e:vterm-input-something ()
     (interactive)
     (let ((input (read-string "input: ")))
-      (kill-new input)
-      (vterm-yank)))
+      (vterm-send-string input)))
+  (defun e:vterm-auto-tmux ()
+    (vterm-send-string "exec tmux new -A -s emacs")
+    (vterm-send-return))
   (set-variable 'vterm-max-scrollback 20000)
   (set-face-attribute 'vterm-color-default nil :foreground "#839496" :background "#002b36")
   (set-face-attribute 'vterm-color-black   nil :foreground "#073642" :background "#002b36")

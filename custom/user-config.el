@@ -300,13 +300,6 @@
                  (nth 1 files))
         (call-interactively #'ediff)))))
 
-(leaf *elfeed
-  :config
-  (leaf elfeed-goodies
-    :defer-config
-    (set-variable 'elfeed-goodies/feed-source-column-width 30)
-    (set-variable 'elfeed-goodies/tag-column-width 30)))
-
 (leaf elisp-demos
   :advice
   (:after describe-function-1 elisp-demos-advice-describe-function-1)

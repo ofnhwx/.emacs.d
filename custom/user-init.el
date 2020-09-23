@@ -59,8 +59,6 @@
         ;; +misc
         copy-as-format
         multiple-cursors
-        ;; +reader
-        elfeed
         ;; +source-control
         (git :variables
              git-magit-status-fullscreen t)
@@ -92,6 +90,7 @@
         codic
         company-tabnine
         company-try-hard
+        deadgrep
         dired-filter
         elisp-demos
         evil-easymotion
@@ -103,7 +102,6 @@
         magit-delta
         magit-libgit
         persistent-scratch
-        poly-org
         psysh
         visual-regexp
         vlf

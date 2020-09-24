@@ -574,25 +574,6 @@
                   (:name "迷惑メール" :query "tag:spam")))
   (setenv "XAPIAN_CJK_NGRAM" "1"))
 
-(leaf *migemo
-  :if (executable-find "cmigemo")
-  :config
-  (leaf avy-migemo
-    :config
-    (leaf avy-migemo-patch
-      :require pkg-info
-      :doc "引数の数が変更されているため暫定的にここで対応"
-      :config
-      (let ((version (pkg-info-format-version (pkg-info-package-version 'avy-migemo)))
-            (target "20180716.1455"))
-        (if (string-equal version target)
-            (with-eval-after-load 'avy-migemo
-              (define-advice avy--generic-jump (:filter-args (args) patch-20180716-1455)
-                (if (= (length args) 4)
-                    args
-                  (e:remove-nth 2 args))))
-          (spacemacs-buffer/warning "`avy-migemo' was updated."))))))
-
 (leaf open-by-jetbrains-ide
   :config
   (when (spacemacs/system-is-mac)

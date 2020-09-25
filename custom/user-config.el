@@ -916,6 +916,8 @@
   :config
   (defun e:setup-haml-mode ()
     (e:setup-company-backends 'company-tabnine)
+    (highlight-indentation-mode 1)
+    (setq-local highlight-indentation-offset 2)
     (company-mode-on)))
 
 (leaf js2-mode

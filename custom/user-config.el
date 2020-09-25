@@ -605,13 +605,17 @@
     (eval-when-compile (require 'org))
     (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
     (when (f-directory? org-directory)
-      (set-variable 'org-default-notes-file (expand-file-name "notes.org" org-directory))
+      (set-variable 'org-default-notes-file (expand-file-name "index.org" org-directory))
       (set-variable 'org-agenda-files (-union (list org-default-notes-file)
                                               (directory-files-recursively org-directory org-agenda-file-regexp)))
       (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3))))
     (set-variable 'org-todo-keywords
                   '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
                     (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c@)")))
+    (set-variable 'org-startup-indented t)
+    (set-variable 'org-startup-folded 'content)
+    (set-variable 'org-indent-mode-turns-on-hiding-stars nil)
+    (set-variable 'org-indent-indentation-per-level 2)
     (set-variable 'org-edit-src-content-indentation 0))
   (leaf ob-restclient
     :after org

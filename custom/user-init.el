@@ -61,7 +61,8 @@
         multiple-cursors
         ;; +source-control
         (git :variables
-             git-magit-status-fullscreen t)
+             git-magit-status-fullscreen t
+             git-enable-magit-delta-plugin (executable-find "delta"))
         github
         ;; +tags
         gtags
@@ -99,7 +100,6 @@
         helpful
         leaf
         leaf-tree
-        magit-delta
         magit-libgit
         persistent-scratch
         psysh

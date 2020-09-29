@@ -516,11 +516,8 @@
                          (--map (cons it 3)))))
     (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
   (leaf magit-delta
-    :if (executable-find "delta")
-    :after magit
-    :config
-    (spacemacs|diminish magit-delta-mode)
-    (magit-delta-mode 1))
+    :defer-config
+    (spacemacs|diminish magit-delta-mode))
   (leaf transient
     :defer-config
     (set-variable 'transient-default-level 7)))

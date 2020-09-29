@@ -62,7 +62,7 @@
         ;; +source-control
         (git :variables
              git-magit-status-fullscreen t
-             git-enable-magit-delta-plugin (executable-find "delta"))
+             git-enable-magit-delta-plugin t)
         github
         ;; +tags
         gtags

@@ -913,9 +913,20 @@
   :config
   (defun e:setup-haml-mode ()
     (e:setup-company-backends 'company-tabnine)
-    (highlight-indentation-mode 1)
-    (setq-local highlight-indentation-offset 2)
     (company-mode-on)))
+
+(leaf highlight-indentation
+  :hook ((haml-mode-hook . e:setup-highlight-indentation-mode)
+         (yaml-mode-hook . e:setup-highlight-indentation-mode))
+  :config
+  (spacemacs|diminish highlight-indentation-mode)
+  (spacemacs|diminish highlight-indentation-current-column-mode)
+  (set-face-attribute 'highlight-indentation-face nil :background "#404040")
+  (set-face-attribute 'highlight-indentation-current-column-face nil :background "#408040")
+  (defun e:setup-highlight-indentation-mode ()
+    (highlight-indentation-mode 1)
+    (highlight-indentation-current-column-mode 1)
+    (highlight-indentation-set-offset 2)))
 
 (leaf js2-mode
   :defer-config

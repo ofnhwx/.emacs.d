@@ -995,6 +995,7 @@
       (add-hook 'company-completion-started-hook   #'e:lsp-ui-doc-mode-temporary-disable)
       (add-hook 'company-completion-finished-hook  #'e:lsp-ui-doc-mode-restore)
       (add-hook 'company-completion-cancelled-hook #'e:lsp-ui-doc-mode-restore))
+    (set-variable 'lsp-ui-doc-position 'at-point)
     (set-variable 'lsp-ui-doc-delay 2.0)))
 
 (leaf *dap

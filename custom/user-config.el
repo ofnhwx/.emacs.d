@@ -913,7 +913,21 @@
   :config
   (defun e:setup-haml-mode ()
     (e:setup-company-backends 'company-tabnine)
-    (company-mode-on)))
+    (company-mode-on))
+  (leaf haml-lint
+    :config
+    (flycheck-def-config-file-var flycheck-haml-lintrc haml-lint ".haml-lint.yml" :safe #'stringp)
+    (flycheck-define-checker haml-lint
+      "A haml-lint syntax checker"
+      :command ("bundle" "exec" "haml-lint"
+                (config-file "--config" flycheck-haml-lintrc)
+                source-inplace)
+      :error-patterns
+      ((error   line-start (file-name) ":" line " [E] "  (message) line-end)
+       (warning line-start (file-name) ":" line " [W] "  (message) line-end))
+      :modes (haml-mode))
+    (add-to-list 'flycheck-checkers 'haml-lint)
+    (flycheck-add-next-checker 'haml 'haml-lint)))
 
 (leaf highlight-indentation
   :hook ((haml-mode-hook . e:setup-highlight-indentation-mode)

@@ -113,6 +113,8 @@
       '(
         ;; +spacemacs/spacemacs-evil
         evil-escape
+        ;; +checkers/syntax-checking
+        flycheck-pos-tip
         ;; +intl/japanese
         pangu-spacing
         ;; +lang/php

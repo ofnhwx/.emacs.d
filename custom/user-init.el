@@ -96,6 +96,7 @@
         elisp-demos
         evil-easymotion
         evil-owl
+        grugru
         helm-tramp
         helpful
         leaf

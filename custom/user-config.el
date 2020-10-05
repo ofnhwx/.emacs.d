@@ -433,6 +433,20 @@
   (set-variable 'google-translate-default-source-language "en")
   (set-variable 'google-translate-default-target-language "ja"))
 
+(leaf grugru
+  :config
+  (spacemacs/set-leader-keys "xx" #'grugru)
+  :defer-config
+  (grugru-define-multiple
+   (ruby-mode
+    (symbol "have_button" "have_no_button")
+    (symbol "have_content" "have_no_content")
+    (symbol "have_link" "have_no_link")
+    (symbol "if" "unless")
+    (symbol "let" "let!")
+    (symbol "to" "not_to")
+    (symbol "true" "false"))))
+
 (leaf *helm
   :config
   (leaf helm

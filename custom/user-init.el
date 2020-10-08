@@ -73,7 +73,6 @@
         prodigy
         restclient
         (shell :variables
-               shell-enable-smart-eshell t
                shell-default-height 60
                shell-default-shell 'vterm)
         vagrant

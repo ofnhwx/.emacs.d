@@ -58,6 +58,7 @@
         yaml
         ;; +misc
         copy-as-format
+        dtrt-indent
         multiple-cursors
         ;; +source-control
         (git :variables

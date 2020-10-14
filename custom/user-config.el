@@ -622,7 +622,7 @@
       (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3))))
     (set-variable 'org-todo-keywords
                   '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-                    (sequence "WAITING(w@)" "HOLD(h@)" "|" "CANCELLED(c@)")))
+                    (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
     (set-variable 'org-startup-indented t)
     (set-variable 'org-startup-folded 'content)
     (set-variable 'org-indent-mode-turns-on-hiding-stars nil)

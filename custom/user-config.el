@@ -527,7 +527,7 @@
     (when (executable-find "ghq")
       (set-variable 'magit-repository-directories
                     (->> (e:shell-command-to-list "ghq root --all")
-                         (--map (cons it 3)))))
+                         (--map (cons it 4)))))
     (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
   (leaf magit-delta
     :defer-config

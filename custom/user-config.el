@@ -633,7 +633,12 @@
     :config
     (unless (--find (eq (car it) 'restclient) org-babel-load-languages)
       (org-babel-do-load-languages 'org-babel-load-languages
-                                   (append org-babel-load-languages '((restclient . t)))))))
+                                   (append org-babel-load-languages '((restclient . t))))))
+  (leaf ox-reveal
+    :after org
+    :require t
+    :config
+    (set-variable 'org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")))
 
 (leaf *skk
   :config

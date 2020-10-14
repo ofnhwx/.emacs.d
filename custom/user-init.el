@@ -102,6 +102,7 @@
         leaf
         leaf-tree
         magit-libgit
+        ox-reveal
         persistent-scratch
         psysh
         visual-regexp

@@ -96,6 +96,7 @@
         elisp-demos
         evil-easymotion
         evil-owl
+        foreman-mode
         grugru
         helm-tramp
         helpful

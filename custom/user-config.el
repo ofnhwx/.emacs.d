@@ -409,6 +409,15 @@
   (set-variable 'flycheck-idle-buffer-switch-delay 3.0)
   (set-variable 'flycheck-idle-change-delay 3.0))
 
+(leaf foreman-mode
+  :bind (:foreman-mode-map
+         ("R" . foreman-restart)
+         ("S" . foreman-start)
+         ("X" . foreman-stop)
+         ("x" . foreman-kill-proc))
+  :config
+  (spacemacs/set-leader-keys "atf" #'foreman))
+
 (leaf ggtags
   :defer-config
   (spacemacs|diminish ggtags-navigation-mode))

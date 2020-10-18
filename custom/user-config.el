@@ -647,6 +647,7 @@
     :after org
     :require t
     :config
+    (set-variable 'org-reveal-reveal-js-version 4)
     (set-variable 'org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")))
 
 (leaf *skk

@@ -20,29 +20,17 @@
 (defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
 
-;; ダンプ処理用の小細工
-(and (boundp 'spacemacs-dump-mode)
-     (eq spacemacs-dump-mode 'dumping)
-     (load (expand-file-name "user-init" e:custom-directory)))
-
-;; フォント設定
-(progn
-  (defvar e:font-name "Cica")
-  (defvar e:font-size (cond
-                       ((eq system-type 'darwin) 14)
-                        (t 16)))
-  (defvar e:font-rescale 1.00)
-  (defun e:font ()
-    (list e:font-name :size e:font-size))
-  (define-advice spacemacs/set-default-font (:after (&rest _) japanese-font-setting)
-    (set-fontset-font t 'unicode (font-spec :family e:font-name))
-    (set-variable 'face-font-rescale-alist (list e:font-name e:font-rescale))
-    (when (fboundp 'eaw-fullwidth)
-      (eaw-fullwidth))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Spacemacs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; フォント設定の調整
+(define-advice spacemacs/set-default-font (:after (&rest _) japanese-font-setting)
+  (let ((font (car dotspacemacs-default-font)))
+    (set-fontset-font t 'unicode (font-spec :family font))
+    (set-variable 'face-font-rescale-alist (list font 1.00))
+    (when (fboundp 'eaw-fullwidth)
+      (eaw-fullwidth))))
 
 (let ((user-emacs-directory (expand-file-name "spacemacs/" e:external-directory)))
   (setenv "SPACEMACSDIR" e:custom-directory)

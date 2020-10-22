@@ -31,7 +31,78 @@ This function should only modify configuration layer settings."
    dotspacemacs-configuration-layer-path '()
 
    ;; List of configuration layers to load.
-   dotspacemacs-configuration-layers e:dotspacemacs-configuration-layers
+   dotspacemacs-configuration-layers
+   '(
+     ;; +checkers
+     spell-checking
+     syntax-checking
+     ;; +completion
+     (auto-completion :variables
+                      auto-completion-enable-help-tooltip nil
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-use-company-box t)
+     helm
+     ;; +emacs
+     better-defaults
+     org
+     ;; +email
+     notmuch
+     ;; +filetree
+     treemacs
+     ;; +frameworks
+     react
+     ruby-on-rails
+     ;; +fun
+     emoji
+     ;; +intl
+     japanese
+     ;; +lang
+     csv
+     emacs-lisp
+     (html :variables
+           css-enable-lsp t
+           less-enable-lsp t
+           scss-enable-lsp t
+           html-enable-lsp t)
+     (javascript :variables
+                 javascript-backend 'lsp)
+     markdown
+     (php :variables
+          php-backend 'lsp)
+     (ruby :variables
+           ruby-backend 'lsp
+           ruby-enable-enh-ruby-mode nil
+           ruby-test-runner 'rspec
+           ruby-highlight-debugger-keywords t)
+     shell-scripts
+     sql
+     vimscript
+     yaml
+     ;; +misc
+     copy-as-format
+     dtrt-indent
+     multiple-cursors
+     ;; +source-control
+     (git :variables
+          git-magit-status-fullscreen t
+          git-enable-magit-delta-plugin t)
+     github
+     ;; +tags
+     gtags
+     ;; +tools
+     docker
+     lsp
+     nginx
+     prodigy
+     restclient
+     (shell :variables
+            shell-default-height 60
+            shell-default-shell 'vterm)
+     vagrant
+     ;; +web-services
+     search-engine
+     )
+
 
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -40,13 +111,48 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages e:dotspacemacs-additional-packages
+   dotspacemacs-additional-packages
+   '(
+     (helm-fzf     :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
+     (locale-eaw   :location (recipe :fetcher github :repo "hamano/locale-eaw"))
+     atomic-chrome
+     codic
+     company-tabnine
+     company-try-hard
+     deadgrep
+     dired-filter
+     elisp-demos
+     evil-easymotion
+     evil-owl
+     foreman-mode
+     grugru
+     helm-tramp
+     helpful
+     leaf
+     leaf-tree
+     magit-libgit
+     ox-reveal
+     persistent-scratch
+     psysh
+     visual-regexp
+     vlf
+     )
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
 
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages e:dotspacemacs-excluded-packages
+   dotspacemacs-excluded-packages
+   '(
+     ;; +spacemacs/spacemacs-evil
+     evil-escape
+     ;; +checkers/syntax-checking
+     flycheck-pos-tip
+     ;; +intl/japanese
+     pangu-spacing
+     ;; +lang/php
+     company-php
+     )
 
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
@@ -196,7 +302,10 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-colorize-cursor-according-to-state t
 
    ;; Default font or prioritized list of fonts.
-   dotspacemacs-default-font (e:font)
+   dotspacemacs-default-font '("Cica"
+                               :size 12.0
+                               :weight normal
+                               :width normal)
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -350,7 +459,7 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-line-numbers nil
 
-   ;; Code folding method. Possible values are `evil' and `origami'.
+   ;; Code folding method. Possible values are `evil', `origami' and `vimish'.
    ;; (default 'evil)
    dotspacemacs-folding-method 'evil
 
@@ -459,7 +568,27 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (load (expand-file-name "user-init" e:custom-directory)))
+  ;; +distributions/spacemacs-bootstrap
+  (set-variable 'vim-style-remap-Y-to-y$ t)
+  ;; +spacemacs/spacemacs-completion
+  (set-variable 'helm-use-fuzzy nil)
+  ;; その他、先に設定しておきたいもの
+  (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
+  (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
+  (set-variable 'viper-mode nil)
+  (set-variable 'which-key-enable-extended-define-key t)
+  (set-variable 'which-key-show-early-on-C-h t)
+  (setq-default ispell-local-dictionary "en_US")
+  ;; yasnippet で余計なものを読込ませないための対策
+  (defvar e:yas-snippet-dirs (list (expand-file-name "snippets" e:custom-directory)))
+  (dolist (dir e:yas-snippet-dirs)
+    (unless (file-exists-p dir)
+      (make-directory dir)))
+  (with-eval-after-load "yasnippet"
+    (define-advice yas-reload-all (:around (fn &rest args) only-custom-snippets)
+      (when (equal yas-snippet-dirs e:yas-snippet-dirs)
+        (funcall fn args))))
+  )
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.
@@ -474,7 +603,7 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  (load (expand-file-name "user-config" e:custom-directory)))
+  (load (expand-file-name "lisp/user-config" e:custom-directory)))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.

@@ -636,7 +636,10 @@
     (set-variable 'org-startup-folded 'content)
     (set-variable 'org-indent-mode-turns-on-hiding-stars nil)
     (set-variable 'org-indent-indentation-per-level 2)
-    (set-variable 'org-edit-src-content-indentation 0))
+    (set-variable 'org-edit-src-content-indentation 0)
+    (set-face-attribute 'org-level-1 nil :height 1.0)
+    (set-face-attribute 'org-level-2 nil :height 1.0)
+    (set-face-attribute 'org-level-3 nil :height 1.0))
   (leaf ob-restclient
     :after org
     :config

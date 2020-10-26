@@ -59,11 +59,7 @@ This function should only modify configuration layer settings."
      ;; +lang
      csv
      emacs-lisp
-     (html :variables
-           css-enable-lsp t
-           less-enable-lsp t
-           scss-enable-lsp t
-           html-enable-lsp t)
+     html
      (javascript :variables
                  javascript-backend 'lsp)
      markdown

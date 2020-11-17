@@ -720,11 +720,6 @@
         (when service
           (prodigy-start-service service))))))
 
-(leaf persistent-scratch
-  :config
-  (set-variable 'persistent-scratch-save-file (expand-file-name "scratch" e:private-directory))
-  (persistent-scratch-setup-default))
-
 (leaf persp-mode
   :defer-config
   (set-variable 'persp-kill-foreign-buffer-behaviour nil))

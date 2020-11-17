@@ -579,7 +579,7 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; +spacemacs/spacemacs-completion
   (set-variable 'helm-use-fuzzy nil)
   ;; その他、先に設定しておきたいもの
-  (set-variable 'custom-file (expand-file-name "custom.el" e:private-directory))
+  (set-variable 'custom-file null-device)
   (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" e:private-directory))
   (set-variable 'viper-mode nil)
   (set-variable 'which-key-enable-extended-define-key t)

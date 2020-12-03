@@ -141,6 +141,8 @@ This function should only modify configuration layer settings."
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages
    '(
+     ;; +spacemacs/spacemacs-editing
+     dired-quick-sort
      ;; +spacemacs/spacemacs-evil
      evil-escape
      ;; +checkers/syntax-checking

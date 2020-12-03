@@ -160,8 +160,8 @@
       (setq file-name (propertize file-name 'font-lock-face 'ls-lisp-extension-dired-modes-x-face))))
     (if (stringp file-type)
         (setf (nth 0 file-attr) (propertize (f-short file-type) 'font-lock-face 'ls-lisp-extension-dired-symlink-face)))
-    (setf (nth 2 file-attr) (propertize file-uid 'font-lock-face 'ls-lisp-extension-dired-uid-face))
-    (setf (nth 3 file-attr) (propertize file-gid 'font-lock-face 'ls-lisp-extension-dired-gid-face))
+    (setf (nth 2 file-attr) (propertize (format "%s" file-uid) 'font-lock-face 'ls-lisp-extension-dired-uid-face))
+    (setf (nth 3 file-attr) (propertize (format "%s" file-gid) 'font-lock-face 'ls-lisp-extension-dired-gid-face))
     (setf (nth 8 file-attr) (mapconcat (lambda (c)
                                          (case c
                                            (?d (propertize "d" 'font-lock-face 'ls-lisp-extension-dired-modes-d-face))

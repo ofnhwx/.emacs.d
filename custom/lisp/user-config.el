@@ -810,7 +810,6 @@
     (vterm-send-string "exec tmux new -A -s emacs")
     (vterm-send-return))
   (set-variable 'vterm-max-scrollback 20000)
-  (set-face-attribute 'vterm-color-default nil :foreground "#839496" :background "#002b36")
   (set-face-attribute 'vterm-color-black   nil :foreground "#073642" :background "#002b36")
   (set-face-attribute 'vterm-color-red     nil :foreground "#dc322f" :background "#cb4b16")
   (set-face-attribute 'vterm-color-green   nil :foreground "#859900" :background "#586e75")

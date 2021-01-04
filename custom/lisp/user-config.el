@@ -987,7 +987,8 @@
     (e:place-in-cache lsp-server-install-dir "lsp/server")
     (e:place-in-cache lsp-session-file "lsp/session.v1")
     (e:place-in-cache lsp-intelephense-storage-path "lsp/cache")
-    (set-variable 'lsp-file-watch-threshold 100000))
+    (set-variable 'lsp-file-watch-threshold 100000)
+    (set-variable 'lsp-headerline-breadcrumb-enable nil))
   (leaf lsp-completion-config
     :after lsp-mode
     :config

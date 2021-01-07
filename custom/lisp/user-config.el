@@ -633,7 +633,7 @@
                   '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
                     (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
     (set-variable 'org-startup-indented t)
-    (set-variable 'org-startup-folded 'content)
+    (set-variable 'org-startup-folded t)
     (set-variable 'org-indent-mode-turns-on-hiding-stars nil)
     (set-variable 'org-indent-indentation-per-level 2)
     (set-variable 'org-edit-src-content-indentation 0)

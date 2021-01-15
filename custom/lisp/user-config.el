@@ -758,7 +758,8 @@
                  (-map 'f-short)
                  (-distinct)
                  (--filter (or (file-remote-p it)
-                               (f-exists? it))))))))
+                               (f-exists? it)
+                               (s-equals? it null-device))))))))
 
 (leaf *tramp
   :config

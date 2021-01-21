@@ -2,8 +2,9 @@
 ;;; Commentary:
 ;;; Code:
 
-(let ((dir (file-name-directory (or load-file-name buffer-file-name))))
-  (load (expand-file-name "external/spacemacs/early-init" dir)))
+(let* ((current-dir (file-name-directory (or load-file-name buffer-file-name)))
+       (user-emacs-directory (expand-file-name "external/spacemacs/" current-dir)))
+  (load (expand-file-name "early-init" user-emacs-directory)))
 
 (menu-bar-mode -1)
 (tool-bar-mode -1)

@@ -113,7 +113,7 @@
         company-php
         ))
 
-(defun custom-user-init ()
+(progn
   ;; +distributions/spacemacs-bootstrap
   (set-variable 'vim-style-remap-Y-to-y$ t)
   ;; +spacemacs/spacemacs-completion

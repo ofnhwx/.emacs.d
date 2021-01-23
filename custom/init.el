@@ -2,8 +2,6 @@
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
-(load (expand-file-name "init-custom" e:custom-directory))
-
 (defun dotspacemacs/layers ()
   "Layer configuration:
 This function should only modify configuration layer settings."
@@ -479,7 +477,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (custom-user-init))
+  (load (expand-file-name "lisp/user-init" e:custom-directory)))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.

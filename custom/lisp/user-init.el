@@ -21,6 +21,7 @@
         ;; +frameworks
         react
         ruby-on-rails
+        vue
         ;; +fun
         emoji
         ;; +intl

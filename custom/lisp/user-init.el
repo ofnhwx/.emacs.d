@@ -64,6 +64,7 @@
         prodigy
         restclient
         (shell :variables
+               shell-default-position 'full
                shell-default-height 60
                shell-default-shell 'vterm)
         vagrant

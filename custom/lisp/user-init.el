@@ -44,6 +44,7 @@
               ruby-highlight-debugger-keywords t)
         shell-scripts
         sql
+        typescript
         vimscript
         yaml
         ;; +misc

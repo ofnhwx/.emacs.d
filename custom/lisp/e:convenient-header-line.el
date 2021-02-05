@@ -1,6 +1,39 @@
 
-(eval-and-compile
-  (require 'e:convenient-features))
+(defvar e:project-root-mark '(".git/" ".hg/" ".svn/" ".git")
+  "プロジェクトルートの判定に使用するファイル名の一覧.")
+
+(defun e:project-root (filename)
+  "指定した FILENAME のプロジェクトルートを返す."
+  (let ((dirname (file-name-directory (f-expand filename))))
+    (->> e:project-root-mark
+         (--map (locate-dominating-file dirname it))
+         (--max-by (> (length it) (length other))))))
+
+(defun e:project-name (root)
+  "指定した ROOT のプロジェクトの名前をいい感じに返す."
+  (let* ((root (directory-file-name root))
+         (name (file-name-nondirectory root))
+         (parent (e:project-root root)))
+    (if parent
+        (s-concat (e:project-name parent) "/" name)
+      name)))
+
+(defun e:major-mode (&optional buffer)
+  "指定した BUFFER のメジャーモードを取得する."
+  (buffer-local-value 'major-mode (or buffer (current-buffer))))
+
+(defun e:current-buffer-file-name ()
+  "現在のバッファーの名前をいい感じに取得する"
+  (or buffer-file-name
+      (bound-and-true-p magit-buffer-file-name)))
+
+(defun e:current-buffer-refname ()
+  "現在のバッファーの refname をいい感じに取得する"
+  (let* ((path   (e:current-buffer-file-name))
+         (remote (ignore-errors (file-remote-p path))))
+    (or (and remote (string-trim-right remote ":"))
+        (and vc-mode (s-trim (kllib:unpropertize vc-mode)))
+        (bound-and-true-p magit-buffer-refname))))
 
 
 

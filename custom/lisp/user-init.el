@@ -1,3 +1,4 @@
+;;; user-init.el
 
 (defvar custom-configuration-layers nil)
 (setq custom-configuration-layers
@@ -35,8 +36,7 @@
         markdown
         (php :variables
              php-backend 'lsp)
-        (python :variables
-                python-backend 'lsp)
+        python
         (ruby :variables
               ruby-backend 'lsp
               ruby-enable-enh-ruby-mode nil
@@ -75,8 +75,11 @@
 (defvar custom-additional-packages nil)
 (setq custom-additional-packages
       '(
-        (helm-fzf     :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
-        (locale-eaw   :location (recipe :fetcher github :repo "hamano/locale-eaw"))
+        (command-logger       :location (recipe :fetcher github :repo "ofnhwx/command-logger"))
+        (helm-fzf             :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
+        (komunan-lisp-library :location (recipe :fetcher github :repo "ofnhwx/komunan-lisp-library"))
+        (ls-lisp-extension    :location (recipe :fetcher github :repo "ofnhwx/ls-lisp-extension"))
+        (locale-eaw           :location (recipe :fetcher github :repo "hamano/locale-eaw"))
         atomic-chrome
         codic
         company-tabnine
@@ -89,10 +92,8 @@
         evil-owl
         foreman-mode
         grugru
-        helm-tramp
         helpful
         leaf
-        leaf-tree
         magit-libgit
         ox-reveal
         psysh
@@ -136,3 +137,7 @@
     (define-advice yas-reload-all (:around (fn &rest args) only-custom-snippets)
       (when (equal yas-snippet-dirs e:yas-snippet-dirs)
         (funcall fn args)))))
+
+(provide 'user-init.el)
+
+;;; user-init.el ends here

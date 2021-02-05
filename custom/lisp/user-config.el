@@ -1,28 +1,41 @@
+;;; user-config.el
 
 (eval-and-compile
-  (require 'leaf))
+  (require 'leaf)
+  (require 'komunan-lisp-library)
+  (require 'user-macro))
 
 
 
-(leaf e:convenient-features
-  :require t
+(leaf command-logger
   :config
-  (spacemacs/set-leader-keys "tT" #'e:toggle-indent-tabs-mode))
-
-(leaf e:logging-command
-  :require t
-  :config
-  (e:logging-command-on))
+  (command-logger-on))
 
 (leaf e:convenient-header-line
   :require t
   :config
   (e:convenient-header-line-start))
 
-(leaf e:auto-reset-mode-line-color
-  :require t
-  :config
-  (e:auto-reset-mode-line-color-on))
+
+
+(defun e:auth-source-get (property &rest spec)
+  "認証情報から SPEC に一致する項目の PROPERTY を取得する."
+  (let ((plist (car (apply 'auth-source-search spec)))
+        (pkey (intern (format ":%s" property))))
+    (when plist
+      (plist-get plist pkey))))
+
+(defun e:remove-nth (n list)
+  "N 番目の要素を LIST から取り除いて返す."
+  (if (or (zerop n) (null list))
+      (cdr list)
+    (cons (car list) (e:remove-nth (1- n) (cdr list)))))
+
+(defun e:toggle-indent-tabs-mode ()
+  "インデントモードをタブ/空白で切替える."
+  (interactive)
+  (setq indent-tabs-mode (not indent-tabs-mode))
+  (message "indent-tabs-mode: %s" indent-tabs-mode))
 
 
 
@@ -45,25 +58,22 @@
     (setenv "LC_ALL" value)))
 
 (leaf appearance
+  :doc "モードラインに不要な表示をしない"
   :config
-  (leaf mode-line
-    :doc "不要な表示をしない"
-    :config
-    (spacemacs/defer-until-after-user-config #'spacemacs/toggle-mode-line-version-control-off)
-    (set-variable 'spaceline-line-column-p nil)
-    (set-variable 'spaceline-selection-info-p nil)
-    :doc "ファイルエンコーディングの表示を改善"
-    :config
-    (spaceline-define-segment buffer-encoding-abbrev
-      "The line ending convention used in the buffer."
-      (let ((buf-coding (format "%s" buffer-file-coding-system)))
-        (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
-              (concat (and (string-match "with-signature" buf-coding) "ⓑ")
-                      (and (string-match "unix"           buf-coding) "ⓤ")
-                      (and (string-match "dos"            buf-coding) "ⓓ")
-                      (and (string-match "mac"            buf-coding) "ⓜ")
-                      )))
-      :separator " ")))
+  (spacemacs/defer-until-after-user-config #'spacemacs/toggle-mode-line-version-control-off)
+  (set-variable 'spaceline-selection-info-p nil)
+  :doc "モードラインのファイルエンコーディングの表示を改善"
+  :config
+  (spaceline-define-segment buffer-encoding-abbrev
+    "The line ending convention used in the buffer."
+    (let ((buf-coding (format "%s" buffer-file-coding-system)))
+      (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
+            (concat (and (string-match "with-signature" buf-coding) "ⓑ")
+                    (and (string-match "unix"           buf-coding) "ⓤ")
+                    (and (string-match "dos"            buf-coding) "ⓓ")
+                    (and (string-match "mac"            buf-coding) "ⓜ")
+                    )))
+    :separator " "))
 
 (leaf general
   :doc "エイリアス"
@@ -75,7 +85,8 @@
   (spacemacs/set-leader-keys
     "%" 'query-replace
     "&" 'async-shell-command
-    "^" 'ace-window)
+    "^" 'ace-window
+    "tT" #'e:toggle-indent-tabs-mode)
   (bind-keys*
    :map global-map
    ("C-;" . spacemacs/default-pop-shell)
@@ -141,7 +152,7 @@
   :doc "WSLの情報を表示"
   :config
   (when (executable-find "uname")
-    (let ((uname (e:shell-command-to-string "uname -a")))
+    (let ((uname (kllib:shell-command-to-string "uname -a")))
       (cond
        ((s-index-of "microsoft-standard" uname)
         (set-variable 'dotspacemacs-frame-title-format "(WSL2) %I@%S"))
@@ -211,32 +222,22 @@
         (setq-local company-backends (-concat (list backends) default))))
     :defer-config
     (spacemacs|diminish company-mode))
+  :config
   (leaf company-box
-    :after company
     :defer-config
     (spacemacs|diminish company-box-mode))
-  (leaf company-statistics
-    :after company
-    :commands (company-sort-by-statistics)
-    :config
-    (set-variable 'company-transformers
-                  '(spacemacs//company-transformer-cancel
-                    company-sort-by-statistics
-                    company-sort-by-backend-importance)))
+  :config
   (leaf company-tabnine
     :after company
     :require t
     :config
     (e:place-in-cache company-tabnine-binaries-folder "tabnine"))
+  :config
   (leaf company-try-hard
     :bind (("C-z" . company-try-hard)
            (:company-active-map
             :package company
             ("C-z" . company-try-hard)))))
-
-(leaf dap-mode
-  :defer-config
-  (e:place-in-cache dap-breakpoints-file "dap/breakpoints"))
 
 (leaf *dired
   :config
@@ -252,7 +253,7 @@
   (leaf dired-filter
     :hook (dired-mode-hook . dired-filter-mode))
   (leaf image-dired
-    :init
+    :defer-config
     (e:place-in-cache image-dired-dir "dired/images"))
   (leaf ls-lisp
     :after dired
@@ -266,19 +267,18 @@
     (set-variable 'ls-lisp-verbosity '(uid gid)))
   (leaf ls-lisp-extension
     :after ls-lisp
-    :require t))
+    :config
+    (ls-lisp-extension-on)))
 
 (leaf display-line-numbers
   :hook ((find-file-hook . e:display-line-numbers-mode-on)
          (prog-mode-hook . e:display-line-numbers-mode-on)
          (html-mode-hook . e:display-line-numbers-mode-on))
   :config
-  (setq-default display-line-numbers-width 4)
-  (e:define-on/off-function display-line-numbers-mode))
-
-(leaf drupal-mode
-  :defer-config
-  (spacemacs|diminish drupal-mode ""))
+  (defun e:display-line-numbers-mode-on ()
+    (interactive)
+    (display-line-numbers-mode 1))
+  (setq-default display-line-numbers-width 4))
 
 (leaf eaw
   :require t
@@ -341,7 +341,18 @@
     (set-variable 'evil-cross-lines t)
     (set-variable 'evil-disable-insert-state-bindings t)
     (set-variable 'evil-move-beyond-eol t)
-    (set-variable 'evil-move-cursor-back nil))
+    (set-variable 'evil-move-cursor-back nil)
+    :doc "保存時等にノーマルステートに戻す"
+    :advice
+    (:after  save-buffer   e:evil-force-normal-state)
+    (:before keyboard-quit e:evil-force-normal-state)
+    :config
+    (defun e:evil-force-normal-state (&rest _)
+      (cond
+       ((eq evil-state 'visual)
+        (evil-exit-visual-state))
+       ((member evil-state '(insert hybrid))
+        (evil-force-normal-state)))))
   (leaf evil-easymotion
     :config
     (leaf e:evil-em-command
@@ -387,18 +398,7 @@
   (leaf evil-owl
     :config
     (evil-owl-mode 1)
-    (spacemacs|diminish evil-owl-mode))
-  (leaf 保存時等にノーマルステートに戻す
-    :advice
-    (:after  save-buffer   e:evil-force-normal-state)
-    (:before keyboard-quit e:evil-force-normal-state)
-    :config
-    (defun e:evil-force-normal-state (&rest _)
-      (cond
-       ((eq evil-state 'visual)
-        (evil-exit-visual-state))
-       ((member evil-state '(insert hybrid))
-        (evil-force-normal-state))))))
+    (spacemacs|diminish evil-owl-mode)))
 
 (leaf flyspell
   :bind (:flyspell-mode-map
@@ -422,20 +422,12 @@
   :defer-config
   (spacemacs|diminish ggtags-navigation-mode))
 
-(leaf *git-gutter
-  :config
-  (leaf git-gutter
-    :defer-config
-    (dolist (face '(git-gutter:added
-                    git-gutter:deleted
-                    git-gutter:modified))
-      (set-face-attribute face nil :background (face-attribute face :foreground))))
-  (leaf git-gutter+
-    :defer-config
-    (dolist (face '(git-gutter+-added
-                    git-gutter+-deleted
-                    git-gutter+-modified))
-      (set-face-attribute face nil :background (face-attribute face :foreground)))))
+(leaf git-gutter+
+  :defer-config
+  (dolist (face '(git-gutter+-added
+                  git-gutter+-deleted
+                  git-gutter+-modified))
+    (set-face-attribute face nil :background (face-attribute face :foreground))))
 
 (leaf google-translate-default-ui
   :defer-config
@@ -444,17 +436,7 @@
 
 (leaf grugru
   :config
-  (spacemacs/set-leader-keys "xx" #'grugru)
-  :defer-config
-  (grugru-define-multiple
-   (ruby-mode
-    (symbol "have_button" "have_no_button")
-    (symbol "have_content" "have_no_content")
-    (symbol "have_link" "have_no_link")
-    (symbol "if" "unless")
-    (symbol "let" "let!")
-    (symbol "to" "not_to")
-    (symbol "true" "false"))))
+  (spacemacs/set-leader-keys "xx" #'grugru))
 
 (leaf *helm
   :config
@@ -476,30 +458,7 @@
     :require t
     :config
     (helm-migemo-mode)
-    (spacemacs|diminish helm-migemo-mode))
-  (leaf helm-tramp
-    :config
-    (leaf helm-tramp-advice
-      :after helm-tramp
-      :require tramp
-      :doc "ssh の設定ファイルから候補を追加"
-      :config
-      (eval-when-compile (require 'helm-tramp))
-      (define-advice helm-tramp--candidates (:filter-return (result) add-candidates-from-ssh-config)
-        (let ((items (->> (tramp-get-completion-function "ssh")
-                          (-map #'eval)
-                          (-flatten)
-                          (--filter (not (string-equal it tramp-default-host)))
-                          (--map (list (format "/%s:%s:" tramp-default-method it)
-                                       (format "/ssh:%s|sudo:%s:/" it it)))
-                          (-flatten))))
-          (-distinct (-union result items))))))
-  (leaf helm-insert-git-log
-    :after helm
-    :commands (helm-insert-git-log)
-    :init
-    (spacemacs/set-leader-keys
-      "igl" 'helm-insert-git-log)))
+    (spacemacs|diminish helm-migemo-mode)))
 
 (leaf helpful
   :config
@@ -514,12 +473,18 @@
     "hdds" 'helpful-symbol
     "hddv" 'helpful-variable))
 
-(leaf *leaf
+(leaf highlight-indentation
+  :hook ((haml-mode-hook . e:setup-highlight-indentation-mode)
+         (yaml-mode-hook . e:setup-highlight-indentation-mode))
   :config
-  (leaf leaf-tree
-    :config
-    (set-variable 'imenu-list-size 40)
-    (set-variable 'imenu-list-position 'left)))
+  (spacemacs|diminish highlight-indentation-mode)
+  (spacemacs|diminish highlight-indentation-current-column-mode)
+  (set-face-attribute 'highlight-indentation-face nil :background "#404040")
+  (set-face-attribute 'highlight-indentation-current-column-face nil :background "#408040")
+  (defun e:setup-highlight-indentation-mode ()
+    (highlight-indentation-mode 1)
+    (highlight-indentation-current-column-mode 1)
+    (highlight-indentation-set-offset 2)))
 
 (leaf *magit
   :init
@@ -535,7 +500,7 @@
     (magit-add-section-hook 'magit-status-sections-hook #'magit-insert-skip-worktree-files nil t)
     (when (executable-find "ghq")
       (set-variable 'magit-repository-directories
-                    (->> (e:shell-command-to-list "ghq root --all")
+                    (->> (kllib:shell-command-to-list "ghq root --all")
                          (--map (cons it 4)))))
     (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
   (leaf magit-delta
@@ -551,14 +516,14 @@
   (remove-hook 'markdown-mode-hook #'orgtbl-mode))
 
 (leaf notmuch
+  :defun (notmuch-bury-or-kill-this-buffer@kill-layout)
   :defer-config
-  (eval-and-compile
-    (define-advice notmuch-bury-or-kill-this-buffer (:around (fn) kill-layout)
-      (let ((kill (eq (e:major-mode) 'notmuch-hello-mode)))
-        (prog1
-            (funcall fn)
-          (if kill
-              (persp-kill notmuch-spacemacs-layout-name))))))
+  (define-advice notmuch-bury-or-kill-this-buffer (:around (fn) kill-layout)
+    (let ((kill (derived-mode-p 'notmuch-hello-mode)))
+      (prog1
+          (funcall fn)
+        (if kill
+            (persp-kill notmuch-spacemacs-layout-name)))))
   (set-variable 'notmuch-archive-tags '("-inbox" "-unread"))
   (set-variable 'notmuch-message-deleted-tags '("+trash" "-inbox"))
   (set-variable 'notmuch-column-control 1.0)
@@ -594,26 +559,6 @@
                   (:name "迷惑メール" :query "tag:spam")))
   (setenv "XAPIAN_CJK_NGRAM" "1"))
 
-(leaf open-by-jetbrains-ide
-  :config
-  (when (spacemacs/system-is-mac)
-    (set-variable 'jetbrains/use-toolbox-mode t)
-    (set-variable 'jetbrains/ide-pstorm "phpstorm")
-    (set-variable 'jetbrains/ide-mine   "rubymine"))
-  (spacemacs/declare-prefix "aj" "jetbrains")
-  (spacemacs/set-leader-keys
-    "ajA" '("AppCode" . jetbrains/open-by-appcode)
-    "ajC" '("CLion" . jetbrains/open-by-clion)
-    "ajR" '("Rider" . jetbrains/open-by-rider)
-    "ajc" '("PyCharm" . jetbrains/open-by-charm)
-    "ajg" '("GoLand" . jetbrains/open-by-goland)
-    "aji" '("IntelliJ IDEA" . jetbrains/open-by-idea)
-    "ajj" '("Default" . jetbrains/open-by-ide)
-    "ajm" '("RubyMine" . jetbrains/open-by-mine)
-    "ajp" '("PhpStorm" . jetbrains/open-by-pstorm)
-    "ajs" '("Android Studio" . jetbrains/open-by-studio)
-    "ajw" '("WebStorm" . jetbrains/open-by-wstorm)))
-
 (leaf open-junk-file
   :defer-config
   (set-variable 'open-junk-file-format (expand-file-name "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))
@@ -621,8 +566,8 @@
 (leaf *org
   :config
   (leaf org
+    :defvar (org-agenda-file-regexp org-babel-load-languages)
     :defer-config
-    (eval-when-compile (require 'org))
     (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
     (when (f-directory? org-directory)
       (set-variable 'org-default-notes-file (expand-file-name "index.org" org-directory))
@@ -670,8 +615,7 @@
     (set-variable 'skk-show-annotation t)
     (set-variable 'skk-show-inline 'vertical)
     (set-variable 'skk-sticky-key ";")
-    (set-variable 'skk-use-jisx0201-input-method t))
-  (leaf e:skk-mode
+    (set-variable 'skk-use-jisx0201-input-method t)
     :config
     (defun e:skk-mode ()
       "skk の有効化で半角英数入力にする"
@@ -681,7 +625,17 @@
             (skk-latin-mode-on)
           (let ((skk-mode-hook (-union skk-mode-hook '(skk-latin-mode-on))))
             (skk-mode))))))
-  (leaf e:prodigy:google-ime-skk
+  (leaf google-ime-skk
+    :if (executable-find "google-ime-skk")
+    :require prodigy
+    :commands (e:prodigy:google-ime-skk)
+    :doc "設定"
+    :config
+    (set-variable 'skk-server-prog (executable-find "google-ime-skk"))
+    (set-variable 'skk-server-inhibit-startup-server t)
+    (set-variable 'skk-server-host "127.0.0.1")
+    (set-variable 'skk-server-portnum 55100)
+    :doc "起動"
     :config
     (defun e:prodigy:google-ime-skk ()
       (interactive)
@@ -692,18 +646,7 @@
             :command "google-ime-skk"
             :tags '(general)
             :kill-signal 'sigkill))
-        (e:prodigy-start-service service))))
-  (leaf google-ime-skk
-    :if (executable-find "google-ime-skk")
-    :require prodigy
-    :doc "設定"
-    :config
-    (set-variable 'skk-server-prog (executable-find "google-ime-skk"))
-    (set-variable 'skk-server-inhibit-startup-server t)
-    (set-variable 'skk-server-host "127.0.0.1")
-    (set-variable 'skk-server-portnum 55100)
-    :doc "起動"
-    :config
+        (e:prodigy-start-service service)))
     (spacemacs/defer-until-after-user-config  #'e:prodigy:google-ime-skk)))
 
 (leaf paradox-github
@@ -761,35 +704,31 @@
                                (f-exists? it)
                                (s-equals? it null-device))))))))
 
-(leaf *tramp
+(leaf tramp
+  :require t
   :config
-  (leaf tramp
-    :require t
-    :config
-    (set-variable 'tramp-default-host "localhost"))
-  (leaf tramp-sh
-    :doc "ssh/conf.d の中身から接続先を追加"
-    :if (f-exists? "~/.ssh/conf.d/hosts")
-    :config
-    (let ((functions (->> (ignore-errors (f-files "~/.ssh/conf.d/hosts" nil t))
-                          (--map (list #'tramp-parse-sconfig it)))))
-      (--each '("ssh" "scp")
-        (let ((new-functions (-union (tramp-get-completion-function it) functions)))
-          (tramp-set-completion-function it new-functions))))))
+  (set-variable 'tramp-default-host "localhost")
+  :doc "ssh/conf.d の中身から接続先を追加"
+  :if (f-exists? "~/.ssh/conf.d/hosts")
+  :config
+  (let ((functions (->> (ignore-errors (f-files "~/.ssh/conf.d/hosts" nil t))
+                        (--map (list #'tramp-parse-sconfig it)))))
+    (--each '("ssh" "scp")
+      (let ((new-functions (-union (tramp-get-completion-function it) functions)))
+        (tramp-set-completion-function it new-functions)))))
 
 (leaf treemacs
   :defer-config
   (e:place-in-cache treemacs-persist-file "treemacs/persist")
   (e:place-in-cache treemacs-last-error-persist-file "treemacs/persist-at-last-error"))
 
-(leaf *url
-  :config
-  (leaf url-cache
-    :defer-config
-    (e:place-in-cache url-cache-directory "url/cache"))
-  (leaf url-cookie
-    :defer-config
-    (e:place-in-cache url-cookie-file "url/cookies")))
+(leaf url-cache
+  :defer-config
+  (e:place-in-cache url-cache-directory "url/cache"))
+
+(leaf url-cookie
+  :defer-config
+  (e:place-in-cache url-cookie-file "url/cookies"))
 
 (leaf visual-regexp
   :bind (([remap query-replace] . vr/query-replace)))
@@ -806,10 +745,11 @@
   (defun e:vterm-input-something ()
     (interactive)
     (let ((input (read-string "input: ")))
-      (vterm-send-string input)))
+      (with-no-warnings (vterm-send-string input))))
   (defun e:vterm-auto-tmux ()
-    (vterm-send-string "exec tmux new -A -s emacs")
-    (vterm-send-return))
+    (with-no-warnings
+      (vterm-send-string "exec tmux new -A -s emacs")
+      (vterm-send-return)))
   (set-variable 'vterm-max-scrollback 20000)
   (set-face-attribute 'vterm-color-black   nil :foreground "#073642" :background "#002b36")
   (set-face-attribute 'vterm-color-red     nil :foreground "#dc322f" :background "#cb4b16")
@@ -825,9 +765,12 @@
   (spacemacs|diminish which-key-mode))
 
 (leaf whitespace
-  :hook ((find-file-hook prog-mode-hook) . e:whitespace-mode-on)
+  :hook ((find-file-hook prog-mode-hook) . whitespace-mode-on)
   :defer-config
   (spacemacs|diminish whitespace-mode)
+  (defun whitespace-mode-on ()
+    (interactive)
+    (whitespace-mode 1))
   (set-variable 'whitespace-style
                 '(face
                   trailing
@@ -846,8 +789,7 @@
   (let ((color "#595D63"))
     (set-face-attribute 'whitespace-tab      nil :foreground color :strike-through t)
     (set-face-attribute 'whitespace-space    nil :foreground color)
-    (set-face-attribute 'whitespace-newline  nil :foreground color))
-  (e:define-on/off-function whitespace-mode))
+    (set-face-attribute 'whitespace-newline  nil :foreground color)))
 
 (leaf yasnippet
   :defer-config
@@ -857,201 +799,13 @@
 
 
 
-(leaf *php
-  :config
-  (leaf php-mode
-    :hook (php-mode-hook . e:setup-php-mode)
-    :config
-    (defun e:setup-php-mode ()
-      (add-to-list 'flycheck-disabled-checkers 'php-phpmd)
-      (subword-mode 1)))
-  (leaf drupal-mode
-    :hook (drupal-mode-hook . e:setup-drupal-mode)
-    :config
-    (defun e:setup-drupal-mode ()
-      (let* ((project-root (ignore-errors (e:project-root buffer-file-name)))
-             (eslint (f-expand "web/core/node_modules/.bin/eslint" project-root)))
-        (when (and project-root
-                   (f-exists? project-root)
-                   (f-exists? eslint))
-          (setq-local flycheck-javascript-eslint-executable eslint)))))
-  (leaf drupal/phpcs
-    :defer-config
-    (set-variable 'drupal/phpcs-standard "Drupal,DrupalPractice")))
-
-(leaf *ruby
-  :config
-  (leaf ruby-mode
-    :hook ((enh-ruby-mode-hook ruby-mode-hook) . e:setup-flycheck-rubocop)
-    :defer-config
-    (set-variable 'ruby-insert-encoding-magic-comment nil)
-    (defun e:setup-flycheck-rubocop ()
-      (when (zerop (call-process-shell-command "bundle info rubocop"))
-        (setq-local flycheck-command-wrapper-function
-                    (lambda (command)
-                      (append '("bundle" "exec") command))))))
-  (leaf ruby-refactor
-    :defer-config
-    (spacemacs|diminish ruby-refactor-mode))
-  (leaf ruby-tools
-    :bind (:ruby-tools-mode-map
-           ("C-;" . nil)))
-  (leaf robe
-    :hook (enh-ruby-mode-hook ruby-mode-hook)
-    :commands (robe-start robe-ask robe-doc robe-jump robe-jump-to-module robe-rails-refresh)
-    :config
-    (spacemacs|diminish robe-mode)
-    (--each '(enh-ruby-mode ruby-mode)
-      (spacemacs/declare-prefix-for-mode it "mr" "refactor/robe")
-      (spacemacs/declare-prefix-for-mode it "mrs" "robe")
-      (spacemacs/set-leader-keys-for-major-mode it
-        "rs'" #'robe-start
-        "rsa" #'robe-ask
-        "rsd" #'robe-doc
-        "rsj" #'robe-jump
-        "rsm" #'robe-jump-to-module
-        "rsr" #'robe-rails-refresh)))
-  (leaf rubocop
-    :defer-config
-    (spacemacs|diminish rubocop-mode)
-    (--each '(enh-ruby-mode ruby-mode)
-      (spacemacs/set-leader-keys-for-major-mode it
-        "RF" 'rubocop-autocorrect-current-file)))
-  (leaf rubocopfmt
-    :config
-    (--each '(enh-ruby-mode ruby-mode)
-      (spacemacs/set-leader-keys-for-major-mode it
-        "==" 'rubocopfmt))
-    :defer-config
-    (set-variable 'rubocopfmt-use-bundler-when-possible t))
-  (leaf lsp-solargraph
-    :defer-config
-    (eval-when-compile
-      (defvar lsp-solargraph-library-directories nil))
-    (let ((dirs (-filter #'f-exists? lsp-solargraph-library-directories))
-          (rbenv-root (getenv "RBENV_ROOT")))
-      (and rbenv-root
-           (f-exists? rbenv-root)
-           (pushnew (f-slash (f-short rbenv-root)) dirs))
-      (set-variable 'lsp-solargraph-library-directories dirs))))
-
-(leaf haml-mode
-  :hook (haml-mode-hook . e:setup-haml-mode)
-  :config
-  (defun e:setup-haml-mode ()
-    (e:setup-company-backends 'company-tabnine)
-    (company-mode-on))
-  (leaf haml-lint
-    :config
-    (flycheck-def-config-file-var flycheck-haml-lintrc haml-lint ".haml-lint.yml" :safe #'stringp)
-    (flycheck-define-checker haml-lint
-      "A haml-lint syntax checker"
-      :command ("bundle" "exec" "haml-lint"
-                (config-file "--config" flycheck-haml-lintrc)
-                source-inplace)
-      :error-patterns
-      ((error   line-start (file-name) ":" line " [E] "  (message) line-end)
-       (warning line-start (file-name) ":" line " [W] "  (message) line-end))
-      :modes (haml-mode))
-    (add-to-list 'flycheck-checkers 'haml-lint)
-    (flycheck-add-next-checker 'haml 'haml-lint)))
-
-(leaf highlight-indentation
-  :hook ((haml-mode-hook . e:setup-highlight-indentation-mode)
-         (yaml-mode-hook . e:setup-highlight-indentation-mode))
-  :config
-  (spacemacs|diminish highlight-indentation-mode)
-  (spacemacs|diminish highlight-indentation-current-column-mode)
-  (set-face-attribute 'highlight-indentation-face nil :background "#404040")
-  (set-face-attribute 'highlight-indentation-current-column-face nil :background "#408040")
-  (defun e:setup-highlight-indentation-mode ()
-    (highlight-indentation-mode 1)
-    (highlight-indentation-current-column-mode 1)
-    (highlight-indentation-set-offset 2)))
-
-(leaf js2-mode
-  :defer-config
-  (set-face-attribute 'js2-external-variable nil :foreground "#ff0000" :underline t)
-  (defun e:eslint-fix ()
-    (interactive)
-    (let ((eslint (or flycheck-javascript-eslint-executable
-                      (executable-find "eslint"))))
-      (when eslint
-        (call-process eslint nil nil nil buffer-file-name "--fix")))))
+(require 'user-config-lsp)
+(require 'user-config-js)
+(require 'user-config-php)
+(require 'user-config-ruby)
 
 
 
-(leaf *lsp
-  :config
-  (leaf lsp-mode
-    :defer-config
-    (e:place-in-cache lsp-server-install-dir "lsp/server")
-    (e:place-in-cache lsp-session-file "lsp/session.v1")
-    (e:place-in-cache lsp-intelephense-storage-path "lsp/cache")
-    (set-variable 'lsp-file-watch-threshold 100000)
-    (set-variable 'lsp-headerline-breadcrumb-enable nil))
-  (leaf lsp-completion-config
-    :after lsp-mode
-    :config
-    (eval-and-compile
-      (defun e:setup-lsp-completion-config ()
-        (when (bound-and-true-p lsp-completion-mode)
-          (case major-mode
-            ;; for Ruby
-            ((enh-ruby-mode ruby-mode)
-             (e:setup-company-backends '(company-capf company-robe :with company-tabnine)))
-            ;; for PHP
-            ((php-mode)
-             (e:setup-company-backends '(company-capf :with company-tabnine)))))))
-    (add-hook 'lsp-completion-mode-hook #'e:setup-lsp-completion-config))
-  (leaf lsp-diagnostics-config
-    :after lsp-mode
-    :config
-    (eval-and-compile
-      (defun e:setup-lsp-diagnostics-config ()
-        (when (bound-and-true-p lsp-diagnostics-mode)
-          (case major-mode
-            ;; for Ruby
-            ((enh-ruby-mode ruby-mode)
-             (when (flycheck-may-enable-checker 'ruby-rubocop)
-               (flycheck-select-checker 'ruby-rubocop)))
-            ;; for PHP
-            ((php-mode)
-             (when (flycheck-may-enable-checker 'php)
-               (flycheck-select-checker 'php)))
-            ;; for JS
-            ((js2-mode)
-             (when (flycheck-may-enable-checker 'javascript-eslint)
-               (flycheck-select-checker 'javascript-eslint)))))))
-    (add-hook 'lsp-diagnostics-mode-hook #'e:setup-lsp-diagnostics-config))
-  (leaf lsp-ui-doc
-    :defer-config
-    (with-no-warnings
-      (defvar-local e:lsp-ui-doc-mode-enabled nil)
-      (defun e:lsp-ui-doc-mode-temporary-disable (&rest _)
-        (setq e:lsp-ui-doc-mode-enabled lsp-ui-doc-mode)
-        (lsp-ui-doc-mode 0))
-      (defun e:lsp-ui-doc-mode-restore (&rest _)
-        (when e:lsp-ui-doc-mode-enabled
-          (lsp-ui-doc-mode 1)))
-      (add-hook 'company-completion-started-hook   #'e:lsp-ui-doc-mode-temporary-disable)
-      (add-hook 'company-completion-finished-hook  #'e:lsp-ui-doc-mode-restore)
-      (add-hook 'company-completion-cancelled-hook #'e:lsp-ui-doc-mode-restore))
-    (set-variable 'lsp-ui-doc-position 'at-point)
-    (set-variable 'lsp-ui-doc-delay 2.0)))
+(provide 'user-config)
 
-(leaf *dap
-  :config
-  (leaf dap-mode
-    :defer-config
-    (e:place-in-cache dap-utils-extension-path "dap/extensions"))
-  (leaf dap-php
-    :commands (dap-register-debug-template)
-    :defer-config
-    (dap-register-debug-template
-     "Remote Xdebug"
-     (list :name "Remote Xdebug"
-           :type "php"
-           :request "launch"
-           :port 9000
-           :pathMappings (list :/var/www/html "${workspaceFolder}")))))
+;;; user-config.el ends here

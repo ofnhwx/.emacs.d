@@ -36,14 +36,14 @@
          ("C-;" . nil)))
 
 (leaf robe
-  :hook ruby-mode-hook
+  :hook (ruby-mode-hook . robe-mode)
   :commands (robe-start robe-ask robe-doc robe-jump robe-jump-to-module robe-rails-refresh)
   :config
   (spacemacs|diminish robe-mode)
-  (spacemacs/declare-prefix-for-mode ruby-mode-map "mr" "refactor/robe")
-  (spacemacs/declare-prefix-for-mode ruby-mode-map "mrs" "robe")
-  (spacemacs/set-leader-keys-for-major-mode ruby-mode-map
-    "rs'" #'robe-start
+  (spacemacs/declare-prefix-for-mode 'ruby-mode "mr" "refactor/robe")
+  (spacemacs/declare-prefix-for-mode 'ruby-mode "mrs" "robe")
+  (spacemacs/set-leader-keys-for-major-mode 'ruby-mode
+    "rss" #'robe-start
     "rsa" #'robe-ask
     "rsd" #'robe-doc
     "rsj" #'robe-jump
@@ -53,12 +53,12 @@
 (leaf rubocop
   :defer-config
   (spacemacs|diminish rubocop-mode)
-  (spacemacs/set-leader-keys-for-major-mode ruby-mode-map
+  (spacemacs/set-leader-keys-for-major-mode 'ruby-mode
     "RF" 'rubocop-autocorrect-current-file))
 
 (leaf rubocopfmt
   :config
-  (spacemacs/set-leader-keys-for-major-mode ruby-mode-map
+  (spacemacs/set-leader-keys-for-major-mode 'ruby-mode
     "==" 'rubocopfmt)
   :defer-config
   (set-variable 'rubocopfmt-use-bundler-when-possible t))

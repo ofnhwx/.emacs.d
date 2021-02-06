@@ -6,7 +6,7 @@
 
 (leaf ruby-mode
   :hook (ruby-mode-hook . e:setup-flycheck-rubocop)
-  :defer-config
+  :config
   (set-variable 'ruby-insert-encoding-magic-comment nil)
   (defun e:setup-flycheck-rubocop ()
     (when (e:bundle-exists "rubocop")

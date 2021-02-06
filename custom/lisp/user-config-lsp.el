@@ -11,7 +11,7 @@
 (leaf lsp-completion
   :after lsp-mode
   :hook (lsp-completion-mode-hook . e:setup-lsp-completion-config)
-  :defer-config
+  :config
   (defun e:setup-lsp-completion-config ()
     (case major-mode
       ;; for Ruby
@@ -24,7 +24,7 @@
 (leaf lsp-diagnostics
   :after lsp-mode
   :hook (lsp-diagnostics-mode-hook . e:setup-lsp-diagnostics-config)
-  :defer-config
+  :config
   (defun e:setup-lsp-diagnostics-config ()
     (case major-mode
       ;; for Ruby
@@ -46,7 +46,7 @@
   :hook ((company-completion-started-hook   . e:lsp-ui-doc-mode-temporary-disable)
          (company-completion-finished-hook  . e:lsp-ui-doc-mode-restore)
          (company-completion-cancelled-hook . e:lsp-ui-doc-mode-restore))
-  :defer-config
+  :config
   (set-variable 'lsp-ui-doc-position 'at-point)
   (set-variable 'lsp-ui-doc-delay 2.0)
   (defun e:lsp-ui-doc-mode-temporary-disable (&rest _)

@@ -9,7 +9,8 @@
 
 (leaf php-mode
   :after dap-mode
-  :defer-config
+  :defun (dap-register-debug-template)
+  :config
   (dap-register-debug-template
    "Remote Xdebug"
    (list :name "Remote Xdebug"
@@ -24,7 +25,7 @@
   :config
   (spacemacs|diminish drupal-mode "")
   (defun e:setup-drupal-mode ()
-    (let* ((project-root (ignore-errors (e:project-root buffer-file-name)))
+    (let* ((project-root (kllib:project-root buffer-file-name))
            (eslint (f-expand "web/core/node_modules/.bin/eslint" project-root)))
       (when (and project-root
                  (f-exists? project-root)

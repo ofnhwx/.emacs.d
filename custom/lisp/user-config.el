@@ -11,10 +11,10 @@
   :config
   (command-logger-on))
 
-(leaf e:convenient-header-line
+(leaf custom-headerline
   :require t
   :config
-  (e:convenient-header-line-start))
+  (custom-headerline-start))
 
 
 
@@ -85,8 +85,7 @@
   (spacemacs/set-leader-keys
     "%" 'query-replace
     "&" 'async-shell-command
-    "^" 'ace-window
-    "tT" #'e:toggle-indent-tabs-mode)
+    "tT" 'e:toggle-indent-tabs-mode)
   (bind-keys*
    :map global-map
    ("C-;" . spacemacs/default-pop-shell)
@@ -189,6 +188,9 @@
 
 (leaf ace-window
   :bind (("C-^" . ace-window))
+  :init
+  (spacemacs/set-leader-keys
+    "^" 'ace-window)
   :config
   (set-variable 'aw-keys (number-sequence ?1 ?9))
   (set-variable 'aw-scope 'frame))
@@ -220,19 +222,14 @@
                        company-files
                        company-dabbrev)))
         (setq-local company-backends (-concat (list backends) default))))
-    :defer-config
+    :config
     (spacemacs|diminish company-mode))
-  :config
   (leaf company-box
     :defer-config
     (spacemacs|diminish company-box-mode))
-  :config
   (leaf company-tabnine
-    :after company
-    :require t
-    :config
+    :defer-config
     (e:place-in-cache company-tabnine-binaries-folder "tabnine"))
-  :config
   (leaf company-try-hard
     :bind (("C-z" . company-try-hard)
            (:company-active-map
@@ -244,7 +241,7 @@
   (leaf dired
     :bind ((:dired-mode-map
             ("C-c C-e" . wdired-change-to-wdired-mode)))
-    :defer-config
+    :config
     (set-variable 'dired-dwim-target t)
     (set-variable 'dired-listing-switches "-Ahl")
     (set-variable 'dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.DS_Store")
@@ -355,46 +352,44 @@
         (evil-force-normal-state)))))
   (leaf evil-easymotion
     :config
-    (leaf e:evil-em-command
-      :config
-      (define-prefix-command 'e:evil-em-command)
-      (bind-keys
-       :map e:evil-em-command
-       ("w"  . ("em/forward-word-begin"        . evilem-motion-forward-word-begin))
-       ("W"  . ("em/forward-WORD-begin"        . evilem-motion-forward-WORD-begin))
-       ("e"  . ("em/forward-word-end"          . evilem-motion-forward-word-end))
-       ("E"  . ("em/forward-WORD-end"          . evilem-motion-forward-WORD-end))
-       ("b"  . ("em/backward-word-begin"       . evilem-motion-backward-word-begin))
-       ("B"  . ("em/backward-WORD-begin"       . evilem-motion-backward-WORD-begin))
-       ("j"  . ("em/next-visual-line"          . evilem-motion-next-visual-line))
-       ("J"  . ("em/next-line"                 . evilem-motion-next-line))
-       ("k"  . ("em/previous-visual-line"      . evilem-motion-previous-visual-line))
-       ("K"  . ("em/previous-line"             . evilem-motion-previous-line))
-       ("g"  . ("em/backward-word/WORD-end"))
-       ("ge" . ("em/backward-word-end"         . evilem-motion-backward-word-end))
-       ("gE" . ("em/backward-WORD-end"         . evilem-motion-backward-WORD-end))
-       ("t"  . ("em/find-char-to"              . evilem-motion-find-char-to))
-       ("T"  . ("em/find-char-to-backward"     . evilem-motion-find-char-to-backward))
-       ("f"  . ("em/find-char"                 . evilem-motion-find-char))
-       ("F"  . ("em/find-char-backward"        . evilem-motion-find-char-backward))
-       ("["  . ("em/backward-section"))
-       ("[[" . ("em/backward-section-begin"    . evilem-motion-backward-section-begin))
-       ("[]" . ("em/backward-section-end"      . evilem-motion-backward-section-end))
-       ("]"  . ("em/forward-section"))
-       ("]]" . ("em/forward-section-begin"     . evilem-motion-forward-section-begin))
-       ("][" . ("em/forward-section-end"       . evilem-motion-forward-section-end))
-       ("("  . ("em/backward-section-begin"    . evilem-motion-backward-sentence-begin))
-       (")"  . ("em/forward-section-begin"     . evilem-motion-forward-sentence-begin))
-       ("n"  . ("em/search-next"               . evilem-motion-search-next))
-       ("N"  . ("em/search-previous"           . evilem-motion-search-previous))
-       ("*"  . ("em/search-word-forward"       . evilem-motion-search-word-forward))
-       ("#"  . ("em/search-word-backward"      . evilem-motion-search-word-backward))
-       ("-"  . ("em/pres-line-first-non-blank" . evilem-motion-previous-line-first-non-blank))
-       ("+"  . ("em/next-line-first-non-blank" . evilem-motion-next-line-first-non-blank))
-       ("s"  . evil-avy-goto-char-timer))
-      (bind-key "s" 'e:evil-em-command evil-normal-state-map)
-      (bind-key "x" 'e:evil-em-command evil-visual-state-map)
-      (bind-key "x" 'e:evil-em-command evil-operator-state-map)))
+    (define-prefix-command 'e:evil-em-command)
+    (bind-keys
+     :map e:evil-em-command
+     ("w"  . ("em/forward-word-begin"        . evilem-motion-forward-word-begin))
+     ("W"  . ("em/forward-WORD-begin"        . evilem-motion-forward-WORD-begin))
+     ("e"  . ("em/forward-word-end"          . evilem-motion-forward-word-end))
+     ("E"  . ("em/forward-WORD-end"          . evilem-motion-forward-WORD-end))
+     ("b"  . ("em/backward-word-begin"       . evilem-motion-backward-word-begin))
+     ("B"  . ("em/backward-WORD-begin"       . evilem-motion-backward-WORD-begin))
+     ("j"  . ("em/next-visual-line"          . evilem-motion-next-visual-line))
+     ("J"  . ("em/next-line"                 . evilem-motion-next-line))
+     ("k"  . ("em/previous-visual-line"      . evilem-motion-previous-visual-line))
+     ("K"  . ("em/previous-line"             . evilem-motion-previous-line))
+     ("g"  . ("em/backward-word/WORD-end"))
+     ("ge" . ("em/backward-word-end"         . evilem-motion-backward-word-end))
+     ("gE" . ("em/backward-WORD-end"         . evilem-motion-backward-WORD-end))
+     ("t"  . ("em/find-char-to"              . evilem-motion-find-char-to))
+     ("T"  . ("em/find-char-to-backward"     . evilem-motion-find-char-to-backward))
+     ("f"  . ("em/find-char"                 . evilem-motion-find-char))
+     ("F"  . ("em/find-char-backward"        . evilem-motion-find-char-backward))
+     ("["  . ("em/backward-section"))
+     ("[[" . ("em/backward-section-begin"    . evilem-motion-backward-section-begin))
+     ("[]" . ("em/backward-section-end"      . evilem-motion-backward-section-end))
+     ("]"  . ("em/forward-section"))
+     ("]]" . ("em/forward-section-begin"     . evilem-motion-forward-section-begin))
+     ("][" . ("em/forward-section-end"       . evilem-motion-forward-section-end))
+     ("("  . ("em/backward-section-begin"    . evilem-motion-backward-sentence-begin))
+     (")"  . ("em/forward-section-begin"     . evilem-motion-forward-sentence-begin))
+     ("n"  . ("em/search-next"               . evilem-motion-search-next))
+     ("N"  . ("em/search-previous"           . evilem-motion-search-previous))
+     ("*"  . ("em/search-word-forward"       . evilem-motion-search-word-forward))
+     ("#"  . ("em/search-word-backward"      . evilem-motion-search-word-backward))
+     ("-"  . ("em/pres-line-first-non-blank" . evilem-motion-previous-line-first-non-blank))
+     ("+"  . ("em/next-line-first-non-blank" . evilem-motion-next-line-first-non-blank))
+     ("s"  . evil-avy-goto-char-timer))
+    (bind-key "s" 'e:evil-em-command evil-normal-state-map)
+    (bind-key "x" 'e:evil-em-command evil-visual-state-map)
+    (bind-key "x" 'e:evil-em-command evil-operator-state-map))
   (leaf evil-owl
     :config
     (evil-owl-mode 1)
@@ -415,7 +410,7 @@
          ("S" . foreman-start)
          ("X" . foreman-stop)
          ("x" . foreman-kill-proc))
-  :config
+  :init
   (spacemacs/set-leader-keys "atf" #'foreman))
 
 (leaf ggtags
@@ -442,14 +437,15 @@
   :config
   (leaf helm
     :bind (([remap eval-expression] . helm-eval-expression))
-    :defer-config
+    :config
     (set-variable 'helm-buffer-max-length nil))
   (leaf helm-fzf
-    :config
-    (set-variable 'helm-fzf-args nil)
+    :init
     (spacemacs/set-leader-keys
       "fz" 'helm-fzf
-      "pz" 'helm-fzf-project-root))
+      "pz" 'helm-fzf-project-root)
+    :defer-config
+    (set-variable 'helm-fzf-args nil))
   (leaf helm-gtags
     :defer-config
     (spacemacs|diminish helm-gtags-mode))
@@ -492,7 +488,7 @@
   :config
   (leaf magit
     :commands (magit-insert-skip-worktree-files)
-    :defer-config
+    :config
     (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
     (set-variable 'magit-diff-refine-hunk 'all)
     (set-variable 'magit-diff-refine-ignore-whitespace t)
@@ -518,12 +514,18 @@
 (leaf notmuch
   :defun (notmuch-bury-or-kill-this-buffer@kill-layout)
   :defer-config
-  (define-advice notmuch-bury-or-kill-this-buffer (:around (fn) kill-layout)
-    (let ((kill (derived-mode-p 'notmuch-hello-mode)))
-      (prog1
-          (funcall fn)
-        (if kill
-            (persp-kill notmuch-spacemacs-layout-name)))))
+  (prog1
+      (defun notmuch-bury-or-kill-this-buffer@kill-layout
+          (fn)
+        (let
+            ((kill
+              (derived-mode-p 'notmuch-hello-mode)))
+          (prog1
+              (funcall fn)
+            (if kill
+                (persp-kill notmuch-spacemacs-layout-name)))))
+    (advice-add 'notmuch-bury-or-kill-this-buffer :around
+                (function notmuch-bury-or-kill-this-buffer@kill-layout)))
   (set-variable 'notmuch-archive-tags '("-inbox" "-unread"))
   (set-variable 'notmuch-message-deleted-tags '("+trash" "-inbox"))
   (set-variable 'notmuch-column-control 1.0)
@@ -684,38 +686,37 @@
   :config
   (global-so-long-mode 1))
 
-(leaf *recentf
-  :config
-  (leaf recentf
-    :defer-config
-    (set-variable 'recentf-max-menu-items 20)
-    (set-variable 'recentf-max-saved-items 3000)
-    (set-variable 'recentf-filename-handlers '(abbreviate-file-name)))
-  (leaf recentf-advice
-    :after recentf
-    :doc "存在しないファイルを履歴から削除する"
-    :config
-    (define-advice recentf-save-list (:before (&rest _) remove-non-existing-files)
-      (setq recentf-list
-            (->> recentf-list
-                 (-map 'f-short)
-                 (-distinct)
-                 (--filter (or (file-remote-p it)
-                               (f-exists? it)
-                               (s-equals? it null-device))))))))
+(leaf recentf
+  :advice
+  (:before recentf-save-list e:recentf-save-list--cleanup)
+  :defer-config
+  (set-variable 'recentf-max-menu-items 20)
+  (set-variable 'recentf-max-saved-items 3000)
+  (set-variable 'recentf-filename-handlers '(abbreviate-file-name))
+  (defun e:recentf-save-list--cleanup (&rest _)
+    "存在しないファイルを履歴から削除する"
+    (let ((items recentf-list)
+          (ignore `(,(f-short recentf-save-file) ,null-device)))
+      (setq items (-map 'f-short items))
+      (setq items (-distinct items))
+      (setq items (--filter (or (file-remote-p it)
+                                (f-exists? it))
+                            items))
+      (setq items (-difference items ignore))
+      (setq recentf-list items))))
 
 (leaf tramp
   :require t
   :config
   (set-variable 'tramp-default-host "localhost")
   :doc "ssh/conf.d の中身から接続先を追加"
-  :if (f-exists? "~/.ssh/conf.d/hosts")
   :config
-  (let ((functions (->> (ignore-errors (f-files "~/.ssh/conf.d/hosts" nil t))
-                        (--map (list #'tramp-parse-sconfig it)))))
-    (--each '("ssh" "scp")
-      (let ((new-functions (-union (tramp-get-completion-function it) functions)))
-        (tramp-set-completion-function it new-functions)))))
+  (when (f-exists? "~/.ssh/conf.d/hosts")
+    (let ((functions (->> (ignore-errors (f-files "~/.ssh/conf.d/hosts" nil t))
+                          (--map (list #'tramp-parse-sconfig it)))))
+      (--each '("ssh" "scp")
+        (let ((new-functions (-union (tramp-get-completion-function it) functions)))
+          (tramp-set-completion-function it new-functions))))))
 
 (leaf treemacs
   :defer-config
@@ -740,7 +741,7 @@
          ("C-c C-g" . keyboard-quit)
          ("C-g" . vterm-send-C-g)
          ("C-j" . e:vterm-input-something))
-  :defer-config
+  :config
   (evil-define-key 'hybrid vterm-mode-map (kbd "<escape>") #'vterm-send-escape)
   (defun e:vterm-input-something ()
     (interactive)
@@ -766,7 +767,7 @@
 
 (leaf whitespace
   :hook ((find-file-hook prog-mode-hook) . whitespace-mode-on)
-  :defer-config
+  :config
   (spacemacs|diminish whitespace-mode)
   (defun whitespace-mode-on ()
     (interactive)

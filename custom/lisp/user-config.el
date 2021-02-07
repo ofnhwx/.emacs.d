@@ -209,6 +209,11 @@
   :defer-config
   (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic")))
 
+(leaf color-identifiers-mode
+  :config
+  (spacemacs|diminish color-identifiers-mode)
+  (global-color-identifiers-mode))
+
 (leaf *company
   :config
   (leaf company

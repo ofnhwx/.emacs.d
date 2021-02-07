@@ -84,6 +84,7 @@
         (locale-eaw           :location (recipe :fetcher github :repo "hamano/locale-eaw"))
         atomic-chrome
         codic
+        color-identifiers-mode
         company-tabnine
         company-try-hard
         deadgrep

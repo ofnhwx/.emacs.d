@@ -8,13 +8,14 @@
         syntax-checking
         ;; +completion
         (auto-completion :variables
-                         auto-completion-enable-help-tooltip nil
+                         auto-completion-enable-help-tooltip t
                          auto-completion-enable-sort-by-usage t
                          auto-completion-use-company-box t)
         helm
         ;; +emacs
         better-defaults
-        org
+        (org :variables
+             org-enable-roam-support t)
         ;; +email
         notmuch
         ;; +filetree

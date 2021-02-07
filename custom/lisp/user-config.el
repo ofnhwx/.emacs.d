@@ -580,13 +580,17 @@
                   '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
                     (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
     (set-variable 'org-startup-indented t)
-    (set-variable 'org-startup-folded t)
+    (set-variable 'org-startup-folded nil)
     (set-variable 'org-indent-mode-turns-on-hiding-stars nil)
     (set-variable 'org-indent-indentation-per-level 2)
     (set-variable 'org-edit-src-content-indentation 0)
     (set-face-attribute 'org-level-1 nil :height 1.0)
     (set-face-attribute 'org-level-2 nil :height 1.0)
     (set-face-attribute 'org-level-3 nil :height 1.0))
+  (leaf org-roam
+    :config
+    (set-variable 'org-roam-directory (expand-file-name "roam" org-directory))
+    (e:place-in-cache org-roam-db-location "org-roam.db"))
   (leaf ob-restclient
     :after org
     :config

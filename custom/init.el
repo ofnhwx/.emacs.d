@@ -483,7 +483,8 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
-  (load (expand-file-name "lisp/user-init" e:custom-directory)))
+  (load (expand-file-name "lisp/user-init" e:custom-directory))
+  (user-init-config))
 
 (defun dotspacemacs/user-load ()
   "Library to load while dumping.

@@ -85,6 +85,7 @@
         (ls-lisp-extension    :location (recipe :fetcher github :repo "ofnhwx/ls-lisp-extension"))
         (locale-eaw           :location (recipe :fetcher github :repo "hamano/locale-eaw"))
         atomic-chrome
+        beacon
         codic
         color-identifiers-mode
         company-tabnine

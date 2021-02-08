@@ -205,6 +205,11 @@
   (set-variable 'avy-all-windows nil)
   (set-variable 'avy-all-windows-alt t))
 
+(leaf beacon
+  :config
+  (spacemacs|diminish beacon-mode)
+  (beacon-mode))
+
 (leaf codic
   :defer-config
   (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic")))

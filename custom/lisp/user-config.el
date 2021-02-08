@@ -422,13 +422,6 @@
   :defer-config
   (spacemacs|diminish ggtags-navigation-mode))
 
-(leaf git-gutter+
-  :defer-config
-  (dolist (face '(git-gutter+-added
-                  git-gutter+-deleted
-                  git-gutter+-modified))
-    (set-face-attribute face nil :background (face-attribute face :foreground))))
-
 (leaf google-translate-default-ui
   :defer-config
   (set-variable 'google-translate-default-source-language "en")

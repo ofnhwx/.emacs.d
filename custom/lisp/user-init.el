@@ -57,6 +57,8 @@
              git-magit-status-fullscreen t
              git-enable-magit-delta-plugin t)
         github
+        (version-control :variables
+                         version-control-diff-tool 'diff-hl)
         ;; +tags
         gtags
         ;; +tools

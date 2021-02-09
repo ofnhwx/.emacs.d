@@ -497,11 +497,14 @@
     (set-variable 'magit-diff-refine-ignore-whitespace t)
     (set-variable 'smerge-refine-ignore-whitespace nil)
     (magit-add-section-hook 'magit-status-sections-hook #'magit-insert-skip-worktree-files nil t)
+    (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
+  (leaf magit
+    :if (executable-find "ghq")
+    :defer-config
     (when (executable-find "ghq")
       (set-variable 'magit-repository-directories
                     (->> (kllib:shell-command-to-list "ghq root --all")
-                         (--map (cons it 4)))))
-    (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
+                         (--map (cons it 4))))))
   (leaf magit-delta
     :defer-config
     (spacemacs|diminish magit-delta-mode))

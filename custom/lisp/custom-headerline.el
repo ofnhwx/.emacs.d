@@ -9,7 +9,7 @@
 
 
 (defun chl--setup ()
-  (let ((buffers (--filter (not (buffer-local-value 'header-line-format it))
+  (let ((buffers (--remove (buffer-local-value 'header-line-format it)
                            (-map #'window-buffer (window-list)))))
     (-each buffers
       (lambda (buffer)

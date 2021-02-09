@@ -672,6 +672,17 @@
         (when service
           (prodigy-start-service service))))))
 
+(leaf projectile
+  :if (executable-find "ghq")
+  :defer-config
+  (setq projectile-known-projects
+        (->> projectile-known-projects
+             (--remove (eq (projectile-project-vcs it) 'none))
+             (-union (-map #'f-short (kllib:shell-command-to-list "ghq list --full-path")))
+             (-map #'file-name-as-directory)
+             (-sort #'s-less?)
+             (-uniq))))
+
 (leaf persp-mode
   :defer-config
   (set-variable 'persp-kill-foreign-buffer-behaviour nil))

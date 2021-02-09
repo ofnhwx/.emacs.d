@@ -25,7 +25,7 @@
   :config
   (spacemacs|diminish drupal-mode "")
   (defun e:setup-drupal-mode ()
-    (let* ((project-root (kllib:project-root buffer-file-name))
+    (let* ((project-root (ignore-errors (kllib:project-root buffer-file-name)))
            (eslint (f-expand "web/core/node_modules/.bin/eslint" project-root)))
       (when (and project-root
                  (f-exists? project-root)

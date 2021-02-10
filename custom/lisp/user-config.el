@@ -210,6 +210,25 @@
   (spacemacs|diminish beacon-mode)
   (beacon-mode))
 
+(leaf bitwarden
+  :commands (bitwarden-get bitwarden-get-field)
+  :config
+  (defun bitwarden-get (account &optional key print-message)
+    (unless (bitwarden-unlocked-p)
+      (bitwarden-unlock))
+    (let* ((args (list "get" "item" account))
+           (json (bitwarden--handle-message (bitwarden--auto-cmd args) print-message))
+           (result (json-parse-string json :object-type 'plist)))
+      (if key
+          (plist-get result key)
+        result)))
+  (defun bitwarden-get-field (account key)
+    (let ((key (string-trim-left (format "%s" key) ":"))
+          (result (bitwarden-get account :fields)))
+      (plist-get (--first (string-equal (plist-get it :name) key)
+                          (append result nil))
+                 :value))))
+
 (leaf codic
   :defer-config
   (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic")))

@@ -79,6 +79,7 @@
 (defvar custom-additional-packages nil)
 (setq custom-additional-packages
       '(
+        (bitwarden            :location (recipe :fetcher github :repo "ofnhwx/emacs-bitwarden"))
         (command-logger       :location (recipe :fetcher github :repo "ofnhwx/command-logger"))
         (helm-fzf             :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
         (komunan-lisp-library :location (recipe :fetcher github :repo "ofnhwx/komunan-lisp-library"))

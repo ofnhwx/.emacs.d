@@ -40,9 +40,10 @@
         (ruby
          :variables
          ruby-backend 'lsp
-         ruby-enable-enh-ruby-mode nil
-         ruby-test-runner 'rspec
-         ruby-highlight-debugger-keywords t)
+         ruby-test-runner 'rspec)
+        (typescript
+         :variables
+         typescript-backend 'lsp)
         csv
         emacs-lisp
         html
@@ -50,7 +51,6 @@
         python
         shell-scripts
         sql
-        typescript
         vimscript
         yaml
         ;; +misc
@@ -78,6 +78,7 @@
          shell-default-position 'full
          shell-default-height 60
          shell-default-shell 'vterm)
+        dap
         docker
         lsp
         nginx
@@ -97,8 +98,8 @@
         (command-logger       :location (recipe :fetcher github :repo "ofnhwx/command-logger"))
         (helm-fzf             :location (recipe :fetcher github :repo "ofnhwx/helm-fzf"))
         (komunan-lisp-library :location (recipe :fetcher github :repo "ofnhwx/komunan-lisp-library"))
+        (locale-eaw           :location (recipe :fetcher github :repo "ofnhwx/locale-eaw"))
         (ls-lisp-extension    :location (recipe :fetcher github :repo "ofnhwx/ls-lisp-extension"))
-        (locale-eaw           :location (recipe :fetcher github :repo "hamano/locale-eaw"))
         ))
 
 (defvar custom-excluded-packages nil)

@@ -18,27 +18,6 @@
 
 
 
-(defun e:auth-source-get (property &rest spec)
-  "認証情報から SPEC に一致する項目の PROPERTY を取得する."
-  (let ((plist (car (apply 'auth-source-search spec)))
-        (pkey (intern (format ":%s" property))))
-    (when plist
-      (plist-get plist pkey))))
-
-(defun e:remove-nth (n list)
-  "N 番目の要素を LIST から取り除いて返す."
-  (if (or (zerop n) (null list))
-      (cdr list)
-    (cons (car list) (e:remove-nth (1- n) (cdr list)))))
-
-(defun e:toggle-indent-tabs-mode ()
-  "インデントモードをタブ/空白で切替える."
-  (interactive)
-  (setq indent-tabs-mode (not indent-tabs-mode))
-  (message "indent-tabs-mode: %s" indent-tabs-mode))
-
-
-
 (leaf japanese-language-environment
   :doc "言語環境を日本語に設定"
   :config
@@ -195,20 +174,11 @@
   (set-variable 'aw-keys (number-sequence ?1 ?9))
   (set-variable 'aw-scope 'frame))
 
-(leaf atomic-chrome
-  :config
-  (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server))
-
 (leaf avy
   :defer-config
   (set-variable 'avy-keys (number-sequence ?a ?z))
   (set-variable 'avy-all-windows nil)
   (set-variable 'avy-all-windows-alt t))
-
-(leaf beacon
-  :config
-  (spacemacs|diminish beacon-mode)
-  (beacon-mode))
 
 (leaf bitwarden
   :commands (bitwarden-get bitwarden-get-field)
@@ -229,15 +199,6 @@
                           (append result nil))
                  :value))))
 
-(leaf codic
-  :defer-config
-  (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic")))
-
-(leaf color-identifiers-mode
-  :config
-  (spacemacs|diminish color-identifiers-mode)
-  (global-color-identifiers-mode))
-
 (leaf *company
   :config
   (leaf company
@@ -255,15 +216,7 @@
     (spacemacs|diminish company-mode))
   (leaf company-box
     :defer-config
-    (spacemacs|diminish company-box-mode))
-  (leaf company-tabnine
-    :defer-config
-    (e:place-in-cache company-tabnine-binaries-folder "tabnine"))
-  (leaf company-try-hard
-    :bind (("C-z" . company-try-hard)
-           (:company-active-map
-            :package company
-            ("C-z" . company-try-hard)))))
+    (spacemacs|diminish company-box-mode)))
 
 (leaf *dired
   :config
@@ -276,8 +229,6 @@
     (set-variable 'dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.DS_Store")
     (set-variable 'dired-recursive-copies 'always)
     (set-variable 'dired-recursive-deletes 'always))
-  (leaf dired-filter
-    :hook (dired-mode-hook . dired-filter-mode))
   (leaf image-dired
     :defer-config
     (e:place-in-cache image-dired-dir "dired/images"))
@@ -325,11 +276,6 @@
           (ediff (nth 0 files)
                  (nth 1 files))
         (call-interactively #'ediff)))))
-
-(leaf elisp-demos
-  :advice
-  (:after describe-function-1 elisp-demos-advice-describe-function-1)
-  (:after helpful-update elisp-demos-advice-helpful-update))
 
 (leaf emmet-mode
   :bind (:emmet-mode-keymap
@@ -418,11 +364,7 @@
      ("s"  . evil-avy-goto-char-timer))
     (bind-key "s" 'e:evil-em-command evil-normal-state-map)
     (bind-key "x" 'e:evil-em-command evil-visual-state-map)
-    (bind-key "x" 'e:evil-em-command evil-operator-state-map))
-  (leaf evil-owl
-    :config
-    (evil-owl-mode 1)
-    (spacemacs|diminish evil-owl-mode)))
+    (bind-key "x" 'e:evil-em-command evil-operator-state-map)))
 
 (leaf flyspell
   :bind (:flyspell-mode-map
@@ -433,15 +375,6 @@
   (set-variable 'flycheck-idle-buffer-switch-delay 3.0)
   (set-variable 'flycheck-idle-change-delay 3.0))
 
-(leaf foreman-mode
-  :bind (:foreman-mode-map
-         ("R" . foreman-restart)
-         ("S" . foreman-start)
-         ("X" . foreman-stop)
-         ("x" . foreman-kill-proc))
-  :init
-  (spacemacs/set-leader-keys "atf" #'foreman))
-
 (leaf ggtags
   :defer-config
   (spacemacs|diminish ggtags-navigation-mode))
@@ -450,10 +383,6 @@
   :defer-config
   (set-variable 'google-translate-default-source-language "en")
   (set-variable 'google-translate-default-target-language "ja"))
-
-(leaf grugru
-  :config
-  (spacemacs/set-leader-keys "xx" #'grugru))
 
 (leaf *helm
   :config
@@ -477,19 +406,6 @@
     :config
     (helm-migemo-mode)
     (spacemacs|diminish helm-migemo-mode)))
-
-(leaf helpful
-  :config
-  (spacemacs/declare-prefix "hdd" "helpful")
-  (spacemacs/set-leader-keys
-    "hddc" 'helpful-callable
-    "hddd" 'helpful-at-point
-    "hddf" 'helpful-function
-    "hddi" 'helpful-command
-    "hddk" 'helpful-key
-    "hddm" 'helpful-macro
-    "hdds" 'helpful-symbol
-    "hddv" 'helpful-variable))
 
 (leaf highlight-indentation
   :hook ((haml-mode-hook . e:setup-highlight-indentation-mode)
@@ -621,13 +537,7 @@
     :config
     (unless (--find (eq (car it) 'restclient) org-babel-load-languages)
       (org-babel-do-load-languages 'org-babel-load-languages
-                                   (append org-babel-load-languages '((restclient . t))))))
-  (leaf ox-reveal
-    :after org
-    :require t
-    :config
-    (set-variable 'org-reveal-reveal-js-version 4)
-    (set-variable 'org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")))
+                                   (append org-babel-load-languages '((restclient . t)))))))
 
 (leaf *skk
   :config
@@ -770,9 +680,6 @@
 (leaf url-cookie
   :defer-config
   (e:place-in-cache url-cookie-file "url/cookies"))
-
-(leaf visual-regexp
-  :bind (([remap query-replace] . vr/query-replace)))
 
 (leaf vterm
   :commands (vterm-yank)

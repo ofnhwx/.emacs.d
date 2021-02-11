@@ -7,15 +7,17 @@
         spell-checking
         syntax-checking
         ;; +completion
-        (auto-completion :variables
-                         auto-completion-enable-help-tooltip t
-                         auto-completion-enable-sort-by-usage t
-                         auto-completion-use-company-box t)
+        (auto-completion
+         :variables
+         auto-completion-enable-help-tooltip t
+         auto-completion-enable-sort-by-usage t
+         auto-completion-use-company-box t)
         helm
         ;; +emacs
+        (org
+         :variables
+         org-enable-roam-support t)
         better-defaults
-        (org :variables
-             org-enable-roam-support t)
         ;; +email
         notmuch
         ;; +filetree
@@ -29,20 +31,23 @@
         ;; +intl
         japanese
         ;; +lang
+        (javascript
+         :variables
+         javascript-backend 'lsp)
+        (php
+         :variables
+         php-backend 'lsp)
+        (ruby
+         :variables
+         ruby-backend 'lsp
+         ruby-enable-enh-ruby-mode nil
+         ruby-test-runner 'rspec
+         ruby-highlight-debugger-keywords t)
         csv
         emacs-lisp
         html
-        (javascript :variables
-                    javascript-backend 'lsp)
         markdown
-        (php :variables
-             php-backend 'lsp)
         python
-        (ruby :variables
-              ruby-backend 'lsp
-              ruby-enable-enh-ruby-mode nil
-              ruby-test-runner 'rspec
-              ruby-highlight-debugger-keywords t)
         shell-scripts
         sql
         typescript
@@ -53,27 +58,36 @@
         dtrt-indent
         multiple-cursors
         ;; +source-control
-        (git :variables
-             git-magit-status-fullscreen t
-             git-enable-magit-delta-plugin t)
+        (git
+         :variables
+         git-magit-status-fullscreen t
+         git-enable-magit-delta-plugin t)
+        (version-control
+         :variables
+         version-control-diff-tool 'diff-hl)
         github
-        (version-control :variables
-                         version-control-diff-tool 'diff-hl)
+        ;; +spacemacs
+        (spacemacs-completion
+         :variables
+         helm-use-fuzzy nil)
         ;; +tags
         gtags
         ;; +tools
+        (shell
+         :variables
+         shell-default-position 'full
+         shell-default-height 60
+         shell-default-shell 'vterm)
         docker
         lsp
         nginx
         prodigy
         restclient
-        (shell :variables
-               shell-default-position 'full
-               shell-default-height 60
-               shell-default-shell 'vterm)
         vagrant
         ;; +web-services
         search-engine
+        ;; +private
+        misc
         ))
 
 (defvar custom-additional-packages nil)
@@ -85,27 +99,6 @@
         (komunan-lisp-library :location (recipe :fetcher github :repo "ofnhwx/komunan-lisp-library"))
         (ls-lisp-extension    :location (recipe :fetcher github :repo "ofnhwx/ls-lisp-extension"))
         (locale-eaw           :location (recipe :fetcher github :repo "hamano/locale-eaw"))
-        atomic-chrome
-        beacon
-        codic
-        color-identifiers-mode
-        company-tabnine
-        company-try-hard
-        deadgrep
-        dired-filter
-        dired-toggle-sudo
-        elisp-demos
-        evil-easymotion
-        evil-owl
-        foreman-mode
-        grugru
-        helpful
-        leaf
-        magit-libgit
-        ox-reveal
-        psysh
-        visual-regexp
-        vlf
         ))
 
 (defvar custom-excluded-packages nil)
@@ -124,26 +117,25 @@
         ))
 
 (defun user-init-config ()
-  ;; +distributions/spacemacs-bootstrap
-  (set-variable 'vim-style-remap-Y-to-y$ t)
-  ;; +spacemacs/spacemacs-completion
-  (set-variable 'helm-use-fuzzy nil)
-  ;; その他、先に設定しておきたいもの
-  (set-variable 'custom-file null-device)
-  (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" spacemacs-cache-directory))
-  (set-variable 'viper-mode nil)
-  (set-variable 'which-key-enable-extended-define-key t)
-  (set-variable 'which-key-show-early-on-C-h t)
-  (setq-default ispell-local-dictionary "en_US")
-  ;; yasnippet で余計なものを読込ませないための対策
-  (defvar e:yas-snippet-dirs (list (expand-file-name "snippets" e:custom-directory)))
-  (dolist (dir e:yas-snippet-dirs)
-    (unless (file-exists-p dir)
-      (make-directory dir)))
-  (with-eval-after-load "yasnippet"
-    (define-advice yas-reload-all (:around (fn &rest args) only-custom-snippets)
-      (when (equal yas-snippet-dirs e:yas-snippet-dirs)
-        (funcall fn args)))))
+  (prog1 "これは後だと間に合わないのでここで設定"
+    ;; +distributions/spacemacs-bootstrap
+    (set-variable 'vim-style-remap-Y-to-y$ t))
+  (prog1 "その他、先に設定しておきたいもの"
+    (set-variable 'custom-file null-device)
+    (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" spacemacs-cache-directory))
+    (set-variable 'viper-mode nil)
+    (set-variable 'which-key-enable-extended-define-key t)
+    (set-variable 'which-key-show-early-on-C-h t)
+    (setq-default ispell-local-dictionary "en_US"))
+  (prog1 "yasnippet で余計なものを読込ませないための小細工"
+    (defvar e:yas-snippet-dirs (list (expand-file-name "snippets" e:custom-directory)))
+    (dolist (dir e:yas-snippet-dirs)
+      (unless (file-exists-p dir)
+        (make-directory dir)))
+    (with-eval-after-load "yasnippet"
+      (define-advice yas-reload-all (:around (fn &rest args) only-custom-snippets)
+        (when (equal yas-snippet-dirs e:yas-snippet-dirs)
+          (funcall fn args))))))
 
 (provide 'user-init.el)
 

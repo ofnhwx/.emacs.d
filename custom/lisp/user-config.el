@@ -181,7 +181,12 @@
   (set-variable 'avy-all-windows-alt t))
 
 (leaf bitwarden
-  :commands (bitwarden-get bitwarden-get-field)
+  :defun (bitwarden--auto-cmd
+          bitwarden--handle-message
+          bitwarden-get
+          bitwarden-get-field
+          bitwarden-unlock
+          bitwarden-unlocked-p)
   :config
   (defun bitwarden-get (account &optional key print-message)
     (unless (bitwarden-unlocked-p)
@@ -421,6 +426,7 @@
     (highlight-indentation-set-offset 2)))
 
 (leaf *magit
+  :defun (magit-add-section-hook)
   :init
   (add-to-list 'load-path (f-expand "libegit2" e:external-directory))
   :config

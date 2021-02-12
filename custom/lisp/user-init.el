@@ -57,6 +57,8 @@
         copy-as-format
         dtrt-indent
         multiple-cursors
+        ;; +readers
+        dash
         ;; +source-control
         (git
          :variables

@@ -127,16 +127,7 @@
     (set-variable 'viper-mode nil)
     (set-variable 'which-key-enable-extended-define-key t)
     (set-variable 'which-key-show-early-on-C-h t)
-    (setq-default ispell-local-dictionary "en_US"))
-  (prog1 "yasnippet で余計なものを読込ませないための小細工"
-    (defvar e:yas-snippet-dirs (list (expand-file-name "snippets" e:custom-directory)))
-    (dolist (dir e:yas-snippet-dirs)
-      (unless (file-exists-p dir)
-        (make-directory dir)))
-    (with-eval-after-load "yasnippet"
-      (define-advice yas-reload-all (:around (fn &rest args) only-custom-snippets)
-        (when (equal yas-snippet-dirs e:yas-snippet-dirs)
-          (funcall fn args))))))
+    (setq-default ispell-local-dictionary "en_US")))
 
 (provide 'user-init.el)
 

@@ -747,9 +747,7 @@
 
 (leaf yasnippet
   :defer-config
-  (spacemacs|diminish yas-minor-mode)
-  (set-variable 'yas-snippet-dirs e:yas-snippet-dirs)
-  (yas-reload-all))
+  (spacemacs|diminish yas-minor-mode))
 
 
 

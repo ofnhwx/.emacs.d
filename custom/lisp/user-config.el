@@ -687,32 +687,32 @@
   :defer-config
   (e:place-in-cache url-cookie-file "url/cookies"))
 
-(leaf vterm
-  :commands (vterm-yank)
-  :hook (vterm-mode-hook . e:vterm-auto-tmux)
-  :bind (:vterm-mode-map
-         ("C-c C-g" . keyboard-quit)
-         ("C-g" . vterm-send-C-g)
-         ("C-j" . e:vterm-input-something))
+(leaf *vterm
   :config
-  (evil-define-key 'hybrid vterm-mode-map (kbd "<escape>") #'vterm-send-escape)
-  (defun e:vterm-input-something ()
-    (interactive)
-    (let ((input (read-string "input: ")))
-      (with-no-warnings (vterm-send-string input))))
-  (defun e:vterm-auto-tmux ()
-    (with-no-warnings
-      (vterm-send-string "exec tmux new -A -s emacs")
-      (vterm-send-return)))
-  (set-variable 'vterm-max-scrollback 20000)
-  (set-face-attribute 'vterm-color-black   nil :foreground "#073642" :background "#002b36")
-  (set-face-attribute 'vterm-color-red     nil :foreground "#dc322f" :background "#cb4b16")
-  (set-face-attribute 'vterm-color-green   nil :foreground "#859900" :background "#586e75")
-  (set-face-attribute 'vterm-color-yellow  nil :foreground "#b58900" :background "#657b83")
-  (set-face-attribute 'vterm-color-blue    nil :foreground "#268bd2" :background "#839496")
-  (set-face-attribute 'vterm-color-magenta nil :foreground "#d33682" :background "#6c71c4")
-  (set-face-attribute 'vterm-color-cyan    nil :foreground "#2aa198" :background "#93a1a1")
-  (set-face-attribute 'vterm-color-white   nil :foreground "#eee8d5" :background "#fdf6e3"))
+  (leaf vterm
+    :commands (vterm-yank)
+    :hook (vterm-mode-hook . e:vterm-auto-tmux)
+    :bind (:vterm-mode-map
+          ("C-c C-g" . keyboard-quit)
+          ("C-g" . vterm-send-C-g)
+          ("C-j" . e:vterm-input-something))
+    :config
+    (evil-define-key 'hybrid vterm-mode-map (kbd "<escape>") #'vterm-send-escape)
+    (defun e:vterm-input-something ()
+      (interactive)
+      (let ((input (read-string "input: ")))
+        (with-no-warnings (vterm-send-string input))))
+    (defun e:vterm-auto-tmux ()
+      (with-no-warnings
+        (vterm-send-string "exec tmux new -A -s emacs")
+        (vterm-send-return)))
+    (set-variable 'vterm-max-scrollback 20000))
+  (leaf vterm-theme
+    :after vterm
+    :commands (vterm-theme-solarized-dark
+               vterm-theme-onehalf-dark)
+    :config
+    (vterm-theme-solarized-dark)))
 
 (leaf which-key
   :defer-config

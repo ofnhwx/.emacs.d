@@ -20,6 +20,7 @@
     magit-libgit
     ox-reveal
     psysh
+    rainbow-mode
     visual-regexp
     vlf
     ))
@@ -135,6 +136,12 @@
 (defun misc/init-psysh ()
   (use-package psysh
     :defer t))
+
+(defun misc/init-rainbow-mode ()
+  (use-package rainbow-mode
+    :hook (prog-mode . rainbow-mode)
+    :config
+    (spacemacs|diminish rainbow-mode)))
 
 (defun misc/init-vlf ()
   (use-package vlf

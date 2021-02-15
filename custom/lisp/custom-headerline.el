@@ -83,7 +83,8 @@
 (progn ;; 情報取得
   (defun chl--filename ()
     (let ((filename (or buffer-file-name
-                        (bound-and-true-p magit-buffer-file-name))))
+                        (bound-and-true-p magit-buffer-file-name)
+                        (bound-and-true-p gist-filename))))
       (and filename
            (f-short filename))))
   (defun chl--refname ()
@@ -91,7 +92,8 @@
            (remote (and path (file-remote-p path))))
       (or (and remote  (string-trim-right remote ":"))
           (and vc-mode (s-trim (kllib:unpropertize vc-mode)))
-          (bound-and-true-p magit-buffer-refname)))))
+          (bound-and-true-p magit-buffer-refname)
+          (bound-and-true-p gist-id)))))
 
 
 

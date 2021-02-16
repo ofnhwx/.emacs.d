@@ -142,8 +142,7 @@
         (cmd-args '("/c" "start")))
     (when (file-exists-p cmd-exe)
       (set-variable 'browse-url-generic-program  cmd-exe)
-      (set-variable 'browse-url-generic-args     cmd-args)
-      (set-variable 'browse-url-browser-function 'browse-url-generic))))
+      (set-variable 'browse-url-generic-args     cmd-args))))
 
 (leaf load-local-configurations
   :config

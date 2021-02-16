@@ -204,6 +204,10 @@
                           (append result nil))
                  :value))))
 
+(leaf browse-url
+  :defer-config
+  (set-variable 'browse-url-browser-function #'browse-url-by-choosen))
+
 (leaf *company
   :config
   (leaf company
@@ -370,6 +374,14 @@
     (bind-key "s" 'e:evil-em-command evil-normal-state-map)
     (bind-key "x" 'e:evil-em-command evil-visual-state-map)
     (bind-key "x" 'e:evil-em-command evil-operator-state-map)))
+
+(leaf eww
+  :bind (:eww-mode-map
+         ("e" . eww-open-current-url-with-default-browser))
+  :config
+  (defun eww-open-current-url-with-default-browser ()
+    (interactive)
+    (browse-url-default-browser (eww-current-url))))
 
 (leaf flyspell
   :bind (:flyspell-mode-map
@@ -631,6 +643,7 @@
 
 (leaf shr
   :defer-config
+  (set-variable 'shr-use-fonts nil)
   (set-variable 'shr-use-colors nil)
   (set-variable 'shr-max-image-proportion 0.6))
 

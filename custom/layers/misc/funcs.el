@@ -7,6 +7,13 @@
     (when plist
       (plist-get plist pkey))))
 
+(defun browse-url-by-choosen (url &optional new-window)
+  "選択したブラウザで URL を開く."
+  (interactive)
+  (let ((browser (completing-read "Choose Browser:"
+                                  '(eww-browse-url browse-url-default-browser))))
+    (funcall (intern browser) url new-window)))
+
 (defun e:toggle-indent-tabs-mode ()
   "インデントモードをタブ/空白で切替える."
   (interactive)

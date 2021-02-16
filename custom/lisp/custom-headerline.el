@@ -31,34 +31,28 @@
          (face2 (if (powerline-selected-window-active) 'powerline-active2 'powerline-inactive2))
          (file   (file-name-nondirectory (chl--get-cache-path)))
          (dir    (file-name-directory    (chl--get-cache-path)))
-         (remote (file-remote-p          (chl--get-cache-path)))
          (project-root (chl--get-cache-proot))
          (project-name (chl--get-cache-pname))
          (refname (chl--refname))
          (lhs nil)
          (rhs nil))
-    ;; 左側
+    ;; 余計な部分を削る
     (when project-root
-      (setq dir (s-replace project-root "" dir))
-      (setq lhs (-snoc lhs (powerline-raw (concat project-name " ") face2 'l))))
-    (when lhs
+      (setq dir (s-replace project-root "" dir)))
+    ;; 左側
+    (when project-name
+      (setq lhs (-snoc lhs (powerline-raw (concat project-name " ") face2 'l)))
       (setq lhs (-snoc lhs (funcall separator-l face2 face0))))
-    ;; 右側
-    (cond
-     (remote
-      (setq dir (s-replace remote "" dir))
-      (setq rhs (-snoc rhs (powerline-raw (concat " " (string-trim-right remote ":")) face2 'r))))
-     (refname
-      (setq rhs (-snoc rhs (powerline-raw (concat " " refname) face2 'r)))))
-    (when rhs
-      (push (funcall separator-r face0 face2) rhs))
     ;; 中央
-    (setq lhs (-snoc lhs
-                     (powerline-raw dir face0 'l)
-                     (powerline-raw file 'font-lock-keyword-face)))
+    (setq lhs (-snoc lhs (powerline-raw dir face0 'l)))
+    (setq lhs (-snoc lhs (powerline-raw file 'font-lock-keyword-face)))
+    ;; 右側
+    (when refname
+      (setq rhs (-snoc rhs (funcall separator-r face0 face2)))
+      (setq rhs (-snoc rhs (powerline-raw (concat " " refname) face2 'r))))
     ;; 最後に合わせる
     (concat (powerline-render lhs)
-            (powerline-fill 'mode-line (powerline-width rhs))
+            (powerline-fill 'face0 (powerline-width rhs))
             (powerline-render rhs))))
 
 
@@ -78,6 +72,10 @@
            (proot (kllib:project-root path))
            (pname (kllib:project-name proot))
            (cache (list :path path :proot proot :pname pname)))
+      (when (bound-and-true-p gist-id)
+        (plist-put cache :path  (s-replace "#" "/" path))
+        (plist-put cache :proot nil)
+        (plist-put cache :pname (format "Gist:%s" (oref (gist-list-db-get-gist gist-id) :description))))
       (with-no-warnings (setq-local chl--cache cache)))))
 
 (progn ;; 情報取得
@@ -88,12 +86,9 @@
       (and filename
            (f-short filename))))
   (defun chl--refname ()
-    (let* ((path   (chl--filename))
-           (remote (and path (file-remote-p path))))
-      (or (and remote  (string-trim-right remote ":"))
-          (and vc-mode (s-trim (kllib:unpropertize vc-mode)))
-          (bound-and-true-p magit-buffer-refname)
-          (bound-and-true-p gist-id)))))
+    (or (and vc-mode (s-trim (kllib:unpropertize vc-mode)))
+        (bound-and-true-p magit-buffer-refname)
+        (bound-and-true-p gist-id))))
 
 
 

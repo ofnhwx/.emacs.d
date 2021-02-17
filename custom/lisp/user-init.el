@@ -18,8 +18,6 @@
          :variables
          org-enable-roam-support t)
         better-defaults
-        ;; +email
-        notmuch
         ;; +filetree
         treemacs
         ;; +frameworks

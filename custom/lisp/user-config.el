@@ -469,56 +469,6 @@
   (set-variable 'markdown-command "pandoc")
   (remove-hook 'markdown-mode-hook #'orgtbl-mode))
 
-(leaf notmuch
-  :defun (notmuch-bury-or-kill-this-buffer@kill-layout)
-  :defer-config
-  (prog1
-      (defun notmuch-bury-or-kill-this-buffer@kill-layout
-          (fn)
-        (let
-            ((kill
-              (derived-mode-p 'notmuch-hello-mode)))
-          (prog1
-              (funcall fn)
-            (if kill
-                (persp-kill notmuch-spacemacs-layout-name)))))
-    (advice-add 'notmuch-bury-or-kill-this-buffer :around
-                (function notmuch-bury-or-kill-this-buffer@kill-layout)))
-  (set-variable 'notmuch-archive-tags '("-inbox" "-unread"))
-  (set-variable 'notmuch-message-deleted-tags '("+trash" "-inbox"))
-  (set-variable 'notmuch-column-control 1.0)
-  (set-variable 'notmuch-hello-thousands-separator ",")
-  (set-variable 'notmuch-search-oldest-first nil)
-  (set-variable 'notmuch-show-empty-saved-searches nil)
-  (set-variable 'notmuch-show-logo nil)
-  (set-variable 'notmuch-hello-hide-tags
-                '(;; -------------------------
-                  "drafts"    ;; +下書き
-                  "flagged"   ;; +スター付き
-                  "important" ;; +重要
-                  "inbox"     ;; +受信トレイ
-                  "sent"      ;; +送信済み
-                  "spam"      ;; +迷惑メール
-                  "trash"     ;; +ごみ箱
-                  "unread"    ;; +未読
-                  ;; -------------------------
-                  "encrypted" ;; -暗号
-                  "new"       ;; -新規(notmuch)
-                  "signed"    ;; -署名
-                  ;; -------------------------
-                  ))
-  (set-variable 'notmuch-saved-searches
-                '((:name "すべて"     :query "*"             :key "a")
-                  (:name "受信トレイ" :query "tag:inbox"     :key "i")
-                  (:name "未読"       :query "tag:unread"    :key "u")
-                  (:name "スター付き" :query "tag:flagged"   :key "s")
-                  (:name "重要"       :query "tag:important" :key "m")
-                  (:name "送信済み"   :query "tag:sent"      :key "t")
-                  (:name "下書き"     :query "tag:draft"     :key "d")
-                  (:name "ごみ箱"     :query "tag:trash")
-                  (:name "迷惑メール" :query "tag:spam")))
-  (setenv "XAPIAN_CJK_NGRAM" "1"))
-
 (leaf open-junk-file
   :defer-config
   (set-variable 'open-junk-file-format (expand-file-name "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))

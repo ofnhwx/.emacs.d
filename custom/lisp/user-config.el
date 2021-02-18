@@ -453,6 +453,10 @@
   (leaf magit
     :if (executable-find "ghq")
     :defer-config
+    (define-advice magit-repos-alist (:override (&rest _) override)
+      (magit-list-repos-uniquify
+       (--map (cons (f-short it) it)
+              (magit-list-repos))))
     (when (executable-find "ghq")
       (set-variable 'magit-repository-directories
                     (->> (kllib:shell-command-to-list "ghq root --all")

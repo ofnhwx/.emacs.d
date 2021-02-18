@@ -16,7 +16,9 @@
         (with-current-buffer buffer
           (cond
            ((chl--filename)
-            (setq-local header-line-format '((:eval (chl--file-format))))))))))
+            (setq-local header-line-format '((:eval (chl--file-format)))))
+           ((derived-mode-p 'magit-status-mode)
+            (setq-local header-line-format '((:eval (buffer-name))))))))))
   ;; ここはちょっと無理矢理
   (set-face-attribute 'header-line nil :inherit 'mode-line)
   (setq-local spaceline-buffer-id-p nil))

@@ -502,13 +502,7 @@
   (leaf org-roam
     :config
     (set-variable 'org-roam-directory (expand-file-name "roam" org-directory))
-    (e:place-in-cache org-roam-db-location "org-roam.db"))
-  (leaf ob-restclient
-    :after org
-    :config
-    (unless (--find (eq (car it) 'restclient) org-babel-load-languages)
-      (org-babel-do-load-languages 'org-babel-load-languages
-                                   (append org-babel-load-languages '((restclient . t)))))))
+    (e:place-in-cache org-roam-db-location "org-roam.db")))
 
 (leaf *skk
   :config

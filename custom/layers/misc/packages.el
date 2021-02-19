@@ -18,6 +18,7 @@
     helpful
     leaf
     magit-libgit
+    ob-typescript
     ox-reveal
     psysh
     rainbow-mode
@@ -125,6 +126,13 @@
 (defun misc/init-magit-libgit ()
   (use-package magit-libgit
     :defer t))
+
+(defun misc/init-ob-typescript ()
+  (spacemacs|use-package-add-hook org
+    :post-config
+    (use-package ob-typescript
+      :init
+      (add-to-list 'org-babel-load-languages '(typescript . t)))))
 
 (defun misc/init-ox-reveal ()
   (use-package ox-reveal

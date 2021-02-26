@@ -562,6 +562,9 @@
 
 (leaf paradox-github
   :defer-config
+  (set-variable 'paradox-column-width-package 30)
+  (set-variable 'paradox-column-width-version 13)
+  (set-variable 'paradox-column-width-star 5)
   (set-variable 'paradox-github-token (e:auth-source-get 'token :host "paradox")))
 
 (leaf prodigy

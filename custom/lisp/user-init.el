@@ -60,7 +60,6 @@
         ;; +source-control
         (git
          :variables
-         git-magit-status-fullscreen t
          git-enable-magit-delta-plugin t)
         (version-control
          :variables

@@ -395,10 +395,15 @@
   :defer-config
   (spacemacs|diminish ggtags-navigation-mode))
 
-(leaf google-translate-default-ui
+(leaf google-translate
   :defer-config
   (set-variable 'google-translate-default-source-language "en")
-  (set-variable 'google-translate-default-target-language "ja"))
+  (set-variable 'google-translate-default-target-language "ja")
+  ;; https://github.com/atykhonov/google-translate/issues/52
+  ;; https://github.com/atykhonov/google-translate/issues/137
+  (defun google-translate--search-tkk ()
+    "Search TKK."
+    (list 430675 2721866130)))
 
 (leaf *helm
   :config

@@ -57,7 +57,7 @@
       (setq rhs (-snoc rhs (powerline-raw (concat " " refname) face2 'r))))
     ;; 最後に合わせる
     (concat (powerline-render lhs)
-            (powerline-fill 'face0 (powerline-width rhs))
+            (powerline-fill face0 (powerline-width rhs))
             (powerline-render rhs))))
 
 

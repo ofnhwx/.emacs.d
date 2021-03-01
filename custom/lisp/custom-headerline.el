@@ -1,5 +1,8 @@
 ;;; custom-headerline.el
 
+(eval-and-compile
+  (require 'dash))
+
 
 
 (defun custom-headerline-start ()

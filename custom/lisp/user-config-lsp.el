@@ -6,14 +6,15 @@
   (e:place-in-cache lsp-session-file "lsp/session.v1")
   (e:place-in-cache lsp-intelephense-storage-path "lsp/cache")
   (set-variable 'lsp-file-watch-threshold 100000)
-  (set-variable 'lsp-headerline-breadcrumb-enable nil))
+  (set-variable 'lsp-headerline-breadcrumb-enable nil)
+  (set-variable 'lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
 
 (leaf lsp-completion
   :after lsp-mode
   :hook (lsp-completion-mode-hook . e:setup-lsp-completion-config)
   :config
   (defun e:setup-lsp-completion-config ()
-    (case major-mode
+    (cl-case major-mode
       ;; for Ruby
       ((enh-ruby-mode ruby-mode)
        (e:setup-company-backends '(company-capf company-robe :with company-tabnine)))
@@ -26,7 +27,7 @@
   :hook (lsp-diagnostics-mode-hook . e:setup-lsp-diagnostics-config)
   :config
   (defun e:setup-lsp-diagnostics-config ()
-    (case major-mode
+    (cl-case major-mode
       ;; for Ruby
       ((enh-ruby-mode ruby-mode)
        (when (flycheck-may-enable-checker 'ruby-rubocop)

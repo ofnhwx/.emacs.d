@@ -71,6 +71,10 @@
          helm-use-fuzzy nil)
         ;; +tags
         gtags
+        ;; +themes
+        (colors
+         :variables
+         colors-colorize-identifiers 'variables)
         ;; +tools
         (shell
          :variables

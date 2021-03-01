@@ -5,7 +5,6 @@
     atomic-chrome
     beacon
     codic
-    color-identifiers-mode
     company-tabnine
     company-try-hard
     deadgrep
@@ -21,7 +20,6 @@
     ob-typescript
     ox-reveal
     psysh
-    rainbow-mode
     visual-regexp
     vlf
     ))
@@ -43,12 +41,6 @@
     :defer t
     :config
     (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic"))))
-
-(defun misc/init-color-identifiers-mode ()
-  (use-package color-identifiers-mode
-    :config
-    (spacemacs|diminish color-identifiers-mode)
-    (global-color-identifiers-mode 1)))
 
 (defun misc/init-company-tabnine ()
   (use-package company-tabnine
@@ -144,12 +136,6 @@
 (defun misc/init-psysh ()
   (use-package psysh
     :defer t))
-
-(defun misc/init-rainbow-mode ()
-  (use-package rainbow-mode
-    :hook (prog-mode . rainbow-mode)
-    :config
-    (spacemacs|diminish rainbow-mode)))
 
 (defun misc/init-vlf ()
   (use-package vlf

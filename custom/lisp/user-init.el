@@ -118,6 +118,8 @@
         pangu-spacing
         ;; +lang/php
         company-php
+        php-auto-yasnippets
+        phpcbf
         ))
 
 (defun user-init-config ()

@@ -20,6 +20,10 @@
 (defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory))
 (add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
 
+;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1614558372038400
+(set-variable 'warning-suppress-log-types '((comp)))
+(set-variable 'warning-suppress-types '((comp)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Spacemacs
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

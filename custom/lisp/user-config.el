@@ -683,12 +683,6 @@
     :config
     (vterm-theme-solarized-dark)))
 
-(leaf warnings
-  :defer-config
-  ;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1614558372038400
-  (set-variable 'warning-suppress-log-types '((comp)))
-  (set-variable 'warning-suppress-types '((comp))))
-
 (leaf which-key
   :defer-config
   (spacemacs|diminish which-key-mode))

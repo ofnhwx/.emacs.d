@@ -377,6 +377,7 @@
 (leaf eww
   :bind (:eww-mode-map
          ("e" . eww-open-current-url-with-default-browser))
+  :defun (eww-current-url)
   :config
   (defun eww-open-current-url-with-default-browser ()
     (interactive)

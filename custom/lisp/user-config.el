@@ -63,8 +63,7 @@
   :config
   (spacemacs/set-leader-keys
     "%" 'query-replace
-    "&" 'async-shell-command
-    "tT" 'e:toggle-indent-tabs-mode)
+    "&" 'async-shell-command)
   (bind-keys*
    :map global-map
    ("C-;" . spacemacs/default-pop-shell)

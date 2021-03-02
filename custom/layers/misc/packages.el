@@ -26,7 +26,6 @@
 
 (defun misc/init-atomic-chrome ()
   (use-package atomic-chrome
-    :defer t
     :config
     (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server)))
 

@@ -180,12 +180,12 @@
   (set-variable 'avy-all-windows-alt t))
 
 (leaf bitwarden
-  :defun (bitwarden--auto-cmd
-          bitwarden--handle-message
-          bitwarden-get
-          bitwarden-get-field
-          bitwarden-unlock
-          bitwarden-unlocked-p)
+  :commands (bitwarden--auto-cmd
+             bitwarden--handle-message
+             bitwarden-get
+             bitwarden-get-field
+             bitwarden-unlock
+             bitwarden-unlocked-p)
   :config
   (defun bitwarden-get (account &optional key print-message)
     (unless (bitwarden-unlocked-p)
@@ -206,6 +206,10 @@
 (leaf browse-url
   :defer-config
   (set-variable 'browse-url-browser-function #'browse-url-by-choosen))
+
+(leaf codic
+  :defer-config
+  (set-variable 'codic-api-token (bitwarden-get-field "cd592ec0-b3e0-4616-aee4-acdb004b4b68" :token)))
 
 (leaf *company
   :config
@@ -566,7 +570,7 @@
   (set-variable 'paradox-column-width-package 30)
   (set-variable 'paradox-column-width-version 13)
   (set-variable 'paradox-column-width-star 5)
-  (set-variable 'paradox-github-token (e:auth-source-get 'token :host "paradox")))
+  (set-variable 'paradox-github-token (bitwarden-get-field "675208d4-75b0-4b95-94a3-aa6800455dfb" :paradox)))
 
 (leaf prodigy
   :commands (e:prodigy-start-service)

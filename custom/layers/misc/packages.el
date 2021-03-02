@@ -37,9 +37,7 @@
 
 (defun misc/init-codic ()
   (use-package codic
-    :defer t
-    :config
-    (set-variable 'codic-api-token (e:auth-source-get 'token :host "codic"))))
+    :defer t))
 
 (defun misc/init-company-tabnine ()
   (use-package company-tabnine

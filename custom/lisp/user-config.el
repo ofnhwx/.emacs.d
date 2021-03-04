@@ -663,6 +663,11 @@
   :defer-config
   (e:place-in-cache url-cookie-file "url/cookies"))
 
+(leaf vc
+  :config
+  (spacemacs/set-leader-keys
+    "gvh" #'vc-region-history))
+
 (leaf *vterm
   :config
   (leaf vterm

@@ -60,7 +60,8 @@
         ;; +source-control
         (git
          :variables
-         git-enable-magit-delta-plugin t)
+         git-enable-magit-delta-plugin t
+         git-magit-status-fullscreen t)
         (version-control
          :variables
          version-control-diff-tool 'diff-hl)

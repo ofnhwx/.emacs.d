@@ -67,6 +67,8 @@
   (bind-keys*
    :map global-map
    ("C-;" . spacemacs/default-pop-shell)
+   ("C-{" . evil-jump-backward)
+   ("C-}" . evil-jump-forward)
    :map ctl-x-map
    ("C-c" . helm-M-x))
   :doc "マークを辿る"

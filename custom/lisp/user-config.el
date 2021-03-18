@@ -490,32 +490,26 @@
   :defer-config
   (set-variable 'open-junk-file-format (expand-file-name "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))
 
-(leaf *org
-  :config
-  (leaf org
-    :defvar (org-agenda-file-regexp org-babel-load-languages)
-    :defer-config
-    (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
-    (when (f-directory? org-directory)
-      (set-variable 'org-default-notes-file (expand-file-name "index.org" org-directory))
-      (set-variable 'org-agenda-files (-union (list org-default-notes-file)
-                                              (directory-files-recursively org-directory org-agenda-file-regexp)))
-      (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3))))
-    (set-variable 'org-todo-keywords
-                  '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-                    (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
-    (set-variable 'org-startup-indented t)
-    (set-variable 'org-startup-folded nil)
-    (set-variable 'org-indent-mode-turns-on-hiding-stars nil)
-    (set-variable 'org-indent-indentation-per-level 2)
-    (set-variable 'org-edit-src-content-indentation 0)
-    (set-face-attribute 'org-level-1 nil :height 1.0)
-    (set-face-attribute 'org-level-2 nil :height 1.0)
-    (set-face-attribute 'org-level-3 nil :height 1.0))
-  (leaf org-roam
-    :config
-    (set-variable 'org-roam-directory (expand-file-name "roam" org-directory))
-    (e:place-in-cache org-roam-db-location "org-roam.db")))
+(leaf org
+  :defvar (org-agenda-file-regexp org-babel-load-languages)
+  :defer-config
+  (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
+  (when (f-directory? org-directory)
+    (set-variable 'org-default-notes-file (expand-file-name "index.org" org-directory))
+    (set-variable 'org-agenda-files (-union (list org-default-notes-file)
+                                            (directory-files-recursively org-directory org-agenda-file-regexp)))
+    (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3))))
+  (set-variable 'org-todo-keywords
+                '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
+                  (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
+  (set-variable 'org-startup-indented t)
+  (set-variable 'org-startup-folded nil)
+  (set-variable 'org-indent-mode-turns-on-hiding-stars nil)
+  (set-variable 'org-indent-indentation-per-level 2)
+  (set-variable 'org-edit-src-content-indentation 0)
+  (set-face-attribute 'org-level-1 nil :height 1.0)
+  (set-face-attribute 'org-level-2 nil :height 1.0)
+  (set-face-attribute 'org-level-3 nil :height 1.0))
 
 (leaf *skk
   :config

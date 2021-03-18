@@ -126,7 +126,10 @@
 (defun user-init-config ()
   (prog1 "これは後だと間に合わないのでここで設定"
     ;; +distributions/spacemacs-bootstrap
-    (set-variable 'vim-style-remap-Y-to-y$ t))
+    (set-variable 'vim-style-remap-Y-to-y$ t)
+    ;; +emacs/org
+    (set-variable 'org-roam-directory (expand-file-name "org/roam" e:private-directory))
+    (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" e:private-directory)))
   (prog1 "その他、先に設定しておきたいもの"
     (set-variable 'custom-file null-device)
     (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" spacemacs-cache-directory))

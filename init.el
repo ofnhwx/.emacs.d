@@ -8,37 +8,10 @@
 ;; You may delete these explanatory comments.
 ;;(package-initialize)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; 各種設定
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(let ((base (file-name-directory (or load-file-name buffer-file-name))))
+  (require 'bootstrap (expand-file-name "bootstrap.el" base)))
 
-;; パス関連の設定
-(let ((dir (file-name-directory (or load-file-name buffer-file-name))))
-  (setq user-emacs-directory (abbreviate-file-name dir)))
-(defvar e:custom-directory   (expand-file-name "custom/"   user-emacs-directory))
-(defvar e:external-directory (expand-file-name "external/" user-emacs-directory))
-(defvar e:private-directory  (expand-file-name "private/"  user-emacs-directory))
-(add-to-list 'load-path (expand-file-name "lisp" e:custom-directory))
-
-;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1614558372038400
-(set-variable 'warning-suppress-log-types '((comp)))
-(set-variable 'warning-suppress-types '((comp)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Spacemacs
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; フォント設定の調整
-(define-advice spacemacs/set-default-font (:after (&rest _) japanese-font-setting)
-  (let ((font (car dotspacemacs-default-font)))
-    (set-fontset-font t 'unicode (font-spec :family font))
-    (set-variable 'face-font-rescale-alist (list font 1.00))
-    (when (fboundp 'eaw-fullwidth)
-      (eaw-fullwidth))))
-
-(let ((user-emacs-directory (expand-file-name "spacemacs/" e:external-directory)))
-  (setenv "SPACEMACSDIR" e:custom-directory)
-  (load (expand-file-name "init" user-emacs-directory)))
+(e:load-init)
 
 (provide 'init)
 ;;; init.el ends here

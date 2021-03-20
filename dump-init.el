@@ -2,18 +2,9 @@
 ;;; Commentary:
 ;;; Code:
 
-(let* ((dir (file-name-directory (or load-file-name buffer-file-name)))
-       (spacemacs-init      (expand-file-name "external/spacemacs/init.el"   dir))
-       (spacemacs-dump-init (expand-file-name "external/spacemacs/dump-init" dir))
-       (custom-user-init    (expand-file-name "custom/lisp/user-init" dir))
-       (custom-init         (expand-file-name "init" dir)))
-  (defun fake-load-with-dump (args)
-    (if (string-equal (car args) spacemacs-init)
-        (prog1 (list custom-init)
-          (advice-remove 'load #'fake-load-with-dump)
-          (load custom-user-init))
-      args))
-  (advice-add 'load :filter-args #'fake-load-with-dump)
-  (load spacemacs-dump-init))
+(let ((base (file-name-directory (or load-file-name buffer-file-name))))
+  (require 'bootstrap (expand-file-name "bootstrap.el" base)))
+
+(e:load-dump-init)
 
 ;;; dump-init.el ends here

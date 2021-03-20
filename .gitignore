@@ -8,10 +8,11 @@
 !/.editorconfig
 !/.gitignore
 !/README.md
+!/bootstrap.el
 !/dump-init.el
 !/early-init.el
 !/init.el
-!/custom/
+!/distributions/
 !/external/
 !/private/
 

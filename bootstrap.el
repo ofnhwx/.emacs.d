@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(defvar e:distribution "spacemacs")
+(defvar e:distribution (or (getenv "EMACS_DISTRIBUTION") "spacemacs"))
 
 (let ((base (file-name-directory (or load-file-name buffer-file-name))))
   (setq user-emacs-directory (abbreviate-file-name base)))

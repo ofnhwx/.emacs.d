@@ -407,7 +407,7 @@
     :defer-config
     (set-variable 'google-translate-default-source-language "en")
     (set-variable 'google-translate-default-target-language "ja"))
-  (leaf google-translate-tk
+  (leaf google-translate-core
     :defer-config
     ;; https://github.com/atykhonov/google-translate/issues/52
     ;; https://github.com/atykhonov/google-translate/issues/137

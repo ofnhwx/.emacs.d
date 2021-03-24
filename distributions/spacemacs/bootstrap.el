@@ -8,18 +8,16 @@
         '(
           ;; +checkers
           spell-checking
-          syntax-checking
+          (syntax-checking :packages (not flycheck-pos-tip))
           ;; +completion
-          (auto-completion
-           :variables
-           auto-completion-enable-help-tooltip t
-           auto-completion-enable-sort-by-usage t
-           auto-completion-use-company-box t)
+          (auto-completion :variables
+                           auto-completion-enable-help-tooltip t
+                           auto-completion-enable-sort-by-usage t
+                           auto-completion-use-company-box t)
           helm
           ;; +emacs
-          (org
-           :variables
-           org-enable-roam-support t)
+          (org :variables
+               org-enable-roam-support t)
           better-defaults
           ;; +filetree
           treemacs
@@ -30,21 +28,18 @@
           ;; +fun
           emoji
           ;; +intl
-          japanese
+          (japanese :packages (not pangu-spacing))
           ;; +lang
-          (javascript
-           :variables
-           javascript-backend 'lsp)
-          (php
-           :variables
-           php-backend 'lsp)
-          (ruby
-           :variables
-           ruby-backend 'lsp
-           ruby-test-runner 'rspec)
-          (typescript
-           :variables
-           typescript-backend 'lsp)
+          (javascript :variables
+                      javascript-backend 'lsp)
+          (php :packages (not company-php php-auto-yasnippets phpcbf)
+               :variables
+               php-backend 'lsp)
+          (ruby :variables
+                ruby-backend 'lsp
+                ruby-test-runner 'rspec)
+          (typescript :variables
+                      typescript-backend 'lsp)
           csv
           emacs-lisp
           html
@@ -61,30 +56,25 @@
           ;; +readers
           dash
           ;; +source-control
-          (git
-           :variables
-           git-enable-magit-delta-plugin t
-           git-magit-status-fullscreen t)
-          (version-control
-           :variables
-           version-control-diff-tool 'diff-hl)
+          (git :variables
+               git-enable-magit-delta-plugin t
+               git-magit-status-fullscreen t)
+          (version-control :variables
+                           version-control-diff-tool 'diff-hl)
           github
           ;; +spacemacs
-          (spacemacs-completion
-           :variables
-           helm-use-fuzzy nil)
+          (spacemacs-completion :variables
+                                helm-use-fuzzy nil)
           ;; +tags
           gtags
           ;; +themes
-          (colors
-           :variables
-           colors-colorize-identifiers 'variables)
+          (colors :variables
+                  colors-colorize-identifiers 'variables)
           ;; +tools
-          (shell
-           :variables
-           shell-default-position 'full
-           shell-default-height 60
-           shell-default-shell 'vterm)
+          (shell :variables
+                 shell-default-position 'full
+                 shell-default-height 60
+                 shell-default-shell 'vterm)
           dap
           docker
           lsp
@@ -112,14 +102,6 @@
           dired-quick-sort
           ;; +spacemacs/spacemacs-evil
           evil-escape
-          ;; +checkers/syntax-checking
-          flycheck-pos-tip
-          ;; +intl/japanese
-          pangu-spacing
-          ;; +lang/php
-          company-php
-          php-auto-yasnippets
-          phpcbf
           )))
 
 (define-advice dotspacemacs/init (:after (&rest _) custom)

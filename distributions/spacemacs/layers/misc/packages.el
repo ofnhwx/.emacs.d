@@ -7,6 +7,7 @@
     codic
     company-tabnine
     company-try-hard
+    cov
     deadgrep
     dired-filter
     dired-toggle-sudo
@@ -51,6 +52,31 @@
     :bind (("C-z" . company-try-hard)
            :map company-active-map
            ("C-z" . company-try-hard))))
+
+(defun misc/init-cov ()
+  (use-package cov
+    :defer t
+    :init
+    (set-variable 'cov-coverage-file-paths '(cov--locate-simplecov))
+    (set-variable 'cov-coverage-mode t)
+    :config
+    (defun cov--locate-simplecov (file-dir file-name)
+      (let ((dir (kllib:project-root file-dir)))
+        (when dir
+          (cons (f-expand "coverage/.resultset.json" dir) 'simplecov))))
+    (defun cov--simplecov-parse ()
+      (let* ((contents (buffer-string))
+             (coverage (let-alist (json-parse-string contents :object-type 'alist :array-type 'list)
+                         .RSpec.coverage))
+             (project-root (f-expand (kllib:project-root cov-coverage-file))))
+        (-map (lambda (item)
+                (let ((file (symbol-name (first item)))
+                      (list (cdadr item)))
+                  (cons (s-replace project-root "" file)
+                        (->> list
+                          (--map-indexed (list (1+ it-index) it))
+                          (--reject (eq (second it) :null))))))
+              coverage)))))
 
 (defun misc/init-deadgrep ()
   (use-package deadgrep

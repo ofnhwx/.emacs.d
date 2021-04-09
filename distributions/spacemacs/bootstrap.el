@@ -123,10 +123,12 @@
   (prog1 "その他、先に設定しておきたいもの"
     (set-variable 'custom-file null-device)
     (set-variable 'evil-want-keybinding nil)
+    (set-variable 'frame-resize-pixelwise t)
     (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" spacemacs-cache-directory))
     (set-variable 'viper-mode nil)
     (set-variable 'which-key-enable-extended-define-key t)
     (set-variable 'which-key-show-early-on-C-h t)
+    (set-variable 'window-resize-pixelwise t)
     (setq-default ispell-local-dictionary "en_US"))
   (prog1 "skk でカーソルの色が変わらなくなったので暫定対応"
     (require 'facemenu)))

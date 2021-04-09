@@ -122,6 +122,7 @@
     (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" e:private-directory)))
   (prog1 "その他、先に設定しておきたいもの"
     (set-variable 'custom-file null-device)
+    (set-variable 'evil-want-keybinding nil)
     (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" spacemacs-cache-directory))
     (set-variable 'viper-mode nil)
     (set-variable 'which-key-enable-extended-define-key t)

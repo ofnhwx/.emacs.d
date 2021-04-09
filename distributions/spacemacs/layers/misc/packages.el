@@ -32,8 +32,8 @@
 
 (defun misc/init-beacon ()
   (use-package beacon
+    :spacediminish beacon-mode
     :config
-    (spacemacs|diminish beacon-mode)
     (beacon-mode 1)))
 
 (defun misc/init-codic ()
@@ -56,6 +56,7 @@
 (defun misc/init-cov ()
   (use-package cov
     :defer t
+    :spacediminish (cov-mode " ☂" " COV")
     :init
     (set-variable 'cov-coverage-file-paths '(cov--locate-simplecov))
     (set-variable 'cov-coverage-mode t)
@@ -99,8 +100,8 @@
 
 (defun misc/init-evil-owl ()
   (use-package evil-owl
+    :spacediminish evil-owl-mode
     :config
-    (spacemacs|diminish evil-owl-mode)
     (evil-owl-mode 1)))
 
 (defun misc/init-foreman-mode ()

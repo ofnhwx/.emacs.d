@@ -106,11 +106,12 @@
 
 (define-advice dotspacemacs/init (:after (&rest _) custom)
   "Customize `dotspacemacs/init'."
-  (setq dotspacemacs-editing-style 'hybrid)
-  (setq dotspacemacs-scratch-mode 'lisp-interaction-mode)
-  (setq dotspacemacs-scratch-buffer-persistent t)
   (setq dotspacemacs-default-font '("Cica" :size 12.0 :weight normal :width normal))
-  (setq dotspacemacs-enable-server t))
+  (setq dotspacemacs-editing-style 'hybrid)
+  (setq dotspacemacs-enable-server t)
+  (setq dotspacemacs-scratch-buffer-persistent t)
+  (setq dotspacemacs-scratch-mode 'lisp-interaction-mode)
+  (setq dotspacemacs-scroll-bar-while-scrolling t))
 
 (define-advice dotspacemacs/user-init (:after (&rest _) custom)
   "Customize `dotspacemacs/user-init'."

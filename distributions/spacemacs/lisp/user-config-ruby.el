@@ -4,6 +4,16 @@
   (and (executable-find "bundle")
        (zerop (call-process-shell-command (format "bundle info %s" name)))))
 
+(leaf projectile-rails
+  :init
+  (set-variable 'projectile-rails-component-dir "app/javascript/")
+  :defer-config
+  (spacemacs/set-leader-keys-for-minor-mode 'projectile-rails-mode
+    "ffC" 'projectile-rails-find-component
+    "ffS" 'projectile-rails-find-serializer
+    "ffV" 'projectile-rails-find-validator
+    "fgS" 'projectile-rails-find-serializer))
+
 (leaf ruby-mode
   :hook (ruby-mode-hook . e:setup-flycheck-rubocop)
   :config

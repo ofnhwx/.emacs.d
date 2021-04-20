@@ -111,7 +111,7 @@
   (setq dotspacemacs-enable-server t)
   (setq dotspacemacs-scratch-buffer-persistent t)
   (setq dotspacemacs-scratch-mode 'lisp-interaction-mode)
-  (setq dotspacemacs-scroll-bar-while-scrolling t))
+  (setq dotspacemacs-scroll-bar-while-scrolling nil))
 
 (define-advice dotspacemacs/user-init (:after (&rest _) custom)
   "Customize `dotspacemacs/user-init'."

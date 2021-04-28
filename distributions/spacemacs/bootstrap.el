@@ -68,8 +68,7 @@
           ;; +tags
           gtags
           ;; +themes
-          (colors :variables
-                  colors-colorize-identifiers 'variables)
+          colors
           ;; +tools
           (shell :variables
                  shell-default-position 'full

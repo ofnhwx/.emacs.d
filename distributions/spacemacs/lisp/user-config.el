@@ -621,16 +621,17 @@
   (set-variable 'recentf-max-menu-items 20)
   (set-variable 'recentf-max-saved-items 3000)
   (set-variable 'recentf-filename-handlers '(abbreviate-file-name))
+  (set-variable 'recentf-exclude (list (f-short recentf-save-file)
+                                       null-device))
   (defun e:recentf-save-list--cleanup (&rest _)
     "存在しないファイルを履歴から削除する"
-    (let ((items recentf-list)
-          (ignore `(,(f-short recentf-save-file) ,null-device)))
+    (let ((items recentf-list))
       (setq items (-map 'f-short items))
       (setq items (-distinct items))
       (setq items (--filter (or (file-remote-p it)
                                 (f-exists? it))
                             items))
-      (setq items (-difference items ignore))
+      (setq items (-difference items recentf-exclude))
       (setq recentf-list items))))
 
 (leaf tramp

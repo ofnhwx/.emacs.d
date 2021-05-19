@@ -453,8 +453,6 @@
 
 (leaf *magit
   :defun (magit-add-section-hook)
-  :init
-  (add-to-list 'load-path (f-expand "libegit2" e:external-directory))
   :config
   (leaf magit
     :commands (magit-insert-skip-worktree-files)

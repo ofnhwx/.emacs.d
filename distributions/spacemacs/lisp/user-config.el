@@ -63,7 +63,8 @@
   :config
   (spacemacs/set-leader-keys
     "%" 'query-replace
-    "&" 'async-shell-command)
+    "&" 'async-shell-command
+    "|" 'shell-command-on-region)
   (bind-keys*
    :map global-map
    ("C-;" . spacemacs/default-pop-shell)

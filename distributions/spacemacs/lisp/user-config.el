@@ -475,11 +475,6 @@
       (set-variable 'magit-repository-directories
                     (->> (kllib:shell-command-to-list "ghq root --all")
                          (--map (cons it 4))))))
-  (leaf magit-todos
-    :config
-    (spacemacs/set-leader-keys
-      "gT" 'helm-magit-todos)
-    (remove-hook 'magit-mode 'magit-todos-mode))
   (leaf transient
     :defer-config
     (set-variable 'transient-default-level 7)))

@@ -474,7 +474,7 @@
     (when (executable-find "ghq")
       (set-variable 'magit-repository-directories
                     (->> (kllib:shell-command-to-list "ghq root --all")
-                         (--map (cons it 4))))))
+                         (--map (cons it 5))))))
   (leaf transient
     :defer-config
     (set-variable 'transient-default-level 7)))

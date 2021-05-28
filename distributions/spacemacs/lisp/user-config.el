@@ -463,7 +463,10 @@
     (set-variable 'magit-diff-refine-ignore-whitespace t)
     (set-variable 'smerge-refine-ignore-whitespace nil)
     (magit-add-section-hook 'magit-status-sections-hook #'magit-insert-skip-worktree-files nil t)
-    (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
+    (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore)
+    :defer-config
+    (when (fboundp 'libgit-load)
+      (libgit-load)))
   (leaf magit
     :if (executable-find "ghq")
     :defer-config

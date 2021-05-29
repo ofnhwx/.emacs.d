@@ -5,6 +5,7 @@
     atomic-chrome
     beacon
     codic
+    company-prescient
     company-tabnine
     company-try-hard
     cov
@@ -39,6 +40,12 @@
 (defun misc/init-codic ()
   (use-package codic
     :defer t))
+
+(defun misc/init-company-prescient ()
+  (use-package company-prescient
+    :after company
+    :config
+    (company-prescient-mode 1)))
 
 (defun misc/init-company-tabnine ()
   (use-package company-tabnine

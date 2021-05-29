@@ -12,7 +12,6 @@
           ;; +completion
           (auto-completion :variables
                            auto-completion-enable-help-tooltip t
-                           auto-completion-enable-sort-by-usage t
                            auto-completion-use-company-box t)
           helm
           ;; +emacs

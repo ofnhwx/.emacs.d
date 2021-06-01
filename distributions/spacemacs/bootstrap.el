@@ -10,7 +10,8 @@
           spell-checking
           (syntax-checking :packages (not flycheck-pos-tip))
           ;; +completion
-          (auto-completion :variables
+          (auto-completion :packages (not yasnippet-snippets)
+                           :variables
                            auto-completion-enable-help-tooltip t
                            auto-completion-use-company-box t)
           helm

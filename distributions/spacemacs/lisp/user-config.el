@@ -724,6 +724,7 @@
 
 (leaf yasnippet
   :defer-config
+  (require 'yas-rails-helper)
   (spacemacs|diminish yas-minor-mode))
 
 

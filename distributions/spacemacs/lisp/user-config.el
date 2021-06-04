@@ -266,7 +266,9 @@
   (setq-default display-line-numbers-width 4))
 
 (leaf eaw
-  :commands (eaw-fullwidth))
+  :require t
+  :config
+  (eaw-fullwidth))
 
 (leaf ediff
   :commands (e:ediff)

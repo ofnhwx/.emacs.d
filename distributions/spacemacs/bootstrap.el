@@ -8,17 +8,15 @@
         '(
           ;; +checkers
           spell-checking
-          (syntax-checking :packages (not flycheck-pos-tip))
+          syntax-checking
           ;; +completion
-          (auto-completion :packages (not yasnippet-snippets)
-                           :variables
+          (auto-completion :variables
                            auto-completion-enable-help-tooltip t
                            auto-completion-use-company-box t)
           helm
           ;; +emacs
           (org :variables
                org-enable-roam-support t)
-          better-defaults
           ;; +filetree
           treemacs
           ;; +frameworks
@@ -28,12 +26,11 @@
           ;; +fun
           emoji
           ;; +intl
-          (japanese :packages (not pangu-spacing))
+          japanese
           ;; +lang
           (javascript :variables
                       javascript-backend 'lsp)
-          (php :packages (not company-php php-auto-yasnippets phpcbf)
-               :variables
+          (php :variables
                php-backend 'lsp)
           (ruby :variables
                 ruby-backend 'lsp
@@ -44,7 +41,6 @@
           emacs-lisp
           html
           markdown
-          python
           shell-scripts
           sql
           vimscript
@@ -53,8 +49,6 @@
           copy-as-format
           dtrt-indent
           multiple-cursors
-          ;; +readers
-          dash
           ;; +source-control
           (git :variables
                git-enable-magit-gitflow-plugin t
@@ -81,6 +75,8 @@
           prodigy
           restclient
           vagrant
+          ;; +web
+          eww
           ;; +web-services
           search-engine
           ;; +private
@@ -101,6 +97,27 @@
           dired-quick-sort
           ;; +spacemacs/spacemacs-evil
           evil-escape
+          ;; +spacemacs/spacemacs-navigation
+          golden-ratio
+          ;; +checkers/syntax-checking
+          flycheck-pos-tip
+          ;; +completion/auto-completion
+          auto-yasnippet
+          auto-complete
+          ac-ispell
+          fuzzy
+          yasnippet-snippets
+          ;; +completion/helm
+          helm-flx
+          helm-themes
+          ;; +intl/japanese
+          pangu-spacing
+          ;; +lang/php
+          company-php
+          php-auto-yasnippets
+          phpcbf
+          ;; +themes/colors
+          nyan-mode
           )))
 
 (define-advice dotspacemacs/init (:after (&rest _) custom)

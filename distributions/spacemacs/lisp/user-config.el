@@ -389,6 +389,7 @@
          ("e" . eww-open-current-url-with-default-browser))
   :defun (eww-current-url)
   :config
+  (set-variable 'eww-search-prefix "https://www.google.com/search?q=")
   (defun eww-open-current-url-with-default-browser ()
     (interactive)
     (browse-url-default-browser (eww-current-url))))

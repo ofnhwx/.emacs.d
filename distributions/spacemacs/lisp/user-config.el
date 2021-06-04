@@ -8,6 +8,7 @@
 
 
 (leaf command-logger
+  :disabled t
   :config
   (command-logger-on))
 
@@ -19,30 +20,30 @@
 
 
 (leaf japanese-language-environment
-  :doc "言語環境を日本語に設定"
   :config
+  ;; 言語環境を日本語に設定
   (set-language-environment "Japanese")
-  :doc "エンコーディングを設定"
-  :config
+  ;; エンコーディングを設定
   (let ((coding-system 'utf-8))
     (prefer-coding-system          coding-system)
-    (set-default-coding-systems    coding-system)
-    (set-buffer-file-coding-system coding-system)
-    (set-terminal-coding-system    coding-system)
-    (set-keyboard-coding-system    coding-system))
-  :doc "ロケールを設定"
-  :config
+    (set-buffer-file-coding-system coding-system))
+  ;;ロケールを設定
   (let ((value "ja_JP.UTF-8"))
     (setenv "LANG" value)
     (setenv "LC_ALL" value)))
 
-(leaf appearance
-  :doc "モードラインに不要な表示をしない"
+(leaf spacemacs
   :config
+  ;; ダンプ処理に小細工を仕掛けていろいろ上手く調整
+  (leaf core-dumper
+    :defer-config
+    (define-advice spacemacs/dump-emacs (:around (fn &rest args) trick)
+      (let ((spacemacs-start-directory user-emacs-directory))
+        (apply fn args))))
+  ;; モードラインに不要な表示をしない
   (spacemacs/defer-until-after-user-config #'spacemacs/toggle-mode-line-version-control-off)
   (set-variable 'spaceline-selection-info-p nil)
-  :doc "モードラインのファイルエンコーディングの表示を改善"
-  :config
+  ;; モードラインのファイルエンコーディングの表示を改善
   (spaceline-define-segment buffer-encoding-abbrev
     "The line ending convention used in the buffer."
     (let ((buf-coding (format "%s" buffer-file-coding-system)))
@@ -54,67 +55,68 @@
                     )))
     :separator " "))
 
-(leaf general
-  :doc "エイリアス"
+(leaf custom-aliases
   :config
   (defalias 'exit 'save-buffers-kill-terminal)
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  :doc "キーバインディング"
+  (defalias 'yes-or-no-p 'y-or-n-p))
+
+(leaf custom-keybindings
   :config
   (spacemacs/set-leader-keys
     "%" 'query-replace
     "&" 'async-shell-command
-    "|" 'shell-command-on-region)
+    "^" 'ace-window
+    "|" 'shell-command-on-region
+    "gvh" 'vc-region-history)
   (bind-keys*
    :map global-map
    ("C-;" . spacemacs/default-pop-shell)
-   ("C-{" . evil-jump-backward)
-   ("C-}" . evil-jump-forward)
+   ("C-<" . evil-jump-backward)
+   ("C->" . evil-jump-forward)
+   ("C-^" . ace-window)
    :map ctl-x-map
-   ("C-c" . helm-M-x))
-  :doc "マークを辿る"
+   ("C-c" . helm-M-x)))
+
+
+
+(leaf buffer.c
   :config
-  (set-variable 'set-mark-command-repeat-pop t)
-  :doc "シェルの設定"
+  (setq-default bidi-display-reordering nil)
+  (setq-default truncate-lines t))
+
+(leaf callproc.c
   :config
   (set-variable 'shell-file-name
                 (or (executable-find "zsh")
                     (executable-find "bash")
-                    (executable-find "sh")))
-  :doc "パスワード関連"
+                    (executable-find "sh"))))
+
+(leaf filelock.c
   :config
-  (set-variable 'epa-pinentry-mode 'loopback)
-  (set-variable 'password-cache-expiry 3600)
-  (set-variable 'plstore-encoded t)
-  :doc "折り返し"
+  (set-variable 'create-lockfiles nil))
+
+(leaf indent.c
   :config
-  (setq-default truncate-lines t)
-  (set-variable 'truncate-partial-width-windows nil)
-  :doc "最終行の改行"
+  (spacemacs|add-toggle indent-tabs-mode
+    :status indent-tabs-mode
+    :on  (setq indent-tabs-mode t)
+    :off (setq indent-tabs-mode nil)
+    :evil-leader "tT"))
+
+(leaf minibuf.c
   :config
-  (set-variable 'mode-require-final-newline nil)
-  (set-variable 'require-final-newline nil)
-  :doc "ロックファイルを使用しない"
+  (set-variable 'history-delete-duplicates t))
+
+(leaf xdisp.c
   :config
-  (set-variable 'create-lockfiles nil)
-  :doc "右から左に読む言語に対応しない"
-  :config
-  (setq-default bidi-display-reordering nil)
-  :doc "コマンド履歴の重複を排除"
-  :config
-  (set-variable 'history-delete-duplicates t)
-  :doc "特定のバッファを消去しない"
-  :config
-  (dolist (buffer '("*scratch*" "*Messages*"))
-    (with-current-buffer buffer
-      (emacs-lock-mode 'kill))))
+  (set-variable 'truncate-partial-width-windows nil))
 
 
 
 (leaf configurations-for-Mac
   :if (spacemacs/system-is-mac)
-  :doc "タイトルバーの見た目を変更"
   :config
+  ;; タイトルバーの見た目を変更
   (let ((items '((ns-transparent-titlebar . t)
                  (ns-appearance . dark))))
     (dolist (item items)
@@ -122,15 +124,14 @@
       (assq-delete-all (car item) default-frame-alist)
       (add-to-list 'initial-frame-alist item)
       (add-to-list 'default-frame-alist item)))
-  :doc "特殊キーの設定"
-  :config
+  ;; 特殊キーの設定
   (set-variable 'ns-command-modifier 'meta)
   (set-variable 'ns-right-command-modifier 'super)
   (set-variable 'ns-alternate-modifier 'none))
 
 (leaf configurations-for-WSL1/2
-  :doc "WSLの情報を表示"
   :config
+  ;; WSLの情報を表示
   (when (executable-find "uname")
     (let ((uname (kllib:shell-command-to-string "uname -a")))
       (cond
@@ -138,13 +139,13 @@
         (set-variable 'dotspacemacs-frame-title-format "(WSL2) %I@%S"))
        ((s-index-of "Microsoft" uname)
         (set-variable 'dotspacemacs-frame-title-format "(WSL1) %I@%S")))))
-  :doc "Windows側のブラウザを起動"
   :config
+  ;; Windows側のブラウザを起動
   (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
         (cmd-args '("/c" "start")))
     (when (file-exists-p cmd-exe)
-      (set-variable 'browse-url-generic-program  cmd-exe)
-      (set-variable 'browse-url-generic-args     cmd-args))))
+      (set-variable 'browse-url-generic-program cmd-exe)
+      (set-variable 'browse-url-generic-args    cmd-args))))
 
 (leaf load-local-configurations
   :config
@@ -155,23 +156,8 @@
 
 
 
-(leaf spacemacs
-  :config
-  (leaf core-dumper
-    :doc "ダンプ処理に小細工を仕掛けていろいろ上手く調整"
-    :defer-config
-    (define-advice spacemacs/dump-emacs (:around (fn &rest args) trick)
-      (let ((spacemacs-start-directory user-emacs-directory))
-        (apply fn args)))))
-
-
-
 (leaf ace-window
-  :bind (("C-^" . ace-window))
-  :init
-  (spacemacs/set-leader-keys
-    "^" 'ace-window)
-  :config
+  :defer-config
   (set-variable 'aw-keys (number-sequence ?1 ?9))
   (set-variable 'aw-scope 'frame))
 
@@ -207,6 +193,13 @@
 
 (leaf browse-url
   :defer-config
+  (defun browse-url-by-choosen (url &optional new-window)
+    "選択したブラウザで URL を開く."
+    (interactive)
+    (let ((browsers '(eww-browse-url browse-url-default-browser)))
+      (when browse-url-generic-program
+        (add-to-list 'browsers 'browse-url-generic t))
+      (funcall (intern (completing-read "Choose Browser: " browsers)) url new-window)))
   (set-variable 'browse-url-browser-function #'browse-url-by-choosen))
 
 (leaf codic
@@ -226,7 +219,7 @@
                        company-files
                        company-dabbrev)))
         (setq-local company-backends (-concat (list backends) default))))
-    :config
+    :defer-config
     (spacemacs|diminish company-mode))
   (leaf company-box
     :defer-config
@@ -262,19 +255,18 @@
     (ls-lisp-extension-on)))
 
 (leaf display-line-numbers
-  :hook ((find-file-hook . e:display-line-numbers-mode-on)
-         (prog-mode-hook . e:display-line-numbers-mode-on)
-         (html-mode-hook . e:display-line-numbers-mode-on))
+  :hook ((find-file-hook . spacemacs/toggle-display-line-numbers-mode-on)
+         (prog-mode-hook . spacemacs/toggle-display-line-numbers-mode-on)
+         (html-mode-hook . spacemacs/toggle-display-line-numbers-mode-on))
   :config
-  (defun e:display-line-numbers-mode-on ()
-    (interactive)
-    (display-line-numbers-mode 1))
+  (spacemacs|add-toggle display-line-numbers-mode
+    :status display-line-numbers-mode
+    :on  (display-line-numbers-mode 1)
+    :off (display-line-numbers-mode 0))
   (setq-default display-line-numbers-width 4))
 
 (leaf eaw
-  :require t
-  :config
-  (eaw-fullwidth))
+  :commands (eaw-fullwidth))
 
 (leaf ediff
   :commands (e:ediff)
@@ -291,11 +283,21 @@
                  (nth 1 files))
         (call-interactively #'ediff)))))
 
+(leaf emacs-lock
+  :config
+  (dolist (buffer '("*scratch*" "*Messages*"))
+    (with-current-buffer buffer
+      (emacs-lock-mode 'kill))))
+
 (leaf emmet-mode
   :bind (:emmet-mode-keymap
          ("<C-return>" . nil)
          ("C-c C-j" . emmet-expand-line)
          ("C-j" . nil)))
+
+(leaf epg-config
+  :defer-config
+  (set-variable 'epg-pinentry-mode 'loopback))
 
 (leaf eshell
   :defer-config
@@ -389,6 +391,11 @@
     (interactive)
     (browse-url-default-browser (eww-current-url))))
 
+(leaf files
+  :defer-config
+  (set-variable 'mode-require-final-newline nil)
+  (set-variable 'require-final-newline nil))
+
 (leaf flyspell
   :bind (:flyspell-mode-map
          ("C-;" . nil)))
@@ -462,9 +469,9 @@
     (set-variable 'magit-diff-refine-hunk 'all)
     (set-variable 'magit-diff-refine-ignore-whitespace t)
     (set-variable 'smerge-refine-ignore-whitespace nil)
-    (magit-add-section-hook 'magit-status-sections-hook #'magit-insert-skip-worktree-files nil t)
+    (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-skip-worktree-files nil t)
+    (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview 'magit-insert-stashes t)
     (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore)
-    :defer-config
     (when (fboundp 'libgit-load)
       (libgit-load)))
   (leaf magit
@@ -570,15 +577,17 @@
   (set-variable 'paradox-column-width-star 5)
   (set-variable 'paradox-github-token (bitwarden-get-field "675208d4-75b0-4b95-94a3-aa6800455dfb" :paradox)))
 
+(leaf password-cache
+  :defer-config
+  (set-variable 'password-cache-expiry 3600))
+
 (leaf prodigy
   :commands (e:prodigy-start-service)
   :config
-  (leaf e:prodigy-start-service
-    :config
-    (defun e:prodigy-start-service (name)
-      (let ((service (prodigy-find-service name)))
-        (when service
-          (prodigy-start-service service))))))
+  (defun e:prodigy-start-service (name)
+    (let ((service (prodigy-find-service name)))
+      (when service
+        (prodigy-start-service service)))))
 
 (leaf projectile
   :if (executable-find "ghq")
@@ -604,6 +613,10 @@
   (set-variable 'shr-use-fonts nil)
   (set-variable 'shr-use-colors nil)
   (set-variable 'shr-max-image-proportion 0.6))
+
+(leaf simple
+  :defer-config
+  (set-variable 'set-mark-command-repeat-pop t))
 
 (leaf smartparens
   :defer-config
@@ -658,11 +671,6 @@
 (leaf url-cookie
   :defer-config
   (e:place-in-cache url-cookie-file "url/cookies"))
-
-(leaf vc
-  :config
-  (spacemacs/set-leader-keys
-    "gvh" #'vc-region-history))
 
 (leaf *vterm
   :config

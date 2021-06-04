@@ -124,6 +124,7 @@
     (set-variable 'custom-file null-device)
     (set-variable 'evil-want-keybinding nil)
     (set-variable 'frame-resize-pixelwise t)
+    (set-variable 'package-gnupghome-dir (expand-file-name "gnupg" spacemacs-cache-directory))
     (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" spacemacs-cache-directory))
     (set-variable 'viper-mode nil)
     (set-variable 'which-key-enable-extended-define-key t)

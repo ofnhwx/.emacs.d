@@ -39,7 +39,7 @@
 
 (defun misc/init-codic ()
   (use-package codic
-    :defer t))
+    :no-require t))
 
 (defun misc/init-company-prescient ()
   (use-package company-prescient
@@ -88,7 +88,7 @@
 
 (defun misc/init-deadgrep ()
   (use-package deadgrep
-    :defer t))
+    :no-require))
 
 (defun misc/init-dired-filter ()
   (use-package dired-filter
@@ -96,7 +96,7 @@
 
 (defun misc/init-dired-toggle-sudo ()
   (use-package dired-toggle-sudo
-    :defer t))
+    :no-require t))
 
 (defun misc/init-elisp-demos ()
   (use-package elisp-demos
@@ -144,11 +144,13 @@
 
 (defun misc/init-leaf ()
   (use-package leaf
-    :defer t))
+    :no-require t))
 
 (defun misc/init-magit-libgit ()
   (use-package magit-libgit
-    :defer t))
+    :after (magit)
+    :config
+    (libgit-load)))
 
 (defun misc/init-ob-typescript ()
   (spacemacs|use-package-add-hook org
@@ -166,11 +168,11 @@
 
 (defun misc/init-psysh ()
   (use-package psysh
-    :defer t))
+    :no-require t))
 
 (defun misc/init-vlf ()
   (use-package vlf
-    :defer t))
+    :no-require t))
 
 (defun misc/init-visual-regexp ()
   (use-package visual-regexp

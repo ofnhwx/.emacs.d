@@ -472,11 +472,9 @@
     (set-variable 'magit-diff-refine-hunk 'all)
     (set-variable 'magit-diff-refine-ignore-whitespace t)
     (set-variable 'smerge-refine-ignore-whitespace nil)
-    (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-skip-worktree-files nil t)
-    (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview 'magit-insert-stashes t)
-    (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore)
-    (when (fboundp 'libgit-load)
-      (libgit-load)))
+    (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview 'magit-insert-status-headers t)
+    (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-skip-worktree-files 'magit-insert-stashes t)
+    (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore))
   (leaf magit
     :if (executable-find "ghq")
     :defer-config

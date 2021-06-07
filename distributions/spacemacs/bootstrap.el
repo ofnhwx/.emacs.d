@@ -157,6 +157,10 @@
 
 
 
+(define-advice spacemacs/recompile-elpa (:after (&rest _) recompile-distribution)
+  "elpa パッケージのコンパイルに引っかけて設定をリコンパイル."
+  (byte-recompile-directory e:distribution-directory))
+
 (define-advice spacemacs/set-default-font (:after (&rest _) japanese-font-setting)
   "spacemacs のフォント設定に引っかけて日本語関連の設定を行う."
   (let ((font (car dotspacemacs-default-font)))

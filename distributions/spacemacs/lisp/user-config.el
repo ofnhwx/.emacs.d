@@ -466,8 +466,7 @@
   :defun (magit-add-section-hook)
   :config
   (leaf magit
-    :commands (magit-insert-skip-worktree-files)
-    :config
+    :defer-config
     (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
     (set-variable 'magit-diff-refine-hunk 'all)
     (set-variable 'magit-diff-refine-ignore-whitespace t)

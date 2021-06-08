@@ -5,6 +5,7 @@
     atomic-chrome
     beacon
     codic
+    company-org-block
     company-prescient
     company-tabnine
     company-try-hard
@@ -40,6 +41,10 @@
 (defun misc/init-codic ()
   (use-package codic
     :no-require t))
+
+(defun misc/init-company-org-block ()
+  (with-no-warnings
+    (spacemacs|add-company-backends :backends company-org-block :modes org-mode)))
 
 (defun misc/init-company-prescient ()
   (use-package company-prescient

@@ -16,6 +16,7 @@
     elisp-demos
     evil-owl
     foreman-mode
+    good-scroll
     grugru
     helpful
     leaf
@@ -125,6 +126,9 @@
                 ("x" . foreman-kill-proc))
     :init
     (spacemacs/set-leader-keys "atf" #'foreman)))
+
+(defun misc/init-good-scroll ()
+  (spacemacs/defer-until-after-user-config #'good-scroll-mode))
 
 (defun misc/init-grugru ()
   (use-package grugru

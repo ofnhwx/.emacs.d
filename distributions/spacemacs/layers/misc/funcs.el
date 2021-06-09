@@ -3,7 +3,16 @@
 (defun affe-find-in-project (&optional initial)
   (interactive)
   (let ((project-root (kllib:project-root default-directory)))
-    (affe-find project-root initial)))
+    (if project-root
+        (affe-find project-root initial)
+      (message "error: Not in a project."))))
+
+(defun affe-grep-in-project (&optional initial)
+  (interactive)
+  (let ((project-root (kllib:project-root default-directory)))
+    (if project-root
+        (affe-grep project-root initial)
+      (message "error: Not in a project."))))
 
 (defun cov--locate-simplecov (file-dir file-name)
   (let ((dir (kllib:project-root file-dir)))

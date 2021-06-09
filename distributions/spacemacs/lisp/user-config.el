@@ -167,30 +167,6 @@
   (set-variable 'avy-all-windows nil)
   (set-variable 'avy-all-windows-alt t))
 
-(leaf bitwarden
-  :commands (bitwarden--auto-cmd
-             bitwarden--handle-message
-             bitwarden-get
-             bitwarden-get-field
-             bitwarden-unlock
-             bitwarden-unlocked-p)
-  :config
-  (defun bitwarden-get (account &optional key print-message)
-    (unless (bitwarden-unlocked-p)
-      (bitwarden-unlock))
-    (let* ((args (list "get" "item" account))
-           (json (bitwarden--handle-message (bitwarden--auto-cmd args) print-message))
-           (result (json-parse-string json :object-type 'plist)))
-      (if key
-          (plist-get result key)
-        result)))
-  (defun bitwarden-get-field (account key)
-    (let ((key (string-trim-left (format "%s" key) ":"))
-          (result (bitwarden-get account :fields)))
-      (plist-get (--first (string-equal (plist-get it :name) key)
-                          (append result nil))
-                 :value))))
-
 (leaf browse-url
   :defer-config
   (defun browse-url-by-choosen (url &optional new-window)
@@ -204,7 +180,7 @@
 
 (leaf codic
   :defer-config
-  (set-variable 'codic-api-token (bitwarden-get-field "cd592ec0-b3e0-4616-aee4-acdb004b4b68" :token)))
+  (set-variable 'codic-api-token (getenv "EMACS_CODIC_API_TOKEN")))
 
 (leaf *company
   :config
@@ -568,7 +544,7 @@
   (set-variable 'paradox-column-width-package 30)
   (set-variable 'paradox-column-width-version 13)
   (set-variable 'paradox-column-width-star 5)
-  (set-variable 'paradox-github-token (bitwarden-get-field "675208d4-75b0-4b95-94a3-aa6800455dfb" :paradox)))
+  (set-variable 'paradox-github-token (getenv "EMACS_PARADOX_GITHUB_TOKEN")))
 
 (leaf password-cache
   :defer-config

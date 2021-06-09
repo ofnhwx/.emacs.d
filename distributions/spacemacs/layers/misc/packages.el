@@ -66,25 +66,7 @@
   (with-eval-after-load 'cov
     (spacemacs|diminish cov-mode " ☂" " COV")
     (set-variable 'cov-coverage-file-paths '(cov--locate-simplecov))
-    (set-variable 'cov-coverage-mode t)
-    (prog1 "`simplecov' 用の設定"
-      (defun cov--locate-simplecov (file-dir file-name)
-        (let ((dir (kllib:project-root file-dir)))
-          (when dir
-            (cons (f-expand "coverage/.resultset.json" dir) 'simplecov))))
-      (defun cov--simplecov-parse ()
-        (let* ((contents (buffer-string))
-               (coverage (let-alist (json-parse-string contents :object-type 'alist :array-type 'list)
-                           .RSpec.coverage))
-               (project-root (f-expand (kllib:project-root cov-coverage-file))))
-          (-map (lambda (item)
-                  (let ((file (symbol-name (first item)))
-                        (list (cdadr item)))
-                    (cons (s-replace project-root "" file)
-                          (->> list
-                            (--map-indexed (list (1+ it-index) it))
-                            (--reject (eq (second it) :null))))))
-                coverage))))))
+    (set-variable 'cov-coverage-mode t)))
 
 (defun misc/init-deadgrep ())
 
@@ -103,6 +85,11 @@
   (spacemacs/defer-until-after-user-config #'evil-owl-mode))
 
 (defun misc/init-foreman-mode ()
+  (eval-when-compile
+    (defvar foreman-mode-map)
+    (declare-function foreman-kill-proc 'foreman-mode)
+    (declare-function foreman-restart   'foreman-mode)
+    (declare-function foreman-stop      'foreman-mode))
   (spacemacs/set-leader-keys "atf" #'foreman)
   (bind-keys :package foreman-mode
              :map foreman-mode-map

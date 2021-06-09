@@ -2,6 +2,7 @@
 
 (defvar misc-packages
   '(
+    affe
     atomic-chrome
     beacon
     codic
@@ -27,6 +28,11 @@
     visual-regexp
     vlf
     ))
+
+(defun misc/init-affe ()
+  (spacemacs/set-leader-keys
+    "fz" 'affe-find
+    "pz" 'affe-find-in-project))
 
 (defun misc/init-atomic-chrome ()
   (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server))

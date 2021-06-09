@@ -432,13 +432,6 @@
     :bind (([remap eval-expression] . helm-eval-expression))
     :config
     (set-variable 'helm-buffer-max-length nil))
-  (leaf helm-fzf
-    :init
-    (spacemacs/set-leader-keys
-      "fz" 'helm-fzf
-      "pz" 'helm-fzf-project-root)
-    :defer-config
-    (set-variable 'helm-fzf-args nil))
   (leaf helm-gtags
     :defer-config
     (spacemacs|diminish helm-gtags-mode))

@@ -75,7 +75,7 @@
    ("C->" . evil-jump-forward)
    ("C-^" . ace-window)
    :map ctl-x-map
-   ("C-c" . helm-M-x)))
+   ("C-c" . spacemacs/helm-M-x-fuzzy-matching)))
 
 
 
@@ -405,7 +405,7 @@
 (leaf *helm
   :config
   (leaf helm
-    :bind (([remap eval-expression] . helm-eval-expression))
+    :bind (([remap eval-expression] . helm-eval-expression-with-eldoc))
     :config
     (set-variable 'helm-buffer-max-length nil))
   (leaf helm-gtags

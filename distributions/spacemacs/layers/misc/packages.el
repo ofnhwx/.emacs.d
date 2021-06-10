@@ -2,7 +2,6 @@
 
 (defvar misc-packages
   '(
-    affe
     atomic-chrome
     beacon
     codic
@@ -23,21 +22,11 @@
     leaf
     magit-libgit
     ob-typescript
-    orderless
     ox-reveal
     psysh
     visual-regexp
     vlf
     ))
-
-(defun misc/init-affe ()
-  (with-eval-after-load 'affe
-    (when (require 'orderless nil t)
-      (set-variable 'affe-regexp-function 'orderless-pattern-compiler)
-      (set-variable 'affe-highlight-function 'orderless--highlight)))
-  (spacemacs/set-leader-keys
-    "fz" 'affe-find
-    "pz" 'affe-find-in-project))
 
 (defun misc/init-atomic-chrome ()
   (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server))
@@ -134,8 +123,6 @@
   (spacemacs|use-package-add-hook org
     :post-config
     (add-to-list 'org-babel-load-languages '(typescript . t))))
-
-(defun misc/init-orderless ())
 
 (defun misc/init-ox-reveal ()
   (set-variable 'org-reveal-reveal-js-version 4)

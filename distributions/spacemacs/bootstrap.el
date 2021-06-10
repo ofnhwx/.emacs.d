@@ -80,6 +80,7 @@
           ;; +web-services
           search-engine
           ;; +private
+          vertico
           misc
           ))
   (setq dotspacemacs-additional-packages

@@ -110,6 +110,9 @@
   (spacemacs/set-leader-keys "xgg" #'grugru))
 
 (defun misc/init-helpful ()
+  (with-eval-after-load 'helpful
+    (evil-define-key 'normal helpful-mode-map (kbd "gr") 'helpful-update)
+    (evil-define-key 'normal helpful-mode-map (kbd "q") 'quit-window))
   (spacemacs/declare-prefix "hdd" "helpful")
   (spacemacs/set-leader-keys
     "hddc" 'helpful-callable

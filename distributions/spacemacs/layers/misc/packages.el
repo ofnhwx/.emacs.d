@@ -2,6 +2,7 @@
 
 (defvar misc-packages
   '(
+    affe
     atomic-chrome
     beacon
     codic
@@ -9,128 +10,233 @@
     company-prescient
     company-tabnine
     company-try-hard
+    consult
     cov
     deadgrep
     dired-filter
     dired-toggle-sudo
     elisp-demos
+    embark
+    embark-consult
     evil-owl
     foreman-mode
     good-scroll
     grugru
+    helm
     helpful
     leaf
     magit-libgit
+    marginalia
     ob-typescript
+    orderless
     ox-reveal
     psysh
+    vertico
     visual-regexp
     vlf
     ))
 
+(defun misc/init-affe ()
+  (use-package affe
+    :defer (spacemacs/defer)
+    :init
+    (spacemacs/set-leader-keys
+      "fz" 'affe-find
+      "fg" 'affe-grep)
+    :config
+    (set-variable 'affe-regexp-function 'orderless-pattern-compiler)
+    (set-variable 'affe-highlight-function 'orderless--highlight)))
+
 (defun misc/init-atomic-chrome ()
-  (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server))
+  (use-package atomic-chrome
+    :defer (spacemacs/defer)
+    :init
+    (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server)))
 
 (defun misc/init-beacon ()
-  (with-eval-after-load 'beacon
-    (spacemacs|hide-lighter beacon-mode))
-  (spacemacs/defer-until-after-user-config #'beacon-mode))
+  (use-package beacon
+    :defer (spacemacs/defer)
+    :spacediminish beacon-mode
+    :init
+    (spacemacs/defer-until-after-user-config #'beacon-mode)))
 
-(defun misc/init-codic ())
+(defun misc/init-codic ()
+  (use-package codic
+    :no-require t))
+
+(defun misc/init-consult ()
+  (use-package consult
+    :bind (([remap goto-line] . consult-goto-line))
+    :config
+    (set-variable 'consult-project-root-function 'kllib:project-root)))
 
 (defun misc/init-company-org-block ()
-  (with-no-warnings (spacemacs|add-company-backends :backends company-org-block :modes org-mode)))
+  (use-package company-org-block
+    :after (company org)
+    :config
+    (with-no-warnings (spacemacs|add-company-backends :backends company-org-block :modes org-mode))))
 
 (defun misc/init-company-prescient ()
-  (with-eval-after-load 'company
+  (use-package company-prescient
+    :after (company)
+    :config
     (company-prescient-mode 1)))
 
 (defun misc/init-company-tabnine ()
-  (with-eval-after-load 'company-tabnine
+  (use-package company-tabnine
+    :defer (spacemacs/defer)
+    :config
     (set-variable 'company-tabnine-binaries-folder
                   (expand-file-name "tabnine" spacemacs-cache-directory))))
 
 (defun misc/init-company-try-hard ()
-  (bind-keys :package company-try-hard
-             ("C-z" . company-try-hard)
-             :map company-active-map
-             ("C-z" . company-try-hard)))
+  (use-package company-try-hard
+    :bind (("C-z" . company-try-hard)
+           :map company-active-map
+           ("C-z" . company-try-hard))))
 
 (defun misc/init-cov ()
-  (with-eval-after-load 'cov
-    (spacemacs|diminish cov-mode " ☂" " COV")
+  (use-package cov
+    :defer (spacemacs/defer)
+    :spacediminish (cov-mode " ☂" " COV")
+    :config
     (set-variable 'cov-coverage-file-paths '(cov--locate-simplecov))
     (set-variable 'cov-coverage-mode t)))
 
-(defun misc/init-deadgrep ())
+(defun misc/init-deadgrep ()
+  (use-package deadgrep
+    :no-require t))
 
 (defun misc/init-dired-filter ()
-  (add-hook 'dired-mode-hook #'dired-filter-mode))
+  (use-package dired-filter
+    :hook (dired-mode . dired-filter-mode)))
 
-(defun misc/init-dired-toggle-sudo ())
+(defun misc/init-dired-toggle-sudo ()
+  (use-package dired-toggle-sudo
+    :no-require t))
 
 (defun misc/init-elisp-demos ()
-  (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1)
-  (advice-add 'helpful-update      :after #'elisp-demos-advice-helpful-update))
+  (use-package elisp-demos
+    :defer (spacemacs/defer)
+    :init
+    (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1)
+    (advice-add 'helpful-update      :after #'elisp-demos-advice-helpful-update)))
+
+(defun misc/init-embark ()
+  (use-package embark
+    :defer (spacemacs/defer)
+    :init
+    (bind-key "C-c C-e" 'embark-export minibuffer-local-map)))
+
+(defun misc/init-embark-consult ()
+  (use-package embark-consult
+    :after (embark consult)))
 
 (defun misc/init-evil-owl ()
-  (with-eval-after-load 'evil-owl
-    (spacemacs|hide-lighter evil-owl-mode))
-  (spacemacs/defer-until-after-user-config #'evil-owl-mode))
+  (use-package evil-owl
+    :defer (spacemacs/defer)
+    :spacediminish evil-owl-mode
+    :init
+    (spacemacs/defer-until-after-user-config #'evil-owl-mode)))
 
 (defun misc/init-foreman-mode ()
-  (eval-when-compile
-    (defvar foreman-mode-map)
-    (declare-function foreman-kill-proc 'foreman-mode)
-    (declare-function foreman-restart   'foreman-mode)
-    (declare-function foreman-stop      'foreman-mode))
-  (spacemacs/set-leader-keys "atf" #'foreman)
-  (bind-keys :package foreman-mode
-             :map foreman-mode-map
-             ("R" . foreman-restart)
-             ("S" . foreman-start)
-             ("X" . foreman-stop)
-             ("x" . foreman-kill-proc)))
+  (use-package foreman-mode
+    :bind (:map foreman-mode-map
+                ("R" . foreman-restart)
+                ("S" . foreman-start)
+                ("X" . foreman-stop)
+                ("x" . foreman-kill-proc))
+    :init
+    (spacemacs/set-leader-keys "atf" #'foreman)))
 
 (defun misc/init-good-scroll ()
-  (spacemacs/defer-until-after-user-config #'good-scroll-mode))
+  (use-package good-scroll
+    :defer (spacemacs/defer)
+    :init
+    (spacemacs/defer-until-after-user-config #'good-scroll-mode)))
 
 (defun misc/init-grugru ()
-  (spacemacs/set-leader-keys "xgg" #'grugru))
+  (use-package grugru
+    :defer t
+    :init
+    (spacemacs/set-leader-keys "xgg" #'grugru)))
+
+(defun misc/pre-init-helm ()
+  (spacemacs|use-package-add-hook helm
+    :pre-init
+    (with-no-warnings (define-advice helm-mode (:around (&rest _) disable)))))
 
 (defun misc/init-helpful ()
-  (with-eval-after-load 'helpful
+  (use-package helpful
+    :defer (spacemacs/defer)
+    :init
+    (spacemacs/declare-prefix "hdd" "helpful")
+    (spacemacs/set-leader-keys
+      "hddc" 'helpful-callable
+      "hddd" 'helpful-at-point
+      "hddf" 'helpful-function
+      "hddi" 'helpful-command
+      "hddk" 'helpful-key
+      "hddm" 'helpful-macro
+      "hdds" 'helpful-symbol
+      "hddv" 'helpful-variable)
+    :config
     (evil-define-key 'normal helpful-mode-map (kbd "gr") 'helpful-update)
-    (evil-define-key 'normal helpful-mode-map (kbd "q") 'quit-window))
-  (spacemacs/declare-prefix "hdd" "helpful")
-  (spacemacs/set-leader-keys
-    "hddc" 'helpful-callable
-    "hddd" 'helpful-at-point
-    "hddf" 'helpful-function
-    "hddi" 'helpful-command
-    "hddk" 'helpful-key
-    "hddm" 'helpful-macro
-    "hdds" 'helpful-symbol
-    "hddv" 'helpful-variable))
+    (evil-define-key 'normal helpful-mode-map (kbd "q") 'quit-window)))
 
-(defun misc/init-leaf ())
+(defun misc/init-leaf ()
+  (use-package leaf
+    :no-require t))
+
+(defun misc/init-marginalia ()
+  (use-package marginalia
+    :defer (spacemacs/defer)
+    :init
+    (bind-key "M-A" 'marginalia-cycle minibuffer-local-map)
+    (spacemacs/defer-until-after-user-config #'marginalia-mode)))
 
 (defun misc/init-magit-libgit ()
-  (with-eval-after-load 'magit
+  (use-package magit-libgit
+    :after (magit)
+    :config
     (libgit-load)))
 
 (defun misc/init-ob-typescript ()
   (spacemacs|use-package-add-hook org
     :post-config
-    (add-to-list 'org-babel-load-languages '(typescript . t))))
+    (use-package ob-typescript
+      :init
+      (add-to-list 'org-babel-load-languages '(typescript . t)))))
+
+(defun misc/init-orderless ()
+  (use-package orderless
+    :defer (spacemacs/defer)
+    :init
+    (setq completion-styles '(orderless))))
 
 (defun misc/init-ox-reveal ()
-  (set-variable 'org-reveal-reveal-js-version 4)
-  (set-variable 'org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js"))
+  (use-package ox-reveal
+    :defer (spacemacs/defer)
+    :config
+    (set-variable 'org-reveal-reveal-js-version 4)
+    (set-variable 'org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")))
 
-(defun misc/init-psysh ())
+(defun misc/init-psysh ()
+  (use-package psysh
+    :no-require t))
 
-(defun misc/init-vlf ())
+(defun misc/init-vertico ()
+  (use-package vertico
+    :defer (spacemacs/defer)
+    :init
+    (spacemacs/defer-until-after-user-config #'vertico-mode)
+    :config
+    (set-variable 'vertico-count 20)))
+
+(defun misc/init-vlf ()
+  (use-package vlf
+    :no-require t))
 
 (defun misc/init-visual-regexp ()
-  (bind-key [remap query-replace] #'vr/query-replace))
+  (use-package visual-regexp
+    :bind (([remap query-replace] . vr/query-replace))))

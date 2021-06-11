@@ -296,7 +296,7 @@
             ("k" . evil-previous-visual-line)
             ("gj" . evil-avy-goto-line-below)
             ("gk" . evil-avy-goto-line-above)
-            ("S" . evil-avy-goto-char-timer))
+            ("S" . evil-avy-goto-word-0))
            (:evil-visual-state-map)
            (:evil-insert-state-map)
            (:evil-operator-state-map)

@@ -56,6 +56,7 @@
 
 (defun vertico/init-vertico ()
   (with-eval-after-load 'vertico
+    (set-variable 'vertico-count 20)
     (when (require 'orderless nil t)
       (setq completion-styles '(orderless))))
   (spacemacs/defer-until-after-user-config #'vertico-mode))

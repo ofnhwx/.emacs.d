@@ -18,8 +18,7 @@
       (set-variable 'affe-regexp-function 'orderless-pattern-compiler)
       (set-variable 'affe-highlight-function 'orderless--highlight)))
   (spacemacs/set-leader-keys
-    "fz" 'affe-find
-    "pz" 'affe-find-in-project))
+    "fz" 'affe-find))
 
 (defun vertico/init-consult ()
   (with-eval-after-load 'consult

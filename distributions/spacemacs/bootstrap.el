@@ -147,7 +147,8 @@
     (set-variable 'which-key-show-early-on-C-h t)
     (set-variable 'window-resize-pixelwise t)
     (setq-default ispell-local-dictionary "en_US"))
-  (prog1 "skk でカーソルの色が変わらなくなったので暫定対応"
+  (prog1 "暫定対応として `require' をちょっと追加"
+    (require 'ert)
     (require 'facemenu)))
 
 (define-advice dotspacemacs/user-config (:after (&rest _) custom)

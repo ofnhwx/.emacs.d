@@ -21,7 +21,20 @@
     "fz" 'affe-find
     "pz" 'affe-find-in-project))
 
-(defun vertico/init-consult ())
+(defun vertico/init-consult ()
+  (with-eval-after-load 'consult
+    (set-variable 'consult-project-root-function 'kllib:project-root))
+  (bind-keys
+   ([remap goto-line] . consult-goto-line))
+  (spacemacs|use-package-add-hook helm
+    :post-init
+    (-each '((helm-swoop . consult-line)
+             (lazy-helm/helm-mini . consult-buffer)
+             (lazy-helm/helm-recentf . consult-recent-file)
+             (spacemacs/helm-M-x-fuzzy-matching . execute-extended-command)
+             (spacemacs/helm-jump-in-buffer . consult-imenu))
+      (lambda (item)
+        (bind-key `[remap ,(car item)] (cdr item))))))
 
 (defun vertico/init-embark ()
   (bind-key "C-c C-e" 'embark-export minibuffer-local-map))
@@ -33,9 +46,7 @@
 (defun vertico/pre-init-helm ()
   (spacemacs|use-package-add-hook helm
     :pre-init
-    (with-no-warnings (define-advice helm-mode (:around (&rest _) disable)))
-    :post-init
-    (bind-key [remap spacemacs/helm-M-x-fuzzy-matching] 'execute-extended-command)))
+    (with-no-warnings (define-advice helm-mode (:around (&rest _) disable)))))
 
 (defun vertico/init-marginalia ()
   (with-eval-after-load 'vertico

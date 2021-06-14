@@ -23,6 +23,7 @@
     good-scroll
     grugru
     helm
+    helm-icons
     helpful
     leaf
     magit-libgit
@@ -30,6 +31,7 @@
     ob-typescript
     orderless
     ox-reveal
+    popwin
     psysh
     vertico
     visual-regexp
@@ -166,6 +168,14 @@
     :pre-init
     (with-no-warnings (define-advice helm-mode (:around (&rest _) disable)))))
 
+(defun misc/init-helm-icons ()
+  (use-package helm-icons
+    :defer (spacemacs/defer)
+    :init
+    (spacemacs/defer-until-after-user-config #'helm-icons-enable)
+    :config
+    (set-variable 'helm-icons-mode->icon nil)))
+
 (defun misc/init-helpful ()
   (use-package helpful
     :defer (spacemacs/defer)
@@ -221,6 +231,11 @@
     (set-variable 'org-reveal-reveal-js-version 4)
     (set-variable 'org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")))
 
+(defun misc/pre-init-popwin ()
+  (spacemacs|use-package-add-hook popwin
+    :post-config
+    (push '("*Warnings*" :dedicated t :position bottom :stick t :noselect t :height 0.3) popwin:special-display-config)))
+
 (defun misc/init-psysh ()
   (use-package psysh
     :no-require t))
@@ -231,7 +246,8 @@
     :init
     (spacemacs/defer-until-after-user-config #'vertico-mode)
     :config
-    (set-variable 'vertico-count 20)))
+    (set-variable 'vertico-count 20)
+    (set-variable 'vertico-cycle t)))
 
 (defun misc/init-vlf ()
   (use-package vlf

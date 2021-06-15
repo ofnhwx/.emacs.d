@@ -27,7 +27,7 @@
   (let ((coding-system 'utf-8))
     (prefer-coding-system          coding-system)
     (set-buffer-file-coding-system coding-system))
-  ;;ロケールを設定
+  ;; ロケールを設定
   (let ((value "ja_JP.UTF-8"))
     (setenv "LANG" value)
     (setenv "LC_ALL" value)))

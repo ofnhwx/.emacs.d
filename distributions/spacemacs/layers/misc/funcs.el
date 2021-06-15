@@ -20,3 +20,9 @@
                       (--map-indexed (list (1+ it-index) it))
                       (--reject (eq (second it) :null))))))
           coverage)))
+
+(defun orderless-migemo (component)
+  (let ((pattern (migemo-get-pattern component)))
+    (condition-case nil
+        (progn (string-match-p pattern "") pattern)
+      (invalid-regexp nil))))

@@ -222,6 +222,7 @@
   (use-package orderless
     :defer (spacemacs/defer)
     :init
+    (set-variable 'orderless-matching-styles '(orderless-literal orderless-regexp orderless-migemo))
     (setq completion-styles '(orderless))))
 
 (defun misc/init-ox-reveal ()

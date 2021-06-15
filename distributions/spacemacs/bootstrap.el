@@ -130,23 +130,23 @@
 
 (define-advice dotspacemacs/user-init (:after (&rest _) custom)
   "Customize `dotspacemacs/user-init'."
-  (prog1 "これは後だと間に合わないのでここで設定"
+  (prog1 "spacemacs より先に設定しておきたいもの"
     ;; +distributions/spacemacs-bootstrap
     (set-variable 'vim-style-remap-Y-to-y$ t)
+    (set-variable 'which-key-enable-extended-define-key t)
+    (set-variable 'which-key-show-early-on-C-h t)
+    ;; +checkers/spell-checking
+    (setq-default ispell-local-dictionary "en_US")
     ;; +emacs/org
     (set-variable 'org-roam-directory (expand-file-name "org/roam" e:private-directory))
-    (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" e:private-directory)))
-  (prog1 "その他、先に設定しておきたいもの"
+    (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" e:private-directory))
+    ;; others
     (set-variable 'custom-file null-device)
-    (set-variable 'evil-want-keybinding nil)
     (set-variable 'frame-resize-pixelwise t)
     (set-variable 'package-gnupghome-dir (expand-file-name "gnupg" spacemacs-cache-directory))
     (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" spacemacs-cache-directory))
     (set-variable 'viper-mode nil)
-    (set-variable 'which-key-enable-extended-define-key t)
-    (set-variable 'which-key-show-early-on-C-h t)
-    (set-variable 'window-resize-pixelwise t)
-    (setq-default ispell-local-dictionary "en_US"))
+    (set-variable 'window-resize-pixelwise t))
   (prog1 "暫定対応として `require' をちょっと追加"
     (require 'ert)
     (require 'facemenu)))

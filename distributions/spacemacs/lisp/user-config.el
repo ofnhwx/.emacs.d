@@ -91,6 +91,10 @@
                     (executable-find "bash")
                     (executable-find "sh"))))
 
+(leaf fileio.c
+  :config
+  (set-variable 'delete-by-moving-to-trash nil))
+
 (leaf filelock.c
   :config
   (set-variable 'create-lockfiles nil))
@@ -432,11 +436,11 @@
     (highlight-indentation-set-offset 2)))
 
 (leaf *magit
-  :defun (magit-add-section-hook)
   :config
   (leaf magit
     :defer-config
     (set-variable 'magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
+    (set-variable 'magit-delete-by-moving-to-trash nil)
     (set-variable 'magit-diff-refine-hunk 'all)
     (set-variable 'magit-diff-refine-ignore-whitespace t)
     (set-variable 'smerge-refine-ignore-whitespace nil)

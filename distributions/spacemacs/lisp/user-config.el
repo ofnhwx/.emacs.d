@@ -236,8 +236,9 @@
 
 (leaf display-line-numbers
   :hook ((find-file-hook . spacemacs/toggle-display-line-numbers-mode-on)
-         (prog-mode-hook . spacemacs/toggle-display-line-numbers-mode-on)
-         (html-mode-hook . spacemacs/toggle-display-line-numbers-mode-on))
+         (html-mode-hook . spacemacs/toggle-display-line-numbers-mode-on)
+         (org-mode-hook  . spacemacs/toggle-display-line-numbers-mode-on)
+         (prog-mode-hook . spacemacs/toggle-display-line-numbers-mode-on))
   :config
   (spacemacs|add-toggle display-line-numbers-mode
     :status display-line-numbers-mode
@@ -475,22 +476,23 @@
   :defvar (org-agenda-file-regexp org-babel-load-languages)
   :defer-config
   (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
-  (when (f-directory? org-directory)
-    (set-variable 'org-default-notes-file (expand-file-name "index.org" org-directory))
-    (set-variable 'org-agenda-files (-union (list org-default-notes-file)
-                                            (directory-files-recursively org-directory org-agenda-file-regexp)))
-    (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3))))
+  (set-variable 'org-edit-src-content-indentation 0)
+  (set-variable 'org-indent-indentation-per-level 2)
+  (set-variable 'org-indent-mode-turns-on-hiding-stars nil)
+  (set-variable 'org-src-window-setup 'split-window-below)
+  (set-variable 'org-startup-folded nil)
+  (set-variable 'org-startup-indented t)
   (set-variable 'org-todo-keywords
                 '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
                   (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
-  (set-variable 'org-startup-indented t)
-  (set-variable 'org-startup-folded nil)
-  (set-variable 'org-indent-mode-turns-on-hiding-stars nil)
-  (set-variable 'org-indent-indentation-per-level 2)
-  (set-variable 'org-edit-src-content-indentation 0)
   (set-face-attribute 'org-level-1 nil :height 1.0)
   (set-face-attribute 'org-level-2 nil :height 1.0)
-  (set-face-attribute 'org-level-3 nil :height 1.0))
+  (set-face-attribute 'org-level-3 nil :height 1.0)
+  (when (f-directory? org-directory)
+    (set-variable 'org-default-notes-file (f-expand "index.org" org-directory))
+    (set-variable 'org-agenda-files `,(-union (list org-directory)
+                                              (f-directories org-directory nil t)))
+    (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3)))))
 
 (leaf *skk
   :config

@@ -31,6 +31,8 @@
     ob-typescript
     orderless
     ox-reveal
+    poly-markdown
+    poly-org
     psysh
     vertico
     visual-regexp
@@ -232,6 +234,14 @@
     :config
     (set-variable 'org-reveal-reveal-js-version 4)
     (set-variable 'org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")))
+
+(defun misc/init-poly-markdown ()
+  (use-package poly-markdown
+    :hook (markdown-mode . poly-markdown-mode)))
+
+(defun misc/init-poly-org ()
+  (use-package poly-org
+    :hook (org-mode . poly-org-mode)))
 
 (defun misc/init-psysh ()
   (use-package psysh

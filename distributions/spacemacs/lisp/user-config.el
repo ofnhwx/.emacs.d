@@ -577,6 +577,11 @@
   :defer-config
   (set-variable 'persp-kill-foreign-buffer-behaviour nil))
 
+(leaf popwin
+  :defer-config
+  (push '(helpful-mode :dedicated t :stick t)             popwin:special-display-config)
+  (push '("*Warnings*" :dedicated t :stick t :noselect t) popwin:special-display-config))
+
 (leaf shell-pop
   :defer-config
   (set-variable 'shell-pop-autocd-to-working-dir nil))

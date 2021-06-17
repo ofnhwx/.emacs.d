@@ -124,7 +124,7 @@
   (setq dotspacemacs-editing-style 'hybrid)
   (setq dotspacemacs-enable-server t)
   (setq dotspacemacs-scratch-buffer-persistent t)
-  (setq dotspacemacs-scratch-mode 'lisp-interaction-mode)
+  (setq dotspacemacs-scratch-mode 'org-mode)
   (setq dotspacemacs-scroll-bar-while-scrolling nil)
   (setq dotspacemacs-startup-lists nil))
 

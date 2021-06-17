@@ -31,7 +31,6 @@
     ob-typescript
     orderless
     ox-reveal
-    popwin
     psysh
     vertico
     visual-regexp
@@ -76,6 +75,7 @@
   (use-package company-org-block
     :after (company org)
     :config
+    (set-variable 'company-org-block-edit-style 'inline)
     (with-no-warnings (spacemacs|add-company-backends :backends company-org-block :modes org-mode))))
 
 (defun misc/init-company-prescient ()
@@ -166,7 +166,8 @@
 (defun misc/pre-init-helm ()
   (spacemacs|use-package-add-hook helm
     :pre-init
-    (with-no-warnings (define-advice helm-mode (:around (&rest _) disable)))))
+    (with-no-warnings (define-advice helm-mode (:around (&rest _) disable)))
+    (spacemacs/defer-until-after-user-config #'helm-descbinds-mode)))
 
 (defun misc/init-helm-icons ()
   (use-package helm-icons
@@ -231,11 +232,6 @@
     :config
     (set-variable 'org-reveal-reveal-js-version 4)
     (set-variable 'org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")))
-
-(defun misc/pre-init-popwin ()
-  (spacemacs|use-package-add-hook popwin
-    :post-config
-    (push '("*Warnings*" :dedicated t :position bottom :stick t :noselect t :height 0.3) popwin:special-display-config)))
 
 (defun misc/init-psysh ()
   (use-package psysh

@@ -124,9 +124,9 @@
   (setq dotspacemacs-editing-style 'hybrid)
   (setq dotspacemacs-enable-server t)
   (setq dotspacemacs-scratch-buffer-persistent t)
-  (setq dotspacemacs-scratch-mode 'org-mode)
   (setq dotspacemacs-scroll-bar-while-scrolling nil)
-  (setq dotspacemacs-startup-lists nil))
+  (setq dotspacemacs-startup-lists nil)
+  (setq dotspacemacs-use-SPC-as-y t))
 
 (define-advice dotspacemacs/user-init (:after (&rest _) custom)
   "Customize `dotspacemacs/user-init'."

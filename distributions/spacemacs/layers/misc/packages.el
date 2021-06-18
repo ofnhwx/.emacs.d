@@ -12,6 +12,7 @@
     company-try-hard
     consult
     cov
+    ddskk-posframe
     deadgrep
     dired-filter
     dired-toggle-sudo
@@ -106,6 +107,13 @@
     :config
     (set-variable 'cov-coverage-file-paths '(cov--locate-simplecov))
     (set-variable 'cov-coverage-mode t)))
+
+(defun misc/init-ddskk-posframe ()
+  (use-package ddskk-posframe
+    :spacediminish ddskk-posframe-mode
+    :after (skk)
+    :config
+    (ddskk-posframe-mode 1)))
 
 (defun misc/init-deadgrep ()
   (use-package deadgrep

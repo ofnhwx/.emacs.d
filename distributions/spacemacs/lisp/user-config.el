@@ -509,7 +509,6 @@
     (set-variable 'skk-egg-like-newline t)
     (set-variable 'skk-share-private-jisyo t)
     (set-variable 'skk-show-annotation t)
-    (set-variable 'skk-show-inline 'vertical)
     (set-variable 'skk-sticky-key ";")
     (set-variable 'skk-use-jisx0201-input-method t)
     :config

@@ -520,29 +520,25 @@
             (skk-latin-mode-on)
           (let ((skk-mode-hook (-union skk-mode-hook '(skk-latin-mode-on))))
             (skk-mode))))))
-  (leaf google-ime-skk
+  (leaf skk
     :if (executable-find "google-ime-skk")
-    :require prodigy
-    :commands (e:prodigy:google-ime-skk)
-    :doc "設定"
     :config
     (set-variable 'skk-server-prog (executable-find "google-ime-skk"))
     (set-variable 'skk-server-inhibit-startup-server t)
     (set-variable 'skk-server-host "127.0.0.1")
     (set-variable 'skk-server-portnum 55100)
-    :doc "起動"
-    :config
-    (defun e:prodigy:google-ime-skk ()
-      (interactive)
-      (let ((service "google-ime-skk"))
-        (unless (prodigy-find-service service)
-          (prodigy-define-service
-            :name service
-            :command "google-ime-skk"
-            :tags '(general)
-            :kill-signal 'sigkill))
-        (e:prodigy-start-service service)))
-    (spacemacs/defer-until-after-user-config  #'e:prodigy:google-ime-skk)))
+    (when (require 'prodigy nil t)
+      (defun e:prodigy:google-ime-skk ()
+        (interactive)
+        (let ((service "google-ime-skk"))
+          (unless (prodigy-find-service service)
+            (prodigy-define-service
+              :name service
+              :command "google-ime-skk"
+              :tags '(general)
+              :kill-signal 'sigkill))
+          (e:prodigy-start-service service)))
+      (spacemacs/defer-until-after-user-config  #'e:prodigy:google-ime-skk))))
 
 (leaf paradox-github
   :defer-config
@@ -651,8 +647,6 @@
 (leaf *vterm
   :config
   (leaf vterm
-    :commands (vterm-yank)
-    :hook (vterm-mode-hook . e:vterm-auto-tmux)
     :bind (:vterm-mode-map
           ("C-c C-g" . keyboard-quit)
           ("C-g" . vterm-send-C-g)
@@ -663,11 +657,8 @@
       (interactive)
       (let ((input (read-string "input: ")))
         (with-no-warnings (vterm-send-string input))))
-    (defun e:vterm-auto-tmux ()
-      (with-no-warnings
-        (vterm-send-string "exec tmux new -A -s emacs")
-        (vterm-send-return)))
-    (set-variable 'vterm-max-scrollback 20000))
+    (set-variable 'vterm-max-scrollback 20000)
+    (set-variable 'vterm-shell "tmux new -A -s emacs"))
   (leaf vterm-theme
     :after vterm
     :commands (vterm-theme-solarized-dark

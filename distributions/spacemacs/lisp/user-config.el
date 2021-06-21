@@ -41,9 +41,15 @@
       (let ((spacemacs-start-directory user-emacs-directory))
         (apply fn args))))
   ;; モードラインに不要な表示をしない
-  (spacemacs/defer-until-after-user-config #'spacemacs/toggle-mode-line-version-control-off)
-  (set-variable 'spaceline-selection-info-p nil)
-  ;; モードラインのファイルエンコーディングの表示を改善
+  (spacemacs/defer-until-after-user-config #'spaceline-toggle-purpose-off)
+  (spacemacs/defer-until-after-user-config #'spaceline-toggle-selection-info-off)
+  (spacemacs/defer-until-after-user-config #'spaceline-toggle-version-control-off)
+  ;; モードラインの表示を改善
+  (spaceline-define-segment buffer-modified
+    "Buffer modified marker."
+    (cond
+     (buffer-read-only    "")
+     ((buffer-modified-p) "")))
   (spaceline-define-segment buffer-encoding-abbrev
     "The line ending convention used in the buffer."
     (let ((buf-coding (format "%s" buffer-file-coding-system)))

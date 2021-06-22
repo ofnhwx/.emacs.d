@@ -53,7 +53,7 @@
   (spaceline-define-segment buffer-encoding-abbrev
     "The line ending convention used in the buffer."
     (let ((buf-coding (format "%s" buffer-file-coding-system)))
-      (list (string-trim-right buf-coding (rx "-" (or "with-signature" "unix" "dos" "mac") eol))
+      (list (string-trim-right buf-coding (rx (+ "-" (or "with-signature" "unix" "dos" "mac")) eol))
             (concat (and (string-match "with-signature" buf-coding) "ⓑ")
                     (and (string-match "unix"           buf-coding) "ⓤ")
                     (and (string-match "dos"            buf-coding) "ⓓ")

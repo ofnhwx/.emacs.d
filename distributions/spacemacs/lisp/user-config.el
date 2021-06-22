@@ -53,7 +53,7 @@
   (spaceline-define-segment buffer-encoding-abbrev
     "The line ending convention used in the buffer."
     (let ((buf-coding (format "%s" buffer-file-coding-system)))
-      (list (replace-regexp-in-string "-with-signature\\|-unix\\|-dos\\|-mac" "" buf-coding)
+      (list (string-trim-right buf-coding (rx "-" (or "with-signature" "unix" "dos" "mac") eol))
             (concat (and (string-match "with-signature" buf-coding) "ⓑ")
                     (and (string-match "unix"           buf-coding) "ⓤ")
                     (and (string-match "dos"            buf-coding) "ⓓ")
@@ -219,7 +219,9 @@
     :config
     (set-variable 'dired-dwim-target t)
     (set-variable 'dired-listing-switches "-Ahl")
-    (set-variable 'dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\.DS_Store")
+    (set-variable 'dired-omit-files (rx (or (seq bol (? ".") "#")
+                                            (seq bol (or "." "..") eol)
+                                            (seq bol ".DS_Store" eol))))
     (set-variable 'dired-recursive-copies 'always)
     (set-variable 'dired-recursive-deletes 'always))
   (leaf image-dired

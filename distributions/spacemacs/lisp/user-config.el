@@ -618,13 +618,13 @@
   (set-variable 'recentf-filename-handlers '(abbreviate-file-name))
   (defun e:recentf-save-list--cleanup (&rest _)
     "存在しないファイルを履歴から削除する"
-    (let ((items recentf-list))
-      (setq items (-map 'f-short items))
-      (setq items (-distinct items))
-      (setq items (--filter (or (file-remote-p it)
-                                (f-exists? it))
-                            items))
-      (setq recentf-list items))))
+    (setq recentf-list
+          (->> recentf-list
+            (-map 'f-short)
+            (-distinct)
+            (--filter (or (file-remote-p it)
+                          (f-exists? it)))
+            (--filter (recentf-include-p it))))))
 
 (leaf tramp
   :require t

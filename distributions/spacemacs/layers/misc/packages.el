@@ -13,7 +13,6 @@
     consult
     cov
     ddskk-posframe
-    deadgrep
     dired-filter
     dired-toggle-sudo
     elisp-demos
@@ -21,7 +20,6 @@
     embark-consult
     evil-owl
     foreman-mode
-    good-scroll
     grugru
     helm
     helm-icons
@@ -115,10 +113,6 @@
     :config
     (ddskk-posframe-mode 1)))
 
-(defun misc/init-deadgrep ()
-  (use-package deadgrep
-    :no-require t))
-
 (defun misc/init-dired-filter ()
   (use-package dired-filter
     :hook (dired-mode . dired-filter-mode)))
@@ -160,12 +154,6 @@
                 ("x" . foreman-kill-proc))
     :init
     (spacemacs/set-leader-keys "atf" #'foreman)))
-
-(defun misc/init-good-scroll ()
-  (use-package good-scroll
-    :defer (spacemacs/defer)
-    :init
-    (spacemacs/defer-until-after-user-config #'good-scroll-mode)))
 
 (defun misc/init-grugru ()
   (use-package grugru

@@ -207,10 +207,17 @@
                        company-dabbrev)))
         (setq-local company-backends (-concat (list backends) default))))
     :defer-config
-    (spacemacs|diminish company-mode))
+    (spacemacs|diminish company-mode)
+    (set-variable 'company-transformers
+                  '(-distinct
+                    company-prescient-transformer
+                    company-sort-by-backend-importance)))
   (leaf company-box
     :defer-config
-    (spacemacs|diminish company-box-mode)))
+    (spacemacs|diminish company-box-mode)
+    (set-variable 'company-box-backends-colors
+                  '((company-robe    . (:candidate "#90ee90"))
+                    (company-tabnine . (:candidate "#696969"))))))
 
 (leaf *dired
   :config

@@ -18,6 +18,8 @@
   :hook (ruby-mode-hook . e:setup-flycheck-rubocop)
   :config
   (set-variable 'ruby-insert-encoding-magic-comment nil)
+  (add-to-list 'auto-mode-alist
+               '("\\.\\(jb\\)\\'" . ruby-mode))
   (defun e:setup-flycheck-rubocop ()
     (when (e:bundle-exists "rubocop")
       (setq-local flycheck-command-wrapper-function

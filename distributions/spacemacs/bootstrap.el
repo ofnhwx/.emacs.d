@@ -120,10 +120,13 @@
 
 (define-advice dotspacemacs/init (:after (&rest _) custom)
   "Customize `dotspacemacs/init'."
-  (setq dotspacemacs-default-font '("Cica" :size 12.0 :weight normal :width normal))
+  (setq dotspacemacs-default-font '("Cica" :size 12.0))
   (setq dotspacemacs-editing-style 'hybrid)
   (setq dotspacemacs-enable-server t)
+  (setq dotspacemacs-loading-progress-bar nil)
+  (setq dotspacemacs-new-empty-buffer-major-mode 'fundamental-mode)
   (setq dotspacemacs-scratch-buffer-persistent t)
+  (setq dotspacemacs-scratch-mode 'fundamental-mode)
   (setq dotspacemacs-scroll-bar-while-scrolling nil)
   (setq dotspacemacs-startup-lists nil)
   (setq dotspacemacs-use-SPC-as-y t))

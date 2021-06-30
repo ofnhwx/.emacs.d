@@ -452,6 +452,20 @@
     (highlight-indentation-current-column-mode 1)
     (highlight-indentation-set-offset 2)))
 
+(leaf key-chord
+  :init
+  (spacemacs/defer-until-after-user-config 'key-chord-mode)
+  :config
+  (key-chord-define-global " 1" "!")
+  (key-chord-define-global " 2" "\"")
+  (key-chord-define-global " 3" "#")
+  (key-chord-define-global " 4" "$")
+  (key-chord-define-global " 5" "%")
+  (key-chord-define-global " 6" "&")
+  (key-chord-define-global " 7" "'")
+  (key-chord-define-global " 8" "(")
+  (key-chord-define-global " 9" ")"))
+
 (leaf *magit
   :config
   (leaf magit

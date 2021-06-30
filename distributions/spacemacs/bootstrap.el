@@ -88,6 +88,7 @@
           (komunan-lisp-library :location (recipe :fetcher github :repo "ofnhwx/komunan-lisp-library"))
           (locale-eaw           :location (recipe :fetcher github :repo "ofnhwx/locale-eaw"))
           (ls-lisp-extension    :location (recipe :fetcher github :repo "ofnhwx/ls-lisp-extension"))
+          (key-chord            :location (recipe :fetcher github :repo "conao3/key-chord"))
           ))
   (setq dotspacemacs-excluded-packages
         '(

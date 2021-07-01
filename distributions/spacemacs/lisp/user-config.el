@@ -503,8 +503,9 @@
   (set-variable 'open-junk-file-format (expand-file-name "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))
 
 (leaf org
+  :bind (("C-:" . popwin:daily-report))
   :defvar (org-agenda-file-regexp org-babel-load-languages)
-  :defer-config
+  :config
   (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
   (set-variable 'org-edit-src-content-indentation 0)
   (set-variable 'org-indent-indentation-per-level 2)
@@ -522,7 +523,13 @@
     (set-variable 'org-default-notes-file (f-expand "index.org" org-directory))
     (set-variable 'org-agenda-files `,(-union (list org-directory)
                                               (f-directories org-directory nil t)))
-    (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3)))))
+    (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3))))
+  ;; 日報用(暫定)
+  (defun popwin:daily-report ()
+    (interactive)
+    (let* ((daily-dir (f-expand "daily" org-directory))
+           (daily-file (f-short (f-expand (format-time-string "%Y-%m.org") daily-dir))))
+      (popwin:popup-buffer (find-file-noselect daily-file) :height 30))))
 
 (leaf *skk
   :config

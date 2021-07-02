@@ -503,7 +503,7 @@
   (set-variable 'open-junk-file-format (expand-file-name "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))
 
 (leaf org
-  :bind (("C-:" . popwin:daily-report))
+  :bind* (("C-:" . popwin:daily-report))
   :defvar (org-agenda-file-regexp org-babel-load-languages)
   :config
   (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
@@ -529,7 +529,7 @@
     (interactive)
     (let* ((daily-dir (f-expand "daily" org-directory))
            (daily-file (f-short (f-expand (format-time-string "%Y-%m.org") daily-dir))))
-      (popwin:popup-buffer (find-file-noselect daily-file) :height 30))))
+      (popwin:popup-buffer (find-file-noselect daily-file) :height 30 :dedicated t :stick t))))
 
 (leaf *skk
   :config

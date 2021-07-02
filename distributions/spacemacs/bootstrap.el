@@ -39,6 +39,7 @@
                       typescript-backend 'lsp)
           csv
           emacs-lisp
+          graphql
           html
           markdown
           shell-scripts

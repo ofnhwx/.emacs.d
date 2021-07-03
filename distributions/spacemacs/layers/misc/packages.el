@@ -36,6 +36,7 @@
     visual-regexp
     vlf
     (codic :if (getenv "EMACS_CODIC_API_TOKEN"))
+    (wakatime-mode :if (and (getenv "EMACS_WAKATIME_API_KEY")))
     ))
 
 (defun misc/init-affe ()
@@ -261,3 +262,18 @@
 (defun misc/init-visual-regexp ()
   (use-package visual-regexp
     :bind (([remap query-replace] . vr/query-replace))))
+
+(defun misc/init-wakatime-mode ()
+  (use-package wakatime-mode
+    :defer (spacemacs/defer)
+    :spacediminish (wakatime-mode " " " [T]")
+    :commands (global-wakatime-mode)
+    :init
+    (spacemacs/defer-until-after-user-config #'global-wakatime-mode)
+    :config
+    (set-variable 'wakatime-api-key (getenv "EMACS_WAKATIME_API_KEY"))
+    (defun spacemacs/wakatime-dashboard ()
+      (interactive)
+      (browse-url "https://wakatime.com/dashboard"))
+    (spacemacs/set-leader-keys
+      "aW" 'spacemacs/wakatime-dashboard)))

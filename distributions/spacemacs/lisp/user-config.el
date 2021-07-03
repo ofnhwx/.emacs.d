@@ -189,10 +189,6 @@
       (funcall (intern (completing-read "Choose Browser: " browsers)) url new-window)))
   (set-variable 'browse-url-browser-function #'browse-url-by-choosen))
 
-(leaf codic
-  :defer-config
-  (set-variable 'codic-api-token (getenv "EMACS_CODIC_API_TOKEN")))
-
 (leaf *company
   :config
   (leaf company

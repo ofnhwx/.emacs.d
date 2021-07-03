@@ -5,7 +5,6 @@
     affe
     atomic-chrome
     beacon
-    codic
     company-org-block
     company-prescient
     company-tabnine
@@ -36,6 +35,7 @@
     vertico
     visual-regexp
     vlf
+    (codic :if (getenv "EMACS_CODIC_API_TOKEN"))
     ))
 
 (defun misc/init-affe ()
@@ -64,7 +64,9 @@
 
 (defun misc/init-codic ()
   (use-package codic
-    :no-require t))
+    :defer (spacemacs/defer)
+    :config
+    (set-variable 'codic-api-token (getenv "EMACS_CODIC_API_TOKEN"))))
 
 (defun misc/init-consult ()
   (use-package consult

@@ -97,6 +97,10 @@
                     (executable-find "bash")
                     (executable-find "sh"))))
 
+(leaf emacs.c
+  :config
+  (set-variable 'system-time-locale "C"))
+
 (leaf fileio.c
   :config
   (set-variable 'delete-by-moving-to-trash nil))
@@ -517,8 +521,8 @@
   (set-face-attribute 'org-level-3 nil :height 1.0)
   (when (f-directory? org-directory)
     (set-variable 'org-default-notes-file (f-expand "index.org" org-directory))
-    (set-variable 'org-agenda-files `,(-union (list org-directory)
-                                              (f-directories org-directory nil t)))
+    (set-variable 'org-agenda-files `(,org-directory
+                                      ,(f-expand "daily" org-directory)))
     (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3))))
   ;; 日報用(暫定)
   (defun popwin:daily-report ()

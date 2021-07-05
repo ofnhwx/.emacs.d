@@ -703,6 +703,13 @@
     :config
     (vterm-theme-solarized-dark)))
 
+(leaf web-mode
+  :defer-config
+  (setq-default web-mode-markup-indent-offset 2)
+  (setq-default web-mode-css-indent-offset    2)
+  (setq-default web-mode-code-indent-offset   2)
+  (setq-default web-mode-attr-indent-offset   2))
+
 (leaf which-key
   :defer-config
   (spacemacs|diminish which-key-mode))

@@ -10,33 +10,25 @@
           spell-checking
           syntax-checking
           ;; +completion
-          (auto-completion :variables
-                           auto-completion-enable-help-tooltip t
-                           auto-completion-use-company-box t)
+          (auto-completion :variables auto-completion-enable-help-tooltip t auto-completion-use-company-box t)
           helm
           ;; +emacs
-          (org :variables
-               org-enable-roam-support t)
+          (org :variables org-enable-roam-support t)
           ;; +filetree
           treemacs
           ;; +frameworks
           react
           ruby-on-rails
-          vue
+          (vue :variables vue-backend 'lsp)
           ;; +fun
           emoji
           ;; +intl
           japanese
           ;; +lang
-          (javascript :variables
-                      javascript-backend 'lsp)
-          (php :variables
-               php-backend 'lsp)
-          (ruby :variables
-                ruby-backend 'lsp
-                ruby-test-runner 'rspec)
-          (typescript :variables
-                      typescript-backend 'lsp)
+          (javascript :variables javascript-backend 'lsp)
+          (php        :variables php-backend        'lsp)
+          (ruby       :variables ruby-backend       'lsp ruby-test-runner 'rspec)
+          (typescript :variables typescript-backend 'lsp)
           csv
           emacs-lisp
           graphql
@@ -51,24 +43,17 @@
           dtrt-indent
           multiple-cursors
           ;; +source-control
-          (git :variables
-               git-enable-magit-gitflow-plugin t
-               git-magit-status-fullscreen t)
-          (version-control :variables
-                           version-control-diff-tool 'diff-hl)
+          (git :variables git-enable-magit-gitflow-plugin t git-magit-status-fullscreen t)
+          (version-control :variables version-control-diff-tool 'diff-hl)
           github
           ;; +spacemacs
-          (spacemacs-completion :variables
-                                helm-use-fuzzy nil)
+          (spacemacs-completion :variables helm-use-fuzzy nil)
           ;; +tags
           gtags
           ;; +themes
           colors
           ;; +tools
-          (shell :variables
-                 shell-default-position 'full
-                 shell-default-height 60
-                 shell-default-shell 'vterm)
+          (shell :variables shell-default-position 'full shell-default-height 60 shell-default-shell 'vterm)
           dap
           docker
           lsp

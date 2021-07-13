@@ -26,3 +26,20 @@
     (condition-case nil
         (progn (string-match-p pattern "") pattern)
       (invalid-regexp nil))))
+
+(defun org-support/weekday-in-month (month year &optional day-of-week)
+  (with-no-warnings
+    (defvar date)
+    (defvar entry))
+  (require 'japanese-holidays)
+  (let ((y (calendar-extract-year  date))
+        (m (calendar-extract-month date))
+        (day-of-week (cond
+                      ((null day-of-week) '(1 2 3 4 5))
+                      ((listp day-of-week) day-of-week)
+                      (t (list day-of-week)))))
+    (and (= y year)
+         (= m month)
+         (message "1")
+         (memq (calendar-day-of-week date) day-of-week)
+         (not (calendar-check-holidays date)))))

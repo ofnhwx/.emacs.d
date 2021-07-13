@@ -45,6 +45,7 @@
   (spacemacs/defer-until-after-user-config #'spaceline-toggle-selection-info-off)
   (spacemacs/defer-until-after-user-config #'spaceline-toggle-version-control-off)
   ;; モードラインの表示を改善
+  (set-variable 'spaceline-org-clock-p t)
   (spaceline-define-segment buffer-modified
     "Buffer modified marker."
     (cond
@@ -506,6 +507,8 @@
   :bind* (("C-:" . popwin:daily-report))
   :defvar (org-agenda-file-regexp org-babel-load-languages)
   :config
+  (set-variable 'org-agenda-entry-text-leaders "    │ ")
+  (set-variable 'org-agenda-entry-text-maxlines 20)
   (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
   (set-variable 'org-edit-src-content-indentation 0)
   (set-variable 'org-indent-indentation-per-level 2)

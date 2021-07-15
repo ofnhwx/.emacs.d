@@ -36,7 +36,7 @@
     visual-regexp
     vlf
     (codic :if (getenv "EMACS_CODIC_API_TOKEN"))
-    (wakatime-mode :if (and (getenv "EMACS_WAKATIME_API_KEY")))
+    (wakatime-mode :if (getenv "EMACS_WAKATIME_API_KEY"))
     ))
 
 (defun misc/init-affe ()

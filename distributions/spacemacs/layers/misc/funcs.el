@@ -27,6 +27,26 @@
         (progn (string-match-p pattern "") pattern)
       (invalid-regexp nil))))
 
+(defun org-support/daily-file ()
+  (let* ((daily-dir (f-expand "daily" org-directory)))
+    (f-short (f-expand (format-time-string "%Y-%m.org") daily-dir))))
+
+(defun org-support/day-before (month day year)
+  (with-no-warnings
+    (defvar date)
+    (defvar entry))
+  (let ((date1 (calendar-absolute-from-gregorian (diary-make-date month day year)))
+        (date2 (calendar-absolute-from-gregorian date)))
+    (>= date1 date2)))
+
+(defun org-support/day-after (month day year)
+  (with-no-warnings
+    (defvar date)
+    (defvar entry))
+  (let ((date1 (calendar-absolute-from-gregorian (diary-make-date month day year)))
+        (date2 (calendar-absolute-from-gregorian date)))
+    (<= date1 date2)))
+
 (defun org-support/weekday-in-month (month year &optional day-of-week)
   (with-no-warnings
     (defvar date)

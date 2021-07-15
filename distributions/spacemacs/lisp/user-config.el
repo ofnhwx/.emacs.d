@@ -516,9 +516,25 @@
   (set-variable 'org-src-window-setup 'split-window-below)
   (set-variable 'org-startup-folded nil)
   (set-variable 'org-startup-indented t)
+  (set-variable 'org-tags-column -100)
+  (set-variable 'org-todo-keyword-faces '(("TODO" . org-warning) ("WAITING" . org-done) ("HOLD" . org-done)))
   (set-variable 'org-todo-keywords
                 '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
                   (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
+  (set-variable 'org-capture-templates
+                `(("t" "TODO" entry
+                   (file+headline org-support/daily-file "INBOX")
+                   (file "template/todo.org")
+                   :prepend t :jump-to-captured t)
+                  ("m" "雑談" entry
+                   (file+olp org-support/daily-file "EVENT" "SINGLE")
+                   (file "template/meet.org")
+                   :prepend t :jump-to-captured t :clock-in t :clock-resume t)
+                  ))
+  (set-face-attribute 'org-done nil :foreground "#696969")
+  (set-face-attribute 'org-todo nil :foreground "#00ff00")
+  (set-face-attribute 'org-headline-done nil :foreground "#696969")
+  (set-face-attribute 'org-headline-todo nil :foreground "#00ff00")
   (set-face-attribute 'org-level-1 nil :height 1.0)
   (set-face-attribute 'org-level-2 nil :height 1.0)
   (set-face-attribute 'org-level-3 nil :height 1.0)
@@ -530,9 +546,7 @@
   ;; 日報用(暫定)
   (defun popwin:daily-report ()
     (interactive)
-    (let* ((daily-dir (f-expand "daily" org-directory))
-           (daily-file (f-short (f-expand (format-time-string "%Y-%m.org") daily-dir))))
-      (popwin:popup-buffer (find-file-noselect daily-file) :height 30 :dedicated t :stick t))))
+    (popwin:popup-buffer (find-file-noselect (org-support/daily-file)) :height 30 :dedicated t :stick t)))
 
 (leaf *skk
   :config

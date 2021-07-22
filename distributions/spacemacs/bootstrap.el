@@ -130,6 +130,7 @@
     ;; +emacs/org
     (set-variable 'org-roam-directory (expand-file-name "org/roam" e:private-directory))
     (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" e:private-directory))
+    (set-variable 'org-roam-v2-ack t)
     ;; others
     (set-variable 'custom-file null-device)
     (set-variable 'frame-resize-pixelwise t)

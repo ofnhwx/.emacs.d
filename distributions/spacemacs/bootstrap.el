@@ -117,7 +117,7 @@
   (setq dotspacemacs-loading-progress-bar nil)
   (setq dotspacemacs-new-empty-buffer-major-mode 'fundamental-mode)
   (setq dotspacemacs-scratch-buffer-persistent t)
-  (setq dotspacemacs-scratch-mode 'fundamental-mode)
+  (setq dotspacemacs-scratch-mode 'lisp-interaction-mode)
   (setq dotspacemacs-scroll-bar-while-scrolling nil)
   (setq dotspacemacs-startup-lists nil)
   (setq dotspacemacs-use-SPC-as-y t))

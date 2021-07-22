@@ -7,9 +7,17 @@
 
 (defun custom-headerline-start ()
   (interactive)
+  (add-hook 'find-file-hook #'chl--setup-1)
   (run-with-idle-timer 1.0 1.0 #'chl--setup))
 
 
+
+(defun chl--setup-1 ()
+  (cond
+   ((chl--filename)
+    (setq-local header-line-format '((:eval (chl--file-format)))))
+   ((derived-mode-p 'magit-status-mode)
+    (setq-local header-line-format '((:eval (buffer-name)))))))
 
 (defun chl--setup ()
   (let ((buffers (--remove (buffer-local-value 'header-line-format it)
@@ -17,11 +25,7 @@
     (-each buffers
       (lambda (buffer)
         (with-current-buffer buffer
-          (cond
-           ((chl--filename)
-            (setq-local header-line-format '((:eval (chl--file-format)))))
-           ((derived-mode-p 'magit-status-mode)
-            (setq-local header-line-format '((:eval (buffer-name))))))))))
+          (chl--setup-1)))))
   ;; ここはちょっと無理矢理
   (set-face-attribute 'header-line nil :inherit 'mode-line)
   (setq-local spaceline-buffer-id-p nil))

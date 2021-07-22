@@ -142,7 +142,9 @@
   ;; 特殊キーの設定
   (set-variable 'ns-command-modifier 'meta)
   (set-variable 'ns-right-command-modifier 'super)
-  (set-variable 'ns-alternate-modifier 'none))
+  (set-variable 'ns-alternate-modifier 'none)
+  ;; ちょっと行間を広げる
+  (setq-default line-spacing 2))
 
 (leaf configurations-for-WSL1/2
   :config
@@ -592,7 +594,7 @@
               :tags '(general)
               :kill-signal 'sigkill))
           (e:prodigy-start-service service)))
-      (spacemacs/defer-until-after-user-config  #'e:prodigy:google-ime-skk))))
+      (spacemacs/defer-until-after-user-config  'e:prodigy:google-ime-skk))))
 
 (leaf paradox-github
   :defer-config

@@ -107,7 +107,11 @@
 
 (define-advice dotspacemacs/init (:after (&rest _) custom)
   "Customize `dotspacemacs/init'."
-  (setq dotspacemacs-default-font '("Cica" :size 12.0))
+  (cond
+   ((eq system-type 'darwin)
+    (setq dotspacemacs-default-font '("Cica" :size 16.0)))
+   (t
+    (setq dotspacemacs-default-font '("Cica" :size 12.0))))
   (setq dotspacemacs-editing-style 'hybrid)
   (setq dotspacemacs-enable-server t)
   (setq dotspacemacs-loading-progress-bar nil)

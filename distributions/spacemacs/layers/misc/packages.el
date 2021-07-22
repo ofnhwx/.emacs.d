@@ -35,8 +35,8 @@
     vertico
     visual-regexp
     vlf
-    (codic :if (getenv "EMACS_CODIC_API_TOKEN"))
-    (wakatime-mode :if (getenv "EMACS_WAKATIME_API_KEY"))
+    (codic :toggle (getenv "EMACS_CODIC_API_TOKEN"))
+    (wakatime-mode :toggle (getenv "EMACS_WAKATIME_API_KEY"))
     ))
 
 (defun misc/init-affe ()

@@ -47,19 +47,16 @@
         (date2 (calendar-absolute-from-gregorian date)))
     (<= date1 date2)))
 
-(defun org-support/weekday-in-month (month year &optional day-of-week)
+(cl-defun org-support/weekday (&key day-of-week beg end)
   (with-no-warnings
     (defvar date)
     (defvar entry))
   (require 'japanese-holidays)
-  (let ((y (calendar-extract-year  date))
-        (m (calendar-extract-month date))
-        (day-of-week (cond
+  (let ((day-of-week (cond
                       ((null day-of-week) '(1 2 3 4 5))
                       ((listp day-of-week) day-of-week)
                       (t (list day-of-week)))))
-    (and (= y year)
-         (= m month)
-         (message "1")
-         (memq (calendar-day-of-week date) day-of-week)
+    (and (memq (calendar-day-of-week date) day-of-week)
+         (if beg (apply 'org-support/day-after  beg) t)
+         (if end (apply 'org-support/day-before end) t)
          (not (calendar-check-holidays date)))))

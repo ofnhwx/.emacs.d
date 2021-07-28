@@ -509,7 +509,7 @@
   :bind* (("C-:" . popwin:daily-report))
   :defvar (org-agenda-file-regexp org-babel-load-languages)
   :config
-  (set-variable 'org-agenda-entry-text-leaders "    │ ")
+  (set-variable 'org-agenda-entry-text-leaders (s-concat (s-repeat 25 " ") "│ "))
   (set-variable 'org-agenda-entry-text-maxlines 20)
   (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
   (set-variable 'org-edit-src-content-indentation 0)
@@ -518,7 +518,7 @@
   (set-variable 'org-src-window-setup 'split-window-below)
   (set-variable 'org-startup-folded nil)
   (set-variable 'org-startup-indented t)
-  (set-variable 'org-tags-column -100)
+  (set-variable 'org-tags-column -110)
   (set-variable 'org-todo-keyword-faces '(("TODO" . org-warning) ("WAITING" . org-done) ("HOLD" . org-done)))
   (set-variable 'org-todo-keywords
                 '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")

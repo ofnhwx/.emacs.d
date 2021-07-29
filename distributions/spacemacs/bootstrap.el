@@ -132,8 +132,8 @@
     ;; +checkers/spell-checking
     (setq-default ispell-local-dictionary "en_US")
     ;; +emacs/org
-    (set-variable 'org-roam-directory (expand-file-name "org/roam" e:private-directory))
-    (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" e:private-directory))
+    (set-variable 'org-roam-directory (expand-file-name "~/org/roam"))
+    (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" spacemacs-cache-directory))
     (set-variable 'org-roam-v2-ack t)
     ;; others
     (set-variable 'custom-file null-device)

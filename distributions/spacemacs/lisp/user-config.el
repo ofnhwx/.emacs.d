@@ -511,7 +511,7 @@
   :config
   (set-variable 'org-agenda-entry-text-leaders (s-concat (s-repeat 25 " ") "│ "))
   (set-variable 'org-agenda-entry-text-maxlines 20)
-  (set-variable 'org-directory (expand-file-name "org/" e:private-directory))
+  (set-variable 'org-directory (expand-file-name "~/org/"))
   (set-variable 'org-edit-src-content-indentation 0)
   (set-variable 'org-indent-indentation-per-level 2)
   (set-variable 'org-indent-mode-turns-on-hiding-stars nil)
@@ -545,6 +545,9 @@
     (set-variable 'org-agenda-files `(,org-directory
                                       ,(f-expand "daily" org-directory)))
     (set-variable 'org-refile-targets '((org-agenda-files :maxlevel . 3))))
+  ;; 経過時間の保存
+  (set-variable 'org-clock-persist t)
+  (org-clock-persistence-insinuate)
   ;; 日報用(暫定)
   (defun popwin:daily-report ()
     (interactive)
@@ -559,7 +562,7 @@
            ("C-¥" . skk-mode))
     :init
     (set-variable 'default-input-method "japanese-skk")
-    (set-variable 'skk-user-directory (expand-file-name "ddskk" e:private-directory))
+    (set-variable 'skk-user-directory (expand-file-name "ddskk" spacemacs-cache-directory))
     (set-variable 'skk-large-jisyo (expand-file-name "dic-mirror/SKK-JISYO.L" e:external-directory))
     (set-variable 'skk-preload t)
     (set-variable 'skk-egg-like-newline t)

@@ -236,10 +236,12 @@
 
 (defun misc/init-poly-markdown ()
   (use-package poly-markdown
+    :disabled t
     :hook (markdown-mode . poly-markdown-mode)))
 
 (defun misc/init-poly-org ()
   (use-package poly-org
+    :disabled t
     :hook (org-mode . poly-org-mode)))
 
 (defun misc/init-psysh ()

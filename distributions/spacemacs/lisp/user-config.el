@@ -511,6 +511,7 @@
   :config
   (set-variable 'org-agenda-entry-text-leaders (s-concat (s-repeat 25 " ") "│ "))
   (set-variable 'org-agenda-entry-text-maxlines 20)
+  (set-variable 'org-agenda-span 'day)
   (set-variable 'org-directory (expand-file-name "~/org/"))
   (set-variable 'org-edit-src-content-indentation 0)
   (set-variable 'org-indent-indentation-per-level 2)

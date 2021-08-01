@@ -417,14 +417,7 @@
   (leaf google-translate-default-ui
     :defer-config
     (set-variable 'google-translate-default-source-language "en")
-    (set-variable 'google-translate-default-target-language "ja"))
-  (leaf google-translate-core
-    :defer-config
-    ;; https://github.com/atykhonov/google-translate/issues/52
-    ;; https://github.com/atykhonov/google-translate/issues/137
-    (defun google-translate--search-tkk ()
-      "Search TKK."
-      (list 430675 2721866130))))
+    (set-variable 'google-translate-default-target-language "ja")))
 
 (leaf *helm
   :config

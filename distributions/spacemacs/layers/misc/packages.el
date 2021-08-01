@@ -18,7 +18,6 @@
     embark
     embark-consult
     evil-owl
-    foreman-mode
     grugru
     helm
     helm-icons
@@ -147,16 +146,6 @@
     :spacediminish evil-owl-mode
     :init
     (spacemacs/defer-until-after-user-config #'evil-owl-mode)))
-
-(defun misc/init-foreman-mode ()
-  (use-package foreman-mode
-    :bind (:map foreman-mode-map
-                ("R" . foreman-restart)
-                ("S" . foreman-start)
-                ("X" . foreman-stop)
-                ("x" . foreman-kill-proc))
-    :init
-    (spacemacs/set-leader-keys "atf" #'foreman)))
 
 (defun misc/init-grugru ()
   (use-package grugru

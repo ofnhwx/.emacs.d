@@ -47,7 +47,15 @@
         (date2 (calendar-absolute-from-gregorian date)))
     (<= date1 date2)))
 
-(cl-defun org-support/weekday (&key day-of-week beg end)
+(defun org-support/excludes (key)
+  (with-no-warnings
+    (defvar date)
+    (defvar entry))
+  (when (bound-and-true-p org-support/exclude-date-alist)
+    (memq (calendar-absolute-from-gregorian date)
+          (alist-get key org-support/exclude-date-alist))))
+
+(cl-defun org-support/weekday (key &key day-of-week beg end)
   (with-no-warnings
     (defvar date)
     (defvar entry))
@@ -59,4 +67,5 @@
     (and (memq (calendar-day-of-week date) day-of-week)
          (if beg (apply 'org-support/day-after  beg) t)
          (if end (apply 'org-support/day-before end) t)
+         (if key (not (org-support/excludes key)) t)
          (not (calendar-check-holidays date)))))

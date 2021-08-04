@@ -179,6 +179,10 @@
   (set-variable 'aw-keys (number-sequence ?1 ?9))
   (set-variable 'aw-scope 'frame))
 
+(leaf auth-source
+  :defer-config
+  (set-variable 'auth-sources '("~/.authinfo.json.gpg")))
+
 (leaf avy
   :defer-config
   (set-variable 'avy-keys (number-sequence ?a ?z))

@@ -523,11 +523,11 @@
                   (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
   (set-variable 'org-capture-templates
                 `(("t" "TODO" entry
-                   (file+headline org-support/daily-file "INBOX")
+                   (file+olp org-support/daily-file "TASKS" "INBOX")
                    (file "template/todo.org")
                    :prepend t :jump-to-captured t)
                   ("m" "雑談" entry
-                   (file+olp org-support/daily-file "EVENT" "SINGLE")
+                   (file+olp org-support/daily-file "SCHEDULES / EVENTS")
                    (file "template/meet.org")
                    :prepend t :jump-to-captured t :clock-in t :clock-resume t)
                   ))

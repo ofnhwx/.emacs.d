@@ -168,8 +168,7 @@
   :config
   (let ((private-config (expand-file-name "config" e:private-directory)))
     (condition-case err
-        (if (f-exists? private-config)
-            (load private-config))
+        (load private-config)
       (error (message "Error: %s" err)))))
 
 

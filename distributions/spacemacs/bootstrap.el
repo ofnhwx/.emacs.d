@@ -53,10 +53,10 @@
           ;; +themes
           colors
           ;; +tools
+          (lsp :variables lsp-ui-sideline-enable nil)
           (shell :variables shell-default-position 'full shell-default-height 60 shell-default-shell 'vterm)
           dap
           docker
-          lsp
           nginx
           prodigy
           restclient

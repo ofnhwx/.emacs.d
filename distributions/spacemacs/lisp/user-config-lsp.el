@@ -54,7 +54,7 @@
     (setq e:lsp-ui-doc-mode-enabled lsp-ui-doc-mode)
     (lsp-ui-doc-mode 0))
   (defun e:lsp-ui-doc-mode-restore (&rest _)
-    (when e:lsp-ui-doc-mode-enabled
+    (when (bound-and-true-p e:lsp-ui-doc-mode-enabled)
       (lsp-ui-doc-mode 1))))
 
 (leaf dap-mode

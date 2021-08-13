@@ -601,7 +601,8 @@
   (set-variable 'paradox-column-width-package 30)
   (set-variable 'paradox-column-width-version 13)
   (set-variable 'paradox-column-width-star 5)
-  (set-variable 'paradox-github-token (getenv "EMACS_PARADOX_GITHUB_TOKEN")))
+  (let ((token (plist-get (car (auth-source-search :host "github.com" :user "paradox")) :token)))
+    (set-variable 'paradox-github-token token)))
 
 (leaf password-cache
   :defer-config

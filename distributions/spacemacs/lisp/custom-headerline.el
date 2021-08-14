@@ -7,28 +7,26 @@
 
 (defun custom-headerline-start ()
   (interactive)
-  (add-hook 'find-file-hook #'chl--setup-1)
-  (run-with-idle-timer 1.0 1.0 #'chl--setup))
+  (add-hook 'window-buffer-change-functions 'chl--setup))
 
 
 
-(defun chl--setup-1 ()
-  (cond
-   ((chl--filename)
-    (setq-local header-line-format '((:eval (chl--file-format)))))
-   ((derived-mode-p 'magit-status-mode)
-    (setq-local header-line-format '((:eval (buffer-name)))))))
+(defun chl--setup-1 (&optional buffer)
+  (with-current-buffer (or buffer (current-buffer))
+    (cond
+     ((chl--filename)
+      (setq-local spaceline-buffer-id-p nil)
+      (setq-local header-line-format '((:eval (chl--file-format)))))
+     ((derived-mode-p 'magit-status-mode)
+      (setq-local spaceline-buffer-id-p nil)
+      (setq-local header-line-format '((:eval (buffer-name))))))))
 
-(defun chl--setup ()
-  (let ((buffers (--remove (buffer-local-value 'header-line-format it)
-                           (-map #'window-buffer (window-list)))))
-    (-each buffers
-      (lambda (buffer)
-        (with-current-buffer buffer
-          (chl--setup-1)))))
-  ;; ここはちょっと無理矢理
+(defun chl--setup (&optional _frame)
   (set-face-attribute 'header-line nil :inherit 'mode-line)
-  (setq-local spaceline-buffer-id-p nil))
+  (--each (->> (window-list)
+               (-map 'window-buffer)
+               (--remove (buffer-local-value 'header-line-format it)))
+    (chl--setup-1 it)))
 
 (defun chl--file-format ()
   (unless (chl--cache-exists)

@@ -17,16 +17,15 @@
           ;; +filetree
           treemacs
           ;; +frameworks
+          (vue :variables vue-backend 'lsp)
           react
           ruby-on-rails
-          (vue :variables vue-backend 'lsp)
           ;; +fun
           emoji
           ;; +intl
           japanese
           ;; +lang
           (javascript :variables javascript-backend 'lsp)
-          (php        :variables php-backend        'lsp)
           (ruby       :variables ruby-backend       'lsp ruby-test-runner 'rspec)
           (typescript :variables typescript-backend 'lsp)
           csv
@@ -97,10 +96,6 @@
           helm-themes
           ;; +intl/japanese
           pangu-spacing
-          ;; +lang/php
-          company-php
-          php-auto-yasnippets
-          phpcbf
           ;; +themes/colors
           nyan-mode
           )))
@@ -114,12 +109,13 @@
     (setq dotspacemacs-default-font '("Cica" :size 12.0))))
   (setq dotspacemacs-editing-style 'hybrid)
   (setq dotspacemacs-enable-server t)
-  (setq dotspacemacs-loading-progress-bar nil)
+  (setq dotspacemacs-mode-line-theme '(spacemacs :separator bar))
   (setq dotspacemacs-new-empty-buffer-major-mode 'fundamental-mode)
   (setq dotspacemacs-scratch-buffer-persistent t)
   (setq dotspacemacs-scratch-mode 'lisp-interaction-mode)
   (setq dotspacemacs-scroll-bar-while-scrolling nil)
   (setq dotspacemacs-startup-lists nil)
+  (setq dotspacemacs-themes '(modus-vivendi))
   (setq dotspacemacs-use-SPC-as-y t))
 
 (define-advice dotspacemacs/user-init (:after (&rest _) custom)

@@ -2,9 +2,9 @@
 
 (leaf lsp-mode
   :defer-config
-  (e:place-in-cache lsp-server-install-dir "lsp/server")
-  (e:place-in-cache lsp-session-file "lsp/session.v1")
-  (e:place-in-cache lsp-intelephense-storage-path "lsp/cache")
+  (e:cache! lsp-server-install-dir "lsp/server")
+  (e:cache! lsp-session-file "lsp/session.v1")
+  (e:cache! lsp-intelephense-storage-path "lsp/cache")
   (set-variable 'lsp-file-watch-threshold 100000)
   (set-variable 'lsp-headerline-breadcrumb-enable nil)
   (set-variable 'lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
@@ -59,8 +59,8 @@
 
 (leaf dap-mode
   :defer-config
-  (e:place-in-cache dap-breakpoints-file "dap/breakpoints")
-  (e:place-in-cache dap-utils-extension-path "dap/extensions"))
+  (e:cache! dap-breakpoints-file "dap/breakpoints")
+  (e:cache! dap-utils-extension-path "dap/extensions"))
 
 (provide 'user-config-lsp)
 

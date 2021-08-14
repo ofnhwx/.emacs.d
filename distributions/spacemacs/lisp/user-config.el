@@ -240,7 +240,7 @@
     (set-variable 'dired-recursive-deletes 'always))
   (leaf image-dired
     :defer-config
-    (e:place-in-cache image-dired-dir "dired/images"))
+    (e:cache! image-dired-dir "dired/images"))
   (leaf ls-lisp
     :after dired
     :require t
@@ -690,16 +690,16 @@
 
 (leaf treemacs
   :defer-config
-  (e:place-in-cache treemacs-persist-file "treemacs/persist")
-  (e:place-in-cache treemacs-last-error-persist-file "treemacs/persist-at-last-error"))
+  (e:cache! treemacs-persist-file "treemacs/persist")
+  (e:cache! treemacs-last-error-persist-file "treemacs/persist-at-last-error"))
 
 (leaf url-cache
   :defer-config
-  (e:place-in-cache url-cache-directory "url/cache"))
+  (e:cache! url-cache-directory "url/cache"))
 
 (leaf url-cookie
   :defer-config
-  (e:place-in-cache url-cookie-file "url/cookies"))
+  (e:cache! url-cookie-file "url/cookies"))
 
 (leaf *vterm
   :config
@@ -715,13 +715,7 @@
       (let ((input (read-string "input: ")))
         (with-no-warnings (vterm-send-string input))))
     (set-variable 'vterm-max-scrollback 20000)
-    (set-variable 'vterm-shell "tmux new -A -s emacs"))
-  (leaf vterm-theme
-    :after vterm
-    :commands (vterm-theme-solarized-dark
-               vterm-theme-onehalf-dark)
-    :config
-    (vterm-theme-solarized-dark)))
+    (set-variable 'vterm-shell "tmux new -A -s emacs")))
 
 (leaf web-mode
   :defer-config

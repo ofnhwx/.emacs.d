@@ -17,7 +17,6 @@
     elisp-demos
     embark
     embark-consult
-    evil-owl
     grugru
     helm
     helm-icons
@@ -25,11 +24,9 @@
     leaf
     magit-libgit
     marginalia
+    modus-themes
     ob-typescript
     orderless
-    ox-reveal
-    poly-markdown
-    poly-org
     psysh
     vertico
     visual-regexp
@@ -46,6 +43,7 @@
       "fz" 'affe-find
       "fg" 'affe-grep)
     :config
+    (set-variable 'affe-find-command (or (executable-find "fd") affe-find-command))
     (set-variable 'affe-regexp-function 'orderless-pattern-compiler)
     (set-variable 'affe-highlight-function 'orderless--highlight)))
 
@@ -140,13 +138,6 @@
   (use-package embark-consult
     :after (embark consult)))
 
-(defun misc/init-evil-owl ()
-  (use-package evil-owl
-    :defer (spacemacs/defer)
-    :spacediminish evil-owl-mode
-    :init
-    (spacemacs/defer-until-after-user-config #'evil-owl-mode)))
-
 (defun misc/init-grugru ()
   (use-package grugru
     :defer t
@@ -202,6 +193,10 @@
     :config
     (libgit-load)))
 
+(defun misc/init-modus-themes ()
+  (use-package modus-themes
+    :no-require t))
+
 (defun misc/init-ob-typescript ()
   (spacemacs|use-package-add-hook org
     :post-config
@@ -215,23 +210,6 @@
     :init
     (set-variable 'orderless-matching-styles '(orderless-literal orderless-regexp orderless-migemo))
     (setq completion-styles '(orderless))))
-
-(defun misc/init-ox-reveal ()
-  (use-package ox-reveal
-    :defer (spacemacs/defer)
-    :config
-    (set-variable 'org-reveal-reveal-js-version 4)
-    (set-variable 'org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")))
-
-(defun misc/init-poly-markdown ()
-  (use-package poly-markdown
-    :disabled t
-    :hook (markdown-mode . poly-markdown-mode)))
-
-(defun misc/init-poly-org ()
-  (use-package poly-org
-    :disabled t
-    :hook (org-mode . poly-org-mode)))
 
 (defun misc/init-psysh ()
   (use-package psysh

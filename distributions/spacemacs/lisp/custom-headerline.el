@@ -33,8 +33,8 @@
 (defun chl--file-format ()
   (unless (chl--cache-exists)
     (chl--make-cache))
-  (let* ((separator-l #'powerline-wave-right)
-         (separator-r #'powerline-wave-left)
+  (let* ((separator-l (intern (format "powerline-%s-left"  (spacemacs/mode-line-separator))))
+         (separator-r (intern (format "powerline-%s-right" (spacemacs/mode-line-separator))))
          (face0 (if (powerline-selected-window-active) 'powerline-active0 'powerline-inactive0))
          (face1 (if (powerline-selected-window-active) 'powerline-active1 'powerline-inactive1))
          (face2 (if (powerline-selected-window-active) 'powerline-active2 'powerline-inactive2))
@@ -50,18 +50,18 @@
       (setq dir (s-replace project-root "" dir)))
     ;; 左側
     (when project-name
-      (setq lhs (-snoc lhs (powerline-raw (concat project-name " ") face2 'l)))
-      (setq lhs (-snoc lhs (funcall separator-l face2 face0))))
+      (setq lhs (-snoc lhs (powerline-raw (concat project-name " ") face0 'l)))
+      (setq lhs (-snoc lhs (funcall separator-l face0 face1))))
     ;; 中央
-    (setq lhs (-snoc lhs (powerline-raw dir face0 'l)))
-    (setq lhs (-snoc lhs (powerline-raw file 'font-lock-keyword-face)))
+    (setq lhs (-snoc lhs (powerline-raw dir face1 'l)))
+    (setq lhs (-snoc lhs (powerline-raw (concat file " ") 'font-lock-keyword-face)))
     ;; 右側
     (when refname
-      (setq rhs (-snoc rhs (funcall separator-r face0 face2)))
-      (setq rhs (-snoc rhs (powerline-raw (concat " " refname) face2 'r))))
+      (setq rhs (-snoc rhs (funcall separator-r face1 face0)))
+      (setq rhs (-snoc rhs (powerline-raw (concat " " refname) face0 'r))))
     ;; 最後に合わせる
     (concat (powerline-render lhs)
-            (powerline-fill face0 (powerline-width rhs))
+            (powerline-fill face2 (powerline-width rhs))
             (powerline-render rhs))))
 
 

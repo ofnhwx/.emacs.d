@@ -1,13 +1,11 @@
 ;;; user-config-ruby.el
 
-(defun e:bundle-exists (name)
-  (and (executable-find "bundle")
-       (zerop (call-process-shell-command (format "bundle info %s" name)))))
+(e:after! ruby-refactor
+  (spacemacs|diminish ruby-refactor-mode))
 
 (leaf projectile-rails
-  :init
-  (e:variable! projectile-rails-component-dir "app/javascript/")
   :defer-config
+  (e:variable! projectile-rails-component-dir "app/javascript/")
   (spacemacs/set-leader-keys-for-minor-mode 'projectile-rails-mode
     "ffC" 'projectile-rails-find-component
     "ffS" 'projectile-rails-find-serializer
@@ -16,10 +14,13 @@
 
 (leaf ruby-mode
   :hook (ruby-mode-hook . e:setup-flycheck-rubocop)
+  :mode "\\.\\(jb\\)\\'"
   :config
   (e:variable! ruby-insert-encoding-magic-comment nil)
-  (add-to-list 'auto-mode-alist
-               '("\\.\\(jb\\)\\'" . ruby-mode))
+  
+  (defun e:bundle-exists (name)
+    (and (executable-find "bundle")
+         (zerop (call-process-shell-command (format "bundle info %s" name)))))
   (defun e:setup-flycheck-rubocop ()
     (when (e:bundle-exists "rubocop")
       (setq-local flycheck-command-wrapper-function
@@ -38,10 +39,6 @@
     (symbol "let" "let!")
     (symbol "to" "not_to")
     (symbol "true" "false"))))
-
-(leaf ruby-refactor
-  :defer-config
-  (spacemacs|diminish ruby-refactor-mode))
 
 (leaf ruby-tools
   :bind (:ruby-tools-mode-map

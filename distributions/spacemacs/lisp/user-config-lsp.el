@@ -1,13 +1,16 @@
 ;;; user-config-lsp.el
 
-(leaf lsp-mode
-  :defer-config
+(e:after! lsp-mode
   (e:cache! lsp-server-install-dir "lsp/server")
   (e:cache! lsp-session-file "lsp/session.v1")
   (e:cache! lsp-intelephense-storage-path "lsp/cache")
-  (set-variable 'lsp-file-watch-threshold 100000)
-  (set-variable 'lsp-headerline-breadcrumb-enable nil)
-  (set-variable 'lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
+  (e:variable! lsp-file-watch-threshold 100000)
+  (e:variable! lsp-headerline-breadcrumb-enable nil)
+  (e:variable! lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
+
+(e:after! dap-mode
+  (e:cache! dap-breakpoints-file "dap/breakpoints")
+  (e:cache! dap-utils-extension-path "dap/extensions"))
 
 (leaf lsp-completion
   :after lsp-mode
@@ -48,19 +51,14 @@
          (company-completion-finished-hook  . e:lsp-ui-doc-mode-restore)
          (company-completion-cancelled-hook . e:lsp-ui-doc-mode-restore))
   :config
-  (set-variable 'lsp-ui-doc-position 'at-point)
-  (set-variable 'lsp-ui-doc-delay 2.0)
+  (e:variable! lsp-ui-doc-position 'at-point)
+  (e:variable! lsp-ui-doc-delay 2.0)
   (defun e:lsp-ui-doc-mode-temporary-disable (&rest _)
     (setq e:lsp-ui-doc-mode-enabled lsp-ui-doc-mode)
     (lsp-ui-doc-mode 0))
   (defun e:lsp-ui-doc-mode-restore (&rest _)
     (when (bound-and-true-p e:lsp-ui-doc-mode-enabled)
       (lsp-ui-doc-mode 1))))
-
-(leaf dap-mode
-  :defer-config
-  (e:cache! dap-breakpoints-file "dap/breakpoints")
-  (e:cache! dap-utils-extension-path "dap/extensions"))
 
 (provide 'user-config-lsp)
 

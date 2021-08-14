@@ -6,7 +6,7 @@
 
 (leaf projectile-rails
   :init
-  (set-variable 'projectile-rails-component-dir "app/javascript/")
+  (e:variable! projectile-rails-component-dir "app/javascript/")
   :defer-config
   (spacemacs/set-leader-keys-for-minor-mode 'projectile-rails-mode
     "ffC" 'projectile-rails-find-component
@@ -17,7 +17,7 @@
 (leaf ruby-mode
   :hook (ruby-mode-hook . e:setup-flycheck-rubocop)
   :config
-  (set-variable 'ruby-insert-encoding-magic-comment nil)
+  (e:variable! ruby-insert-encoding-magic-comment nil)
   (add-to-list 'auto-mode-alist
                '("\\.\\(jb\\)\\'" . ruby-mode))
   (defun e:setup-flycheck-rubocop ()
@@ -73,7 +73,7 @@
   (spacemacs/set-leader-keys-for-major-mode 'ruby-mode
     "==" 'rubocopfmt)
   :defer-config
-  (set-variable 'rubocopfmt-use-bundler-when-possible t))
+  (e:variable! rubocopfmt-use-bundler-when-possible t))
 
 (leaf haml-mode
   :hook (haml-mode-hook . e:setup-haml-mode)

@@ -21,12 +21,6 @@
                       (--reject (eq (second it) :null))))))
           coverage)))
 
-(defun orderless-migemo (component)
-  (let ((pattern (migemo-get-pattern component)))
-    (condition-case nil
-        (progn (string-match-p pattern "") pattern)
-      (invalid-regexp nil))))
-
 (defun org-support/daily-file ()
   (let* ((daily-dir (f-expand "daily" org-directory)))
     (f-short (f-expand (format-time-string "%Y-%m.org") daily-dir))))

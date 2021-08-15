@@ -9,26 +9,19 @@
     company-prescient
     company-tabnine
     company-try-hard
-    consult
     cov
     ddskk-posframe
     dired-filter
     dired-toggle-sudo
     elisp-demos
-    embark
-    embark-consult
     grugru
-    helm
     helm-icons
     helpful
     leaf
     magit-libgit
-    marginalia
     modus-themes
     ob-typescript
-    orderless
     psysh
-    vertico
     visual-regexp
     vlf
     (codic :toggle (getenv "EMACS_CODIC_API_TOKEN"))
@@ -65,12 +58,6 @@
     :defer (spacemacs/defer)
     :config
     (set-variable 'codic-api-token (getenv "EMACS_CODIC_API_TOKEN"))))
-
-(defun misc/init-consult ()
-  (use-package consult
-    :bind (([remap goto-line] . consult-goto-line))
-    :config
-    (set-variable 'consult-project-root-function 'kllib:project-root)))
 
 (defun misc/init-company-org-block ()
   (use-package company-org-block
@@ -128,27 +115,11 @@
     (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1)
     (advice-add 'helpful-update      :after #'elisp-demos-advice-helpful-update)))
 
-(defun misc/init-embark ()
-  (use-package embark
-    :defer (spacemacs/defer)
-    :init
-    (bind-key "C-c C-e" 'embark-export minibuffer-local-map)))
-
-(defun misc/init-embark-consult ()
-  (use-package embark-consult
-    :after (embark consult)))
-
 (defun misc/init-grugru ()
   (use-package grugru
     :defer t
     :init
     (spacemacs/set-leader-keys "xgg" #'grugru)))
-
-(defun misc/pre-init-helm ()
-  (spacemacs|use-package-add-hook helm
-    :pre-init
-    (with-no-warnings (define-advice helm-mode (:around (&rest _) disable)))
-    (spacemacs/defer-until-after-user-config #'helm-descbinds-mode)))
 
 (defun misc/init-helm-icons ()
   (use-package helm-icons
@@ -180,13 +151,6 @@
   (use-package leaf
     :no-require t))
 
-(defun misc/init-marginalia ()
-  (use-package marginalia
-    :defer (spacemacs/defer)
-    :init
-    (bind-key "M-A" 'marginalia-cycle minibuffer-local-map)
-    (spacemacs/defer-until-after-user-config #'marginalia-mode)))
-
 (defun misc/init-magit-libgit ()
   (use-package magit-libgit
     :after (magit)
@@ -204,25 +168,9 @@
       :init
       (add-to-list 'org-babel-load-languages '(typescript . t)))))
 
-(defun misc/init-orderless ()
-  (use-package orderless
-    :defer (spacemacs/defer)
-    :init
-    (set-variable 'orderless-matching-styles '(orderless-literal orderless-regexp orderless-migemo))
-    (setq completion-styles '(orderless))))
-
 (defun misc/init-psysh ()
   (use-package psysh
     :no-require t))
-
-(defun misc/init-vertico ()
-  (use-package vertico
-    :defer (spacemacs/defer)
-    :init
-    (spacemacs/defer-until-after-user-config #'vertico-mode)
-    :config
-    (set-variable 'vertico-count 20)
-    (set-variable 'vertico-cycle t)))
 
 (defun misc/init-vlf ()
   (use-package vlf

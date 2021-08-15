@@ -11,7 +11,7 @@
           syntax-checking
           ;; +completion
           (auto-completion :variables auto-completion-enable-help-tooltip t auto-completion-use-company-box t)
-          helm
+          compleseus
           ;; +emacs
           (org :variables org-enable-roam-support t)
           ;; +filetree
@@ -91,9 +91,6 @@
           ac-ispell
           fuzzy
           yasnippet-snippets
-          ;; +completion/helm
-          helm-flx
-          helm-themes
           ;; +intl/japanese
           pangu-spacing
           ;; +themes/colors

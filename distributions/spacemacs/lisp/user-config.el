@@ -242,6 +242,10 @@
 (e:after! url-cookie
   (e:cache! url-cookie-file "url/cookies"))
 
+(e:after! vertico
+  (e:variable! vertico-count 20)
+  (e:variable! vertico-cycle t))
+
 (e:after! web-mode
   (e:default! web-mode-markup-indent-offset 2)
   (e:default! web-mode-css-indent-offset    2)
@@ -490,6 +494,18 @@
   (when (executable-find "ghq")
     (e:variable! magit-repository-directories (->> (kllib:shell-command-to-list "ghq root --all")
                                                    (--map (cons it 5))))))
+
+(leaf orderless
+  :if (executable-find "cmigemo")
+  :commands (orderless-migemo)
+  :config
+  (e:variable! orderless-matching-styles '(orderless-literal orderless-regexp orderless-migemo))
+  
+  (defun orderless-migemo (component)
+    (let ((pattern (migemo-get-pattern component)))
+      (condition-case nil
+          (progn (string-match-p pattern "") pattern)
+        (invalid-regexp nil)))))
 
 (leaf org
   :bind* (("C-:" . popwin:daily-report))

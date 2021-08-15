@@ -21,7 +21,6 @@
     magit-libgit
     modus-themes
     ob-typescript
-    psysh
     visual-regexp
     vlf
     (codic :toggle (getenv "EMACS_CODIC_API_TOKEN"))
@@ -167,10 +166,6 @@
     (use-package ob-typescript
       :init
       (add-to-list 'org-babel-load-languages '(typescript . t)))))
-
-(defun misc/init-psysh ()
-  (use-package psysh
-    :no-require t))
 
 (defun misc/init-vlf ()
   (use-package vlf

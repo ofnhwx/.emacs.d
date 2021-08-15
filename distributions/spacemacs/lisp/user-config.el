@@ -191,7 +191,7 @@
 (e:after! ggtags
   (spacemacs|diminish ggtags-navigation-mode))
 
-(e:after! google-translate
+(e:after! google-translate-default-ui
   (e:variable! google-translate-default-source-language "en")
   (e:variable! google-translate-default-target-language "ja"))
 
@@ -562,6 +562,8 @@
 
 (leaf projectile
   :defer-config
+  (e:variable! projectile-completion-system 'default)
+  
   (defun e:setup-projectile-known-projects ()
     (when (executable-find "ghq")
       (setq projectile-known-projects

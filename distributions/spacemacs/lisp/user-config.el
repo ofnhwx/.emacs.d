@@ -40,8 +40,17 @@
     (define-advice spacemacs/dump-emacs (:around (fn &rest args) trick)
       (let ((spacemacs-start-directory user-emacs-directory))
         (apply fn args))))
+  ;; フォント調整
+  (let ((font (car dotspacemacs-default-font)))
+    (set-face-attribute 'fixed-pitch nil       :family font)
+    (set-face-attribute 'fixed-pitch-serif nil :family font))
+  ;; タイトル表示
+  (defun custom-frame-title-format ()
+    (if (org-clocking-p)
+        org-mode-line-string
+      (spacemacs/title-prepare dotspacemacs-frame-title-format)))
+  (e:variable! frame-title-format '(:eval (custom-frame-title-format)))
   ;; モードラインの表示を切替え
-  (e:variable! spaceline-org-clock-p t)
   (e:variable! spaceline-purpose-p nil)
   (e:variable! spaceline-selection-info-p nil)
   (e:variable! spaceline-version-control-p nil)

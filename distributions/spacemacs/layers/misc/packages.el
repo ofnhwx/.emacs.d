@@ -18,6 +18,7 @@
     helm-descbinds
     helm-icons
     helpful
+    highlight-indent-guides
     leaf
     magit-libgit
     modus-themes
@@ -152,6 +153,18 @@
     :config
     (evil-define-key 'normal helpful-mode-map (kbd "gr") 'helpful-update)
     (evil-define-key 'normal helpful-mode-map (kbd "q") 'quit-window)))
+
+(defun misc/init-highlight-indent-guides ()
+  (use-package highlight-indent-guides
+    :hook ((haml-mode . spacemacs/toggle-highlight-indent-guides-mode-on)
+           (yaml-mode . spacemacs/toggle-highlight-indent-guides-mode-on))
+    :config
+    (e:variable! highlight-indent-guides-method 'character)
+    (e:variable! highlight-indent-guides-responsive 'top)
+    (spacemacs|add-toggle highlight-indent-guides-mode
+      :status highlight-indent-guides-mode
+      :on  (highlight-indent-guides-mode 1)
+      :off (highlight-indent-guides-mode 0))))
 
 (defun misc/init-leaf ()
   (use-package leaf

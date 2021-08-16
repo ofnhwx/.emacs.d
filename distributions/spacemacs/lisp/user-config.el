@@ -107,6 +107,7 @@
 
 (e:progn! buffer.c
   (e:default! bidi-display-reordering nil)
+  (e:default! fill-column 100)
   (e:default! truncate-lines t))
 
 (e:progn! callproc.c
@@ -459,16 +460,13 @@
     (helm-migemo-mode)))
 
 (leaf highlight-indentation
-  :hook ((haml-mode-hook . e:setup-highlight-indentation-mode)
-         (yaml-mode-hook . e:setup-highlight-indentation-mode))
-  :config
+  :defer-config
   (spacemacs|diminish highlight-indentation-mode)
   (spacemacs|diminish highlight-indentation-current-column-mode)
   (set-face-attribute 'highlight-indentation-face nil :background "#404040")
   (set-face-attribute 'highlight-indentation-current-column-face nil :background "#408040")
   
-  (defun e:setup-highlight-indentation-mode ()
-    (highlight-indentation-mode 1)
+  (define-advice highlight-indentation-mode (:after (&rest _) setup)
     (highlight-indentation-current-column-mode 1)
     (highlight-indentation-set-offset 2)))
 

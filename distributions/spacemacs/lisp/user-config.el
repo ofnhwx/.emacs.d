@@ -19,6 +19,16 @@
 
 
 
+(leaf temporary-solutions
+  :config
+  ;; compleseus の設定がミスってるので一時的に上書き
+  (e:variable! completion-category-overrides '((file (styles basic partial-completion))))
+  ;; ido-mode をオフにしたい(これも compleseus で対応してくれないかな)
+  (ido-mode 0)
+  )
+
+
+
 (leaf japanese-language-environment
   :config
   ;; 言語環境を日本語に設定
@@ -513,6 +523,11 @@
   (e:variable! org-agenda-entry-text-leaders (s-concat (s-repeat 25 " ") "│ "))
   (e:variable! org-agenda-entry-text-maxlines 20)
   (e:variable! org-agenda-span 'day)
+  (e:variable! org-agenda-time-grid '((daily today require-timed)
+                                      (800 1000 1200 1400 1600 1800 2000)
+                                      "      "
+                                      "────────────────"))
+  (e:variable! org-agenda-current-time-string "← now")
   (e:variable! org-capture-templates `(("t" "TODO" entry
                                         (file+olp org-support/daily-file "TASKS" "INBOX")
                                         (file "template/todo.org")

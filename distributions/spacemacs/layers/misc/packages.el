@@ -15,6 +15,7 @@
     dired-toggle-sudo
     elisp-demos
     grugru
+    helm-descbinds
     helm-icons
     helpful
     leaf
@@ -119,6 +120,12 @@
     :defer t
     :init
     (spacemacs/set-leader-keys "xgg" #'grugru)))
+
+(defun misc/init-helm-descbinds ()
+  (use-package helm-descbinds
+    :defer (spacemacs/defer)
+    :init
+    (spacemacs/defer-until-after-user-config #'helm-descbinds-mode)))
 
 (defun misc/init-helm-icons ()
   (use-package helm-icons

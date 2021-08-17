@@ -217,7 +217,7 @@
   (e:variable! paradox-column-width-package 30)
   (e:variable! paradox-column-width-version 13)
   (e:variable! paradox-column-width-star 5)
-  (e:variable! paradox-github-token (e:auth-sources-get :token :host "github.com" :user "paradox")))
+  (e:variable! paradox-github-token (e:auth-source-get :token :host "github.com" :user "paradox")))
 
 (e:after! password-cache
   (e:variable! password-cache-expiry 3600))
@@ -269,7 +269,7 @@
 
 
 (leaf auth-source
-  :commands (e:auth-sources-get)
+  :commands (e:auth-source-get)
   :config
   (e:variable! auth-sources '("~/.authinfo.json.gpg"))
   

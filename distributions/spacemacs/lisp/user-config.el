@@ -565,6 +565,14 @@
     (interactive)
     (popwin:popup-buffer (find-file-noselect (org-support/daily-file)) :height 30 :dedicated t :stick t)))
 
+(leaf persistent-scratch
+  :defer-config
+  (define-advice persistent-scratch-save (:after (&rest _) saved)
+    (--each (buffer-list)
+      (with-current-buffer it
+        (when (funcall persistent-scratch-scratch-buffer-p-function)
+          (set-buffer-modified-p nil))))))
+
 (leaf prodigy
   :commands (e:prodigy-start-service)
   :config

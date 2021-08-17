@@ -17,13 +17,13 @@
      ((chl--filename)
       (setq-local spaceline-buffer-id-p nil)
       (setq-local header-line-format '((:eval (chl--file-format)))))
-     ((derived-mode-p 'magit-status-mode)
+     ((derived-mode-p 'magit-status-mode 'magit-process-mode 'messages-buffer-mode)
       (setq-local spaceline-buffer-id-p nil)
       (setq-local header-line-format '((:eval (buffer-name))))))))
 
-(defun chl--setup (&optional _frame)
+(defun chl--setup (&optional frame)
   (set-face-attribute 'header-line nil :inherit 'mode-line)
-  (--each (->> (window-list)
+  (--each (->> (window-list frame)
                (-map 'window-buffer)
                (--remove (buffer-local-value 'header-line-format it)))
     (chl--setup-1 it)))
@@ -51,8 +51,11 @@
       (setq lhs (-snoc lhs (powerline-raw (concat project-name " ") face0 'l)))
       (setq lhs (-snoc lhs (funcall separator-l face0 face1))))
     ;; 中央
+    (let ((foreground "#44bc44")
+          (background (face-attribute face1 :background)))
+      (setq file (propertize file 'face (list :foreground foreground :background background))))
     (setq lhs (-snoc lhs (powerline-raw dir face1 'l)))
-    (setq lhs (-snoc lhs (powerline-raw (concat file " ") 'font-lock-keyword-face)))
+    (setq lhs (-snoc lhs (powerline-raw file nil 'r)))
     ;; 右側
     (when refname
       (setq rhs (-snoc rhs (funcall separator-r face1 face0)))

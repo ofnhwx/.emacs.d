@@ -185,6 +185,9 @@
   (e:variable! avy-all-windows nil)
   (e:variable! avy-all-windows-alt t))
 
+(e:after! codic
+  (e:variable! codic-api-token (e:auth-source-get :token :host "emacs" :user "codic")))
+
 (e:after! epg-config
   (e:variable! epg-pinentry-mode 'loopback))
 
@@ -691,6 +694,12 @@
     (interactive)
     (let ((input (read-string "input: ")))
       (with-no-warnings (vterm-send-string input)))))
+
+(leaf wakatime-mode
+  :if (and (executable-find "wakatime")
+           (bound-and-true-p wakatime-api-key))
+  :init
+  (spacemacs/defer-until-after-user-config 'global-wakatime-mode))
 
 (leaf whitespace
   :hook ((find-file-hook . spacemacs/toggle-whitespace-on)

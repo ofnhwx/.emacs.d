@@ -5,6 +5,7 @@
     affe
     atomic-chrome
     beacon
+    codic
     company-org-block
     company-prescient
     company-tabnine
@@ -25,8 +26,7 @@
     ob-typescript
     visual-regexp
     vlf
-    (codic :toggle (getenv "EMACS_CODIC_API_TOKEN"))
-    (wakatime-mode :toggle (getenv "EMACS_WAKATIME_API_KEY"))
+    wakatime-mode
     ))
 
 (defun misc/init-affe ()
@@ -56,9 +56,7 @@
 
 (defun misc/init-codic ()
   (use-package codic
-    :defer (spacemacs/defer)
-    :config
-    (set-variable 'codic-api-token (getenv "EMACS_CODIC_API_TOKEN"))))
+    :no-require t))
 
 (defun misc/init-company-org-block ()
   (use-package company-org-block
@@ -199,13 +197,11 @@
   (use-package wakatime-mode
     :defer (spacemacs/defer)
     :spacediminish (wakatime-mode " " " [T]")
-    :commands (global-wakatime-mode)
+    :commands (global-wakatime-mode spacemacs/wakatime-dashboard)
     :init
-    (spacemacs/defer-until-after-user-config #'global-wakatime-mode)
+    (spacemacs/set-leader-keys
+      "aW" 'spacemacs/wakatime-dashboard)
     :config
-    (set-variable 'wakatime-api-key (getenv "EMACS_WAKATIME_API_KEY"))
     (defun spacemacs/wakatime-dashboard ()
       (interactive)
-      (browse-url "https://wakatime.com/dashboard"))
-    (spacemacs/set-leader-keys
-      "aW" 'spacemacs/wakatime-dashboard)))
+      (browse-url "https://wakatime.com/dashboard"))))

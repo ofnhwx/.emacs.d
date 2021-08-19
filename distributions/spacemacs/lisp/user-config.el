@@ -25,6 +25,12 @@
   (e:variable! completion-category-overrides '((file (styles basic partial-completion))))
   ;; ido-mode をオフにしたい(これも compleseus で対応してくれないかな)
   (ido-mode 0)
+  ;; 「Too many open files」が出たときの対策
+  (defun kill-all-buffer-processes ()
+    (interactive)
+    (->> (buffer-list)
+         (-filter 'get-buffer-process)
+         (-map 'kill-buffer)))
   )
 
 

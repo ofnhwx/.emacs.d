@@ -580,7 +580,8 @@
     (--each (buffer-list)
       (with-current-buffer it
         (when (funcall persistent-scratch-scratch-buffer-p-function)
-          (set-buffer-modified-p nil))))))
+          (set-buffer-modified-p nil)
+          (e:evil-force-normal-state))))))
 
 (leaf prodigy
   :commands (e:prodigy-start-service)

@@ -705,6 +705,7 @@
   :if (and (executable-find "wakatime")
            (bound-and-true-p wakatime-api-key))
   :init
+  (e:variable! wakatime-cli-path (executable-find "wakatime"))
   (spacemacs/defer-until-after-user-config 'global-wakatime-mode))
 
 (leaf whitespace

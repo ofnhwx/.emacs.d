@@ -1,19 +1,16 @@
 ;;; user-config-js.el
 
 (leaf web-mode ;; typescript-tsx-mode, vue-mode
-  :hook ((typescript-tsx-mode-hook . setup-typescript-tsx-mode)
-         (vue-mode-hook . setup-vue-mode))
+  :hook (typescript-tsx-mode-hook . setup-typescript-tsx-mode)
   :config
   (defun setup-typescript-tsx-mode ()
     (e:variable! web-mode-code-indent-offset   2)
     (e:variable! web-mode-css-indent-offset    2)
     (e:variable! web-mode-markup-indent-offset 2)
-    (e:variable! web-mode-sql-indent-offset    2)
-    (poly-tsx-mode))
-  (defun setup-vue-mode ()
-    (poly-vue-mode)))
+    (e:variable! web-mode-sql-indent-offset    2)))
 
 (leaf graphql-mode
+  :disabled t
   :hook (graphql-mode-hook . setup-graphql-mode)
   :config
   (defun setup-graphql-mode ()
@@ -21,32 +18,26 @@
 
 
 
-(leaf polymode
-  :commands (poly-tsx-mode poly-vue-mode)
+(leaf mmm-mode
+  :require t
   :config
-  (define-innermode poly-graphql-innermode
-    :mode 'graphql-mode
-    :head-matcher "gql`"
-    :tail-matcher "`"
-    :head-mode 'host
-    :tail-mode 'host)
-  
-  (define-hostmode poly-tsx-hostmode
-    :mode 'typescript-tsx-mode)
-  (define-polymode poly-tsx-mode
-    :hostmode 'poly-tsx-hostmode
-    :innermodes '(poly-graphql-innermode))
-  
-  (define-hostmode poly-vue-hostmode
-    :mode 'vue-mode)
-  (define-polymode poly-vue-mode
-    :hostmode 'poly-vue-hostmode
-    :innermodes '(poly-graphql-innermode)))
+  (e:variable! mmm-global-mode 'maybe)
+  (mmm-add-classes
+   '((embedded-graphql
+      :submode graphql-mode
+      :front "gql`"
+      :back  "`")))
+  (mmm-add-mode-ext-class 'typescript-tsx-mode nil 'embedded-graphql)
+  (mmm-add-mode-ext-class 'vue-mode nil 'embedded-graphql))
 
 
 
 (leaf lsp-mode
   ;; yarn global add graphql graphql-language-service-cli
+  :defun (make-lsp-client
+          lsp-register-client
+          lsp-stdio-connection)
+  :defvar (lsp-language-id-configuration)
   :defer-config
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection

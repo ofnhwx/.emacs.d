@@ -24,7 +24,6 @@
     magit-libgit
     modus-themes
     ob-typescript
-    polymode
     visual-regexp
     vlf
     wakatime-mode
@@ -185,10 +184,6 @@
     (use-package ob-typescript
       :init
       (add-to-list 'org-babel-load-languages '(typescript . t)))))
-
-(defun misc/init-polymode ()
-  (use-package polymode
-    :no-require t))
 
 (defun misc/init-visual-regexp ()
   (use-package visual-regexp

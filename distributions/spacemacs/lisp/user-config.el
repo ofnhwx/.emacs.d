@@ -370,7 +370,7 @@
        (normal-mode))))
   (defun e:current-string-type (buffer point)
     (with-current-buffer buffer
-      (while (string-at-point-p point)
+      (while (at-point-string-p point)
         (cl-decf point))
       (save-excursion
         (goto-char point)

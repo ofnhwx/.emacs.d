@@ -354,6 +354,46 @@
   :init
   (spacemacs/defer-until-after-user-config 'eaw-fullwidth))
 
+(leaf edit-indirect
+  :commands (e:string-edit-indirect-dwim)
+  :config
+  (e:variable! edit-indirect-guess-mode-function 'e:edit-indirect-guess-mode)
+  (spacemacs/set-leader-keys
+    "xE" 'e:string-edit-indirect-dwim)
+  
+  (defun e:edit-indirect-guess-mode (parent beg end)
+    (cl-case (e:current-string-type parent beg)
+      (gql (graphql-mode))
+      (t   (normal-mode))))
+  (defun e:current-string-type (buffer point)
+    (with-current-buffer buffer
+      (while (and (>= point (point-min))
+                  (eq (get-text-property point 'part-token) 'string))
+        (cl-decf point))
+      (save-excursion
+        (goto-char point)
+        (symbol-at-point))))
+  
+  (defun e:string-edit-indirect-dwim (s e)
+    (interactive "r")
+    (cond
+     ((region-active-p)
+      (edit-indirect-region s e t))
+     ((eq (get-text-property (point) 'part-token) 'string)
+      (let ((s (point))
+            (e (point)))
+        (while (and (>= s (point-min))
+                    (eq (get-text-property s 'part-token) 'string))
+          (cl-decf s))
+        (while (and (<= e (point-max))
+                    (eq (get-text-property e 'part-token) 'string))
+          (cl-incf e))
+        (cl-incf s 2)
+        (cl-decf e)
+        (edit-indirect-region s e t)))
+     (t
+      (user-error "Not in string")))))
+
 (leaf emacs-lock
   :config
   (dolist (buffer '("*scratch*" "*Messages*"))
@@ -580,8 +620,9 @@
     (--each (buffer-list)
       (with-current-buffer it
         (when (funcall persistent-scratch-scratch-buffer-p-function)
-          (set-buffer-modified-p nil)
-          (e:evil-force-normal-state))))))
+          (when (interactive-p)
+            (e:evil-force-normal-state))
+          (set-buffer-modified-p nil))))))
 
 (leaf prodigy
   :commands (e:prodigy-start-service)

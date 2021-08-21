@@ -15,6 +15,7 @@
     dired-filter
     dired-toggle-sudo
     elisp-demos
+    edit-indirect
     grugru
     helm-descbinds
     helm-icons
@@ -113,6 +114,10 @@
     :init
     (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1)
     (advice-add 'helpful-update      :after #'elisp-demos-advice-helpful-update)))
+
+(defun misc/init-edit-indirect ()
+  (use-package edit-indirect
+    :no-require t))
 
 (defun misc/init-grugru ()
   (use-package grugru

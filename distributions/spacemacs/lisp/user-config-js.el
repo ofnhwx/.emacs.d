@@ -18,20 +18,6 @@
 
 
 
-(leaf mmm-mode
-  :require t
-  :config
-  (e:variable! mmm-global-mode 'maybe)
-  (mmm-add-classes
-   '((embedded-graphql
-      :submode graphql-mode
-      :front "gql`"
-      :back  "`")))
-  (mmm-add-mode-ext-class 'typescript-tsx-mode nil 'embedded-graphql)
-  (mmm-add-mode-ext-class 'vue-mode nil 'embedded-graphql))
-
-
-
 (leaf lsp-mode
   ;; yarn global add graphql graphql-language-service-cli
   :defun (make-lsp-client

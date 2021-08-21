@@ -117,7 +117,8 @@
 
 (defun misc/init-edit-indirect ()
   (use-package edit-indirect
-    :no-require t))
+    :defer (spacemacs/defer)
+    :spacediminish (edit-indirect--overlay "[INDIRECT]")))
 
 (defun misc/init-grugru ()
   (use-package grugru

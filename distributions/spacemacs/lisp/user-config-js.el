@@ -10,7 +10,6 @@
     (e:variable! web-mode-sql-indent-offset    2)))
 
 (leaf graphql-mode
-  :disabled t
   :hook (graphql-mode-hook . setup-graphql-mode)
   :config
   (defun setup-graphql-mode ()

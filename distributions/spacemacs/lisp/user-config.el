@@ -355,7 +355,7 @@
   (spacemacs/defer-until-after-user-config 'eaw-fullwidth))
 
 (leaf edit-indirect
-  :commands (e:string-edit-indirect-dwim)
+  :commands (e:string-edit-indirect-dwim e:edit-indirect-guess-mode)
   :config
   (e:variable! edit-indirect-guess-mode-function 'e:edit-indirect-guess-mode)
   (spacemacs/set-leader-keys
@@ -363,12 +363,14 @@
   
   (defun e:edit-indirect-guess-mode (parent beg end)
     (cl-case (e:current-string-type parent beg)
-      (gql (graphql-mode))
-      (t   (normal-mode))))
+      (gql
+       (e:local! buffer-file-name (concat (with-current-buffer parent (buffer-file-name)) ".graphql"))
+       (graphql-mode))
+      (t
+       (normal-mode))))
   (defun e:current-string-type (buffer point)
     (with-current-buffer buffer
-      (while (and (>= point (point-min))
-                  (eq (get-text-property point 'part-token) 'string))
+      (while (string-at-point-p point)
         (cl-decf point))
       (save-excursion
         (goto-char point)
@@ -376,23 +378,13 @@
   
   (defun e:string-edit-indirect-dwim (s e)
     (interactive "r")
-    (cond
-     ((region-active-p)
-      (edit-indirect-region s e t))
-     ((eq (get-text-property (point) 'part-token) 'string)
-      (let ((s (point))
-            (e (point)))
-        (while (and (>= s (point-min))
-                    (eq (get-text-property s 'part-token) 'string))
-          (cl-decf s))
-        (while (and (<= e (point-max))
-                    (eq (get-text-property e 'part-token) 'string))
-          (cl-incf e))
-        (cl-incf s 2)
-        (cl-decf e)
-        (edit-indirect-region s e t)))
-     (t
-      (user-error "Not in string")))))
+    (unless (region-active-p)
+      (when-let ((range (string-range-at-point)))
+        (setq s (1+ (nth 0 range)))
+        (setq e (1- (nth 1 range)))))
+    (if (and s e)
+        (edit-indirect-region s e t)
+      (user-error "Not in string"))))
 
 (leaf emacs-lock
   :config

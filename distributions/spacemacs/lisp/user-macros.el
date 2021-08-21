@@ -12,6 +12,9 @@
 (defmacro e:default! (variable default)
   `(setq-default ,variable ,default))
 
+(defmacro e:local! (variable value)
+  `(setq-local ,variable ,value))
+
 (defmacro e:variable! (variable value)
   `(set-variable ',variable ,value))
 

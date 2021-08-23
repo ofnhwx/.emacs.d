@@ -360,6 +360,8 @@
   (e:variable! edit-indirect-guess-mode-function 'e:edit-indirect-guess-mode)
   (spacemacs/set-leader-keys
     "xE" 'e:string-edit-indirect-dwim)
+  (define-advice edit-indirect--clean-up (:before (&rest _) without-save)
+    (set-buffer-modified-p nil))
   
   (defun e:edit-indirect-guess-mode (parent beg end)
     (cl-case (e:current-string-type parent beg)
@@ -501,6 +503,7 @@
     (helm-migemo-mode)))
 
 (leaf highlight-indentation
+  :commands (highlight-indentation-mode@setup)
   :defer-config
   (spacemacs|diminish highlight-indentation-mode)
   (spacemacs|diminish highlight-indentation-current-column-mode)
@@ -612,7 +615,7 @@
     (--each (buffer-list)
       (with-current-buffer it
         (when (funcall persistent-scratch-scratch-buffer-p-function)
-          (when (interactive-p)
+          (when (called-interactively-p 'any)
             (e:evil-force-normal-state))
           (set-buffer-modified-p nil))))))
 

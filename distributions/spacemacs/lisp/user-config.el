@@ -29,8 +29,9 @@
   (defun kill-all-buffer-processes ()
     (interactive)
     (->> (buffer-list)
-         (-filter 'get-buffer-process)
-         (-map 'kill-buffer)))
+         (-map 'get-buffer-process)
+         (-non-nil)
+         (-map 'kill-process)))
   )
 
 

@@ -31,7 +31,8 @@
     (->> (buffer-list)
          (-map 'get-buffer-process)
          (-non-nil)
-         (-map 'kill-process)))
+         (-map (lambda (process)
+                 (ignore-errors (kill-process process))))))
   )
 
 
@@ -195,6 +196,9 @@
 (e:after! codic
   (e:variable! codic-api-token (e:auth-source-get :token :host "emacs" :user "codic")))
 
+(e:after! consult
+  (e:variable! consult-preview-key nil))
+
 (e:after! epg-config
   (e:variable! epg-pinentry-mode 'loopback))
 
@@ -309,8 +313,11 @@
   (e:variable! company-transformers '(-distinct
                                       company-prescient-transformer
                                       company-sort-by-backend-importance))
-  (e:variable! company-box-backends-colors '((company-robe    . (:candidate "#90ee90"))
-                                             (company-tabnine . (:candidate "#696969"))))
+  (spacemacs|use-package-add-hook company-box
+    :post-config
+    (e:variable! company-box-backends-colors
+                 '((company-robe    . (:candidate "#90ee90"))
+                   (company-tabnine . (:candidate "#696969")))))
   
   (defun e:setup-company-backends (backends)
     (let ((default '(company-dabbrev-code

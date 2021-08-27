@@ -735,7 +735,9 @@
   :bind (:vterm-mode-map
          ("C-c C-g" . keyboard-quit)
          ("C-g" . vterm-send-C-g)
-         ("C-j" . e:vterm-input-something))
+         ("C-j" . e:vterm-input-something)
+         ("<wheel-up>" . ignore)
+         ("<wheel-down>" . ignore))
   :config
   (evil-define-key 'hybrid vterm-mode-map (kbd "<escape>") 'vterm-send-escape)
   (e:variable! vterm-max-scrollback 20000)

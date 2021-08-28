@@ -196,9 +196,6 @@
 (e:after! codic
   (e:variable! codic-api-token (e:auth-source-get :token :host "emacs" :user "codic")))
 
-(e:after! consult
-  (e:variable! consult-preview-key nil))
-
 (e:after! epg-config
   (e:variable! epg-pinentry-mode 'loopback))
 

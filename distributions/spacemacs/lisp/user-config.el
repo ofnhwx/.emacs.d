@@ -542,8 +542,8 @@
   (e:variable! magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
   (e:variable! smerge-refine-ignore-whitespace nil)
   (e:variable! transient-default-level 7)
-  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview 'magit-insert-status-headers t)
   (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-skip-worktree-files 'magit-insert-stashes t)
+  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview    'magit-insert-stashes t)
   (define-advice magit-repos-alist (:override (&rest _) override)
     (magit-list-repos-uniquify
      (--map (cons (f-short it) it)

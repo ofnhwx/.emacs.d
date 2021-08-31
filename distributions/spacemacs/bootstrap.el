@@ -7,8 +7,7 @@
   (setq dotspacemacs-configuration-layers
         '(
           ;; +checkers
-          spell-checking
-          syntax-checking
+          (syntax-checking :variables syntax-checking-enable-tooltips nil)
           ;; +completion
           (auto-completion :variables auto-completion-enable-help-tooltip t auto-completion-use-company-box t)
           compleseus
@@ -69,7 +68,6 @@
           ))
   (setq dotspacemacs-additional-packages
         '(
-          (command-logger       :location (recipe :fetcher github :repo "ofnhwx/command-logger"))
           (komunan-lisp-library :location (recipe :fetcher github :repo "ofnhwx/komunan-lisp-library"))
           (locale-eaw           :location (recipe :fetcher github :repo "ofnhwx/locale-eaw"))
           (ls-lisp-extension    :location (recipe :fetcher github :repo "ofnhwx/ls-lisp-extension"))
@@ -81,20 +79,8 @@
           dired-quick-sort
           ;; +spacemacs/spacemacs-evil
           evil-escape
-          ;; +spacemacs/spacemacs-navigation
-          golden-ratio
-          ;; +checkers/syntax-checking
-          flycheck-pos-tip
-          ;; +completion/auto-completion
-          auto-yasnippet
-          auto-complete
-          ac-ispell
-          fuzzy
-          yasnippet-snippets
           ;; +intl/japanese
           pangu-spacing
-          ;; +themes/colors
-          nyan-mode
           )))
 
 (define-advice dotspacemacs/init (:after (&rest _) custom)
@@ -112,7 +98,7 @@
   (setq dotspacemacs-scratch-mode 'lisp-interaction-mode)
   (setq dotspacemacs-scroll-bar-while-scrolling nil)
   (setq dotspacemacs-startup-lists nil)
-  (setq dotspacemacs-themes '(modus-vivendi))
+  (setq dotspacemacs-themes '(modus-vivendi modus-operandi))
   (setq dotspacemacs-use-SPC-as-y t))
 
 (define-advice dotspacemacs/user-init (:after (&rest _) custom)
@@ -122,22 +108,15 @@
     (set-variable 'vim-style-remap-Y-to-y$ t)
     (set-variable 'which-key-enable-extended-define-key t)
     (set-variable 'which-key-show-early-on-C-h t)
-    ;; +checkers/spell-checking
-    (setq-default ispell-local-dictionary "en_US")
     ;; +emacs/org
     (set-variable 'org-roam-directory (expand-file-name "~/org/roam"))
     (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" spacemacs-cache-directory))
     (set-variable 'org-roam-v2-ack t)
     ;; others
     (set-variable 'custom-file (make-temp-file "emacs-custom-" nil ".el"))
-    (set-variable 'frame-resize-pixelwise t)
     (set-variable 'package-gnupghome-dir (expand-file-name "gnupg" spacemacs-cache-directory))
     (set-variable 'spacemacs-env-vars-file (expand-file-name "spacemacs.env" spacemacs-cache-directory))
-    (set-variable 'viper-mode nil)
-    (set-variable 'window-resize-pixelwise t))
-  (prog1 "暫定対応として `require' をちょっと追加"
-    (require 'ert)
-    (require 'facemenu)))
+    (set-variable 'viper-mode nil)))
 
 (define-advice dotspacemacs/user-config (:after (&rest _) custom)
   "Customize `dotspacemacs/user-config'."

@@ -1,13 +1,9 @@
 ;;; user-macros.el
 
-(defmacro e:progn! (package &rest body)
-  (declare (indent 1))
-  `(progn ,@body))
-
 (defmacro e:after! (package &rest body)
   (declare (indent 1))
   `(with-eval-after-load ',package
-     (progn ,@body)))
+     ,@body))
 
 (defmacro e:default! (variable default)
   `(setq-default ,variable ,default))

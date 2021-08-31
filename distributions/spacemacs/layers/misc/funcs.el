@@ -50,7 +50,3 @@
       (when (eq (char-after e) #x0a)
         (cl-decf e))
       (list s e (buffer-substring s e)))))
-
-(defun org-support/daily-file ()
-  (let* ((daily-dir (f-expand "daily" org-directory)))
-    (f-short (f-expand (format-time-string "%Y-%m.org") daily-dir))))

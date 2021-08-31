@@ -5,74 +5,52 @@
   (require 'komunan-lisp-library)
   (require 'user-macros))
 
-
-
-(leaf command-logger
-  :disabled t
-  :config
-  (command-logger-on))
-
 (leaf custom-headerline
-  :require t
+  :commands (custom-headerline-start)
+  :init
+  (spacemacs/defer-until-after-user-config 'custom-headerline-start))
+
+(leaf setup:envinronment
+  :doc "日本語環境"
   :config
-  (custom-headerline-start))
-
-
-
-(leaf temporary-solutions
-  :config
-  ;; compleseus の設定がミスってるので一時的に上書き
-  (e:variable! completion-category-overrides '((file (styles basic partial-completion))))
-  ;; ido-mode をオフにしたい(これも compleseus で対応してくれないかな)
-  (ido-mode 0)
-  ;; 「Too many open files」が出たときの対策
-  (defun kill-all-buffer-processes ()
-    (interactive)
-    (->> (buffer-list)
-         (-map 'get-buffer-process)
-         (-non-nil)
-         (-map (lambda (process)
-                 (ignore-errors (kill-process process))))))
-  )
-
-
-
-(leaf japanese-language-environment
-  :config
-  ;; 言語環境を日本語に設定
   (set-language-environment "Japanese")
-  ;; エンコーディングを設定
+  :doc "Encoding"
+  :config
   (let ((coding-system 'utf-8))
     (prefer-coding-system          coding-system)
     (set-buffer-file-coding-system coding-system))
-  ;; ロケールを設定
+  :doc "Locale"
   (let ((value "ja_JP.UTF-8"))
     (setenv "LANG" value)
     (setenv "LC_ALL" value)))
 
-(leaf spacemacs
+(leaf setup:spacemacs
+  :doc "ダンプ処理に小細工を仕掛けていろいろ上手く調整"
   :config
-  ;; ダンプ処理に小細工を仕掛けていろいろ上手く調整
   (leaf core-dumper
     :defer-config
     (define-advice spacemacs/dump-emacs (:around (fn &rest args) trick)
       (let ((spacemacs-start-directory user-emacs-directory))
         (apply fn args))))
-  ;; フォント調整
+  :doc "フォント調整"
+  :config
   (let ((font (car dotspacemacs-default-font)))
-    (set-face-attribute 'fixed-pitch nil       :family font)
-    (set-face-attribute 'fixed-pitch-serif nil :family font))
-  ;; タイトル表示
+    (set-face-attribute 'fixed-pitch    nil :family font)
+    (set-face-attribute 'variable-pitch nil :family font))
+  :doc "タイトル表示"
+  :config
   (defun custom-frame-title-format ()
     (if (org-clocking-p)
         org-mode-line-string
       (spacemacs/title-prepare dotspacemacs-frame-title-format)))
   (e:variable! frame-title-format '(:eval (custom-frame-title-format)))
-  ;; モードラインの表示を切替え
+  :doc "モードラインの表示を切替え"
+  :config
   (e:variable! spaceline-purpose-p nil)
   (e:variable! spaceline-selection-info-p nil)
   (e:variable! spaceline-version-control-p nil)
-  ;; モードラインの表示を改善
+  :doc "モードラインの表示を改善"
+  :config
   (spaceline-define-segment buffer-modified
     "Buffer modified marker."
     (cond
@@ -89,100 +67,84 @@
                     )))
     :separator " "))
 
-(leaf custom-aliases
+(leaf setup:custom-aliases
   :config
   (defalias 'exit 'save-buffers-kill-terminal)
   (defalias 'yes-or-no-p 'y-or-n-p))
 
-(leaf custom-keybindings
+(leaf setup:custom-keybindings
   :config
   (spacemacs/set-leader-keys
     "%" 'query-replace
     "&" 'async-shell-command
+    ":" 'popwin:daily-report
     "^" 'ace-window
     "|" 'shell-command-on-region
     "gvh" 'vc-region-history)
   (bind-keys*
    :map global-map
+   ("C-:" . popwin:daily-report)
    ("C-;" . spacemacs/default-pop-shell)
    ("C-<" . evil-jump-backward)
    ("C->" . evil-jump-forward)
    ("C-^" . ace-window)
    :map ctl-x-map
-   ("C-c" . spacemacs/helm-M-x-fuzzy-matching)))
+   ("C-c" . execute-extended-command)))
 
-
-
-(e:progn! buffer.c
+(leaf setup:emacs-config
+  :doc "C Sources"
+  :config
   (e:default! bidi-display-reordering nil)
   (e:default! fill-column 100)
-  (e:default! truncate-lines t))
-
-(e:progn! callproc.c
-  (e:variable! shell-file-name
-               (or (executable-find "zsh")
-                   (executable-find "bash")
-                   (executable-find "sh"))))
-
-(e:progn! emacs.c
-  (e:variable! system-time-locale "C"))
-
-(e:progn! fileio.c
-  (e:variable! delete-by-moving-to-trash nil))
-
-(e:progn! filelock.c
-  (e:variable! create-lockfiles nil))
-
-(e:progn! minibuf.c
-  (e:variable! history-delete-duplicates t))
-
-(e:progn! xdisp.c
-  (e:variable! truncate-partial-width-windows nil))
-
-(leaf indent.c
-  :config
+  (e:default! truncate-lines t)
+  (e:variable! create-lockfiles nil)
+  (e:variable! delete-by-moving-to-trash nil)
+  (e:variable! frame-resize-pixelwise t)
+  (e:variable! history-delete-duplicates t)
+  (e:variable! shell-file-name "zsh")
+  (e:variable! system-time-locale "C")
+  (e:variable! truncate-partial-width-windows nil)
+  (e:variable! window-resize-pixelwise t)
   (spacemacs|add-toggle indent-tabs-mode
     :status indent-tabs-mode
     :on  (setq indent-tabs-mode t)
     :off (setq indent-tabs-mode nil)
     :evil-leader "tT"))
 
-
-
-(leaf configurations-for-Mac
+(leaf setup:mac
   :if (spacemacs/system-is-mac)
+  :doc "タイトルバーの見た目を変更"
   :config
-  ;; タイトルバーの見た目を変更
   (--each '((ns-transparent-titlebar . t)
             (ns-appearance . dark))
     (assq-delete-all (car it) initial-frame-alist)
     (assq-delete-all (car it) default-frame-alist)
     (add-to-list 'initial-frame-alist it)
     (add-to-list 'default-frame-alist it))
-  ;; 特殊キーの設定
+  :doc "特殊キーの設定"
+  :config
   (e:variable! ns-command-modifier 'meta)
   (e:variable! ns-right-command-modifier 'super)
   (e:variable! ns-alternate-modifier 'none)
-  ;; ちょっと行間を広げる
+  :doc "ちょっと行間を広げる"
+  :config
   (e:default! line-spacing 2))
 
-(leaf configurations-for-WSL1/2
+(leaf setup:WSL1/2
+  :doc "Windows側のブラウザを起動"
   :config
-  ;; Windows側のブラウザを起動
   (let ((cmd-exe "/mnt/c/Windows/System32/cmd.exe")
         (cmd-args '("/c" "start")))
     (when (file-exists-p cmd-exe)
       (e:variable! browse-url-generic-program cmd-exe)
       (e:variable! browse-url-generic-args    cmd-args))))
 
-(leaf load-local-configurations
+(leaf setup:private-config
   :config
   (let ((private-config (f-expand "config" e:private-directory)))
     (condition-case err
         (load private-config)
-      (error (message "Error: %s" err)))))
-
-
+      (display-warning :warning err))))
 
 (e:after! ace-window
   (e:variable! aw-keys (number-sequence 49 57))
@@ -275,15 +237,13 @@
   (e:default! web-mode-attr-indent-offset   2))
 
 (e:after! which-key
-  (spacemacs|diminish which-key-mode))
-
-
+  (spacemacs|diminish which-key-mode)
+  (e:variable! which-key-sort-order 'which-key-key-order-alpha))
 
 (leaf auth-source
   :commands (e:auth-source-get)
   :config
   (e:variable! auth-sources '("~/.authinfo.json.gpg"))
-  
   (defun e:auth-source-get (prop &rest spec)
     (plist-get (car (apply 'auth-source-search spec)) prop)))
 
@@ -291,7 +251,6 @@
   :commands (browse-url-by-choosen)
   :config
   (e:variable! browse-url-browser-function 'browse-url-by-choosen)
-  
   (defun browse-url-by-choosen (url &optional new-window)
     "選択したブラウザで URL を開く."
     (let ((browsers '(eww-browse-url browse-url-default-browser)))
@@ -315,7 +274,6 @@
     (e:variable! company-box-backends-colors
                  '((company-robe    . (:candidate "#90ee90"))
                    (company-tabnine . (:candidate "#696969")))))
-  
   (defun e:setup-company-backends (backends)
     (let ((default '(company-dabbrev-code
                      company-files
@@ -361,13 +319,17 @@
 
 (leaf edit-indirect
   :commands (e:string-edit-indirect-dwim e:edit-indirect-guess-mode)
-  :config
-  (e:variable! edit-indirect-guess-mode-function 'e:edit-indirect-guess-mode)
+  :init
   (spacemacs/set-leader-keys
     "xE" 'e:string-edit-indirect-dwim)
+  :config
+  (e:variable! edit-indirect-guess-mode-function 'e:edit-indirect-guess-mode)
+  :doc "バッファを保存せずに閉じる"
+  :config
   (define-advice edit-indirect--clean-up (:before (&rest _) without-save)
     (set-buffer-modified-p nil))
-  
+  :doc "文字列を何のモードで編集するかの判定"
+  :config
   (defun e:edit-indirect-guess-mode (parent beg end)
     (cl-case (e:current-string-type parent beg)
       (gql
@@ -382,7 +344,8 @@
       (save-excursion
         (goto-char point)
         (symbol-at-point))))
-  
+  :doc "文字列の範囲をいい感じに選択して編集する"
+  :config
   (defun e:string-edit-indirect-dwim (s e)
     (interactive "r")
     (unless (region-active-p)
@@ -489,14 +452,9 @@
   :defun (eww-current-url)
   :config
   (e:variable! eww-search-prefix "https://www.google.com/search?q=")
-  
   (defun eww-open-current-url-with-default-browser ()
     (interactive)
     (browse-url-default-browser (eww-current-url))))
-
-(leaf flyspell
-  :bind (:flyspell-mode-map
-         ("C-;" . nil)))
 
 (leaf helm
   :bind (([remap eval-expression] . helm-eval-expression-with-eldoc))
@@ -506,18 +464,6 @@
   (when (executable-find "cmigemo")
     (spacemacs|diminish helm-migemo-mode)
     (helm-migemo-mode)))
-
-(leaf highlight-indentation
-  :commands (highlight-indentation-mode@setup)
-  :defer-config
-  (spacemacs|diminish highlight-indentation-mode)
-  (spacemacs|diminish highlight-indentation-current-column-mode)
-  (set-face-attribute 'highlight-indentation-face nil :background "#404040")
-  (set-face-attribute 'highlight-indentation-current-column-face nil :background "#408040")
-  
-  (define-advice highlight-indentation-mode (:after (&rest _) setup)
-    (highlight-indentation-current-column-mode 1)
-    (highlight-indentation-set-offset 2)))
 
 (leaf key-chord
   :init
@@ -542,22 +488,26 @@
   (e:variable! magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
   (e:variable! smerge-refine-ignore-whitespace nil)
   (e:variable! transient-default-level 7)
-  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-skip-worktree-files 'magit-insert-stashes t)
-  (magit-add-section-hook 'magit-status-sections-hook 'magit-insert-modules-overview    'magit-insert-stashes t)
+  (--each '(magit-insert-skip-worktree-files magit-insert-modules-overview)
+    (magit-add-section-hook 'magit-status-sections-hook it 'magit-insert-unpulled-from-upstream t))
+  :doc "リポジトリの一覧表示にパスをつける"
+  :defer-config
   (define-advice magit-repos-alist (:override (&rest _) override)
     (magit-list-repos-uniquify
      (--map (cons (f-short it) it)
             (magit-list-repos))))
+  :doc "ghq で管理しているディレクトリを探索の対象にする"
+  :defer-config
   (when (executable-find "ghq")
-    (e:variable! magit-repository-directories (->> (kllib:shell-command-to-list "ghq root --all")
-                                                   (--map (cons it 5))))))
+    (e:variable! magit-repository-directories
+                 (->> (kllib:shell-command-to-list "ghq root --all")
+                      (--map (cons it 5))))))
 
 (leaf orderless
   :if (executable-find "cmigemo")
   :commands (orderless-migemo)
   :config
   (e:variable! orderless-matching-styles '(orderless-literal orderless-regexp orderless-migemo))
-  
   (defun orderless-migemo (component)
     (let ((pattern (migemo-get-pattern component)))
       (condition-case nil
@@ -565,7 +515,6 @@
         (invalid-regexp nil)))))
 
 (leaf org
-  :bind* (("C-:" . popwin:daily-report))
   :config
   (e:variable! org-agenda-entry-text-leaders (s-concat (s-repeat 25 " ") "│ "))
   (e:variable! org-agenda-entry-text-maxlines 20)
@@ -606,10 +555,15 @@
   (set-face-attribute 'org-level-1 nil :height 1.0)
   (set-face-attribute 'org-level-2 nil :height 1.0)
   (set-face-attribute 'org-level-3 nil :height 1.0)
-  ;; 経過時間の保存
+  :doc "経過時間の保存"
+  :config
   (e:variable! org-clock-persist t)
   (org-clock-persistence-insinuate)
-  ;; 日報用(暫定)
+  :doc "日報用(暫定)"
+  :config
+  (defun org-support/daily-file ()
+    (let* ((daily-dir (f-expand "daily" org-directory)))
+      (f-short (f-expand (format-time-string "%Y-%m.org") daily-dir))))
   (defun popwin:daily-report ()
     (interactive)
     (popwin:popup-buffer (find-file-noselect (org-support/daily-file)) :height 30 :dedicated t :stick t)))
@@ -635,7 +589,6 @@
 (leaf projectile
   :defer-config
   (e:variable! projectile-completion-system 'default)
-  
   (defun e:setup-projectile-known-projects ()
     (when (executable-find "ghq")
       (setq projectile-known-projects
@@ -680,7 +633,6 @@
     (e:variable! skk-server-inhibit-startup-server t)
     (e:variable! skk-server-host "127.0.0.1")
     (e:variable! skk-server-portnum 55100)
-    
     (defun e:prodigy:google-ime-skk ()
       (interactive)
       (when (require 'prodigy nil t)
@@ -703,7 +655,6 @@
   (e:variable! recentf-filename-handlers '(abbreviate-file-name))
   (e:variable! recentf-max-menu-items 20)
   (e:variable! recentf-max-saved-items 3000)
-  
   (define-advice recentf-save-list (:before (&rest _) cleanup)
     "存在しないファイルを履歴から削除する"
     (setq recentf-list (->> recentf-list
@@ -716,7 +667,6 @@
 (leaf tramp
   :config
   (e:variable! tramp-default-host "localhost")
-  
   (defun e:setup-tramp-completion ()
     "ssh/conf.d の中身から接続先を追加"
     (when (and (require 'tramp)
@@ -739,7 +689,6 @@
   (evil-define-key 'hybrid vterm-mode-map (kbd "<escape>") 'vterm-send-escape)
   (e:variable! vterm-max-scrollback 20000)
   (e:variable! vterm-shell "tmux new -A -s emacs")
-  
   (defun e:vterm-input-something ()
     (interactive)
     (let ((input (read-string "input: ")))
@@ -777,7 +726,6 @@
 
 (leaf yasnippet
   :defer-config
-  (require 'yas-rails-helper)
   (spacemacs|diminish yas-minor-mode))
 
 

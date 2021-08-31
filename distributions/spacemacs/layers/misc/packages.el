@@ -18,12 +18,10 @@
     edit-indirect
     grugru
     helm-descbinds
-    helm-icons
     helpful
     highlight-indent-guides
     leaf
     magit-libgit
-    modus-themes
     ob-typescript
     visual-regexp
     vlf
@@ -132,28 +130,20 @@
     :init
     (spacemacs/defer-until-after-user-config #'helm-descbinds-mode)))
 
-(defun misc/init-helm-icons ()
-  (use-package helm-icons
-    :defer (spacemacs/defer)
-    :init
-    (spacemacs/defer-until-after-user-config #'helm-icons-enable)
-    :config
-    (set-variable 'helm-icons-mode->icon nil)))
-
 (defun misc/init-helpful ()
   (use-package helpful
     :defer (spacemacs/defer)
     :init
-    (spacemacs/declare-prefix "hdd" "helpful")
+    (spacemacs/declare-prefix "hh" "helpful")
     (spacemacs/set-leader-keys
-      "hddc" 'helpful-callable
-      "hddd" 'helpful-at-point
-      "hddf" 'helpful-function
-      "hddi" 'helpful-command
-      "hddk" 'helpful-key
-      "hddm" 'helpful-macro
-      "hdds" 'helpful-symbol
-      "hddv" 'helpful-variable)
+      "hhc" 'helpful-callable
+      "hhf" 'helpful-function
+      "hhh" 'helpful-at-point
+      "hhi" 'helpful-command
+      "hhk" 'helpful-key
+      "hhm" 'helpful-macro
+      "hhs" 'helpful-symbol
+      "hhv" 'helpful-variable)
     :config
     (evil-define-key 'normal helpful-mode-map (kbd "gr") 'helpful-update)
     (evil-define-key 'normal helpful-mode-map (kbd "q") 'quit-window)))
@@ -179,10 +169,6 @@
     :after (magit)
     :config
     (libgit-load)))
-
-(defun misc/init-modus-themes ()
-  (use-package modus-themes
-    :no-require t))
 
 (defun misc/init-ob-typescript ()
   (spacemacs|use-package-add-hook org

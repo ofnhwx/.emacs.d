@@ -22,12 +22,13 @@
 
 
 (leaf lsp-mode
-  ;; yarn global add graphql graphql-language-service-cli
   :defun (make-lsp-client
           lsp-register-client
           lsp-stdio-connection)
   :defvar (lsp-language-id-configuration)
   :defer-config
+  (e:variable! lsp-enable-file-watchers nil)
+  ;; yarn global add graphql graphql-language-service-cli
   (lsp-register-client
    (make-lsp-client :new-connection (lsp-stdio-connection
                                      (lambda ()

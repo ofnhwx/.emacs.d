@@ -42,6 +42,7 @@
 
 (leaf ruby-tools
   :bind (:ruby-tools-mode-map
+         ("C-:" . nil)
          ("C-;" . nil)))
 
 (leaf robe

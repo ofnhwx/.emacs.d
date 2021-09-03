@@ -4,7 +4,6 @@
   '(
     affe
     atomic-chrome
-    beacon
     codic
     company-org-block
     company-prescient
@@ -45,13 +44,6 @@
     :defer (spacemacs/defer)
     :init
     (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server)))
-
-(defun misc/init-beacon ()
-  (use-package beacon
-    :defer (spacemacs/defer)
-    :spacediminish beacon-mode
-    :init
-    (spacemacs/defer-until-after-user-config #'beacon-mode)))
 
 (defun misc/init-codic ()
   (use-package codic

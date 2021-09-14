@@ -1,9 +1,10 @@
 ;;; user-config-lsp.el
 
 (e:after! lsp-mode
+  (e:cache! lsp-intelephense-storage-path "lsp/cache")
   (e:cache! lsp-server-install-dir "lsp/server")
   (e:cache! lsp-session-file "lsp/session.v1")
-  (e:cache! lsp-intelephense-storage-path "lsp/cache")
+  (e:variable! lsp-enable-file-watchers nil)
   (e:variable! lsp-file-watch-threshold 100000)
   (e:variable! lsp-headerline-breadcrumb-enable nil)
   (e:variable! lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
@@ -38,6 +39,29 @@
        (when (flycheck-may-enable-checker 'ruby-rubocop)
          (flycheck-select-checker 'ruby-rubocop)))
       )))
+
+
+
+(e:after! web-mode
+  (require 'lsp-mode)
+  (lsp-dependency 'volar-server
+                  '(:system "volar-server")
+                  '(:npm :package "@volar/server" :path "volar-server"))
+  (defun lsp-volar--make-init-options ()
+    '(:documentFeatures nil))
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection
+                                     (lambda ()
+                                       (cons (lsp-package-path 'volar-server)
+                                             '("--stdio"))))
+                    :major-modes '(vue-mode)
+                    :initialization-options 'lsp-volar--make-init-options
+                    :server-id 'volar
+                    :download-server-fn (lambda (_client callback error-callback _update?)
+                                          (lsp-package-ensure 'volar-server
+                                                              callback error-callback)))))
+
+
 
 (provide 'user-config-lsp)
 

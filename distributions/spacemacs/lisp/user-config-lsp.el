@@ -38,7 +38,8 @@
       ((enh-ruby-mode ruby-mode)
        (when (flycheck-may-enable-checker 'ruby-rubocop)
          (flycheck-select-checker 'ruby-rubocop)))
-      )))
+      ;; for Others
+      (t (flycheck-select-checker 'lsp)))))
 
 
 

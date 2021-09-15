@@ -170,7 +170,9 @@
 
 (e:after! flycheck
   (e:variable! flycheck-idle-buffer-switch-delay 3.0)
-  (e:variable! flycheck-idle-change-delay 3.0))
+  (e:variable! flycheck-idle-change-delay 3.0)
+  (define-advice flycheck-buffer (:before (&rest _) after-clear)
+    (flycheck-clear)))
 
 (e:after! ggtags
   (spacemacs|diminish ggtags-navigation-mode))

@@ -268,19 +268,12 @@
   :config
   (spacemacs|diminish company-mode)
   (spacemacs|diminish company-box-mode)
-  (e:variable! company-transformers '(-distinct
-                                      company-prescient-transformer
-                                      company-sort-by-backend-importance))
+  (e:variable! company-transformers '(company-prescient-transformer))
   (spacemacs|use-package-add-hook company-box
     :post-config
     (e:variable! company-box-backends-colors
-                 '((company-robe    . (:candidate "#90ee90"))
-                   (company-tabnine . (:candidate "#696969")))))
-  (defun e:setup-company-backends (backends)
-    (let ((default '(company-dabbrev-code
-                     company-files
-                     company-dabbrev)))
-      (setq-local company-backends (-concat (list backends) default)))))
+                 '((company-capf    . (:candidate "#90ee90"))
+                   (company-tabnine . (:candidate "#696969"))))))
 
 (leaf dired
   :bind ((:dired-mode-map

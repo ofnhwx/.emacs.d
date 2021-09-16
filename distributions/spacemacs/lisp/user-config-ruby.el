@@ -74,11 +74,10 @@
   (e:variable! rubocopfmt-use-bundler-when-possible t))
 
 (leaf haml-mode
-  :hook (haml-mode-hook . e:setup-haml-mode)
-  :config
-  (defun e:setup-haml-mode ()
-    (e:setup-company-backends 'company-tabnine)
-    (company-mode-on)))
+  :init
+  (spacemacs|add-company-backends
+    :backends (company-capf company-tabnine)
+    :modes haml-mode))
 
 (leaf haml-mode
   :after flycheck

@@ -9,6 +9,7 @@
     company-prescient
     company-tabnine
     company-try-hard
+    corfu
     cov
     ddskk-posframe
     dired-filter
@@ -22,6 +23,8 @@
     leaf
     magit-libgit
     ob-typescript
+    tree-sitter
+    tree-sitter-langs
     visual-regexp
     vlf
     wakatime-mode
@@ -75,10 +78,16 @@
            :map company-active-map
            ("C-z" . company-try-hard))))
 
+(defun misc/init-corfu ()
+  (use-package corfu
+    :defer (spacemacs/defer)
+    :init
+    (spacemacs/defer-until-after-user-config #'corfu-global-mode)))
+
 (defun misc/init-cov ()
   (use-package cov
     :defer (spacemacs/defer)
-    :spacediminish (cov-mode " ☂" " COV")
+    :spacediminish (cov-mode "☂")
     :config
     (set-variable 'cov-coverage-file-paths '(cov--locate-simplecov))
     (set-variable 'cov-coverage-mode t)))
@@ -169,6 +178,17 @@
       :init
       (add-to-list 'org-babel-load-languages '(typescript . t)))))
 
+(defun misc/init-tree-sitter ()
+  (use-package tree-sitter
+    :defer (spacemacs/defer)
+    :diminish (tree-sitter-mode  "")
+    :hook (tree-sitter-after-on . tree-sitter-hl-mode)
+    :init (spacemacs/defer-until-after-user-config #'global-tree-sitter-mode)))
+
+(defun misc/init-tree-sitter-langs ()
+  (use-package tree-sitter-langs
+    :no-require t))
+
 (defun misc/init-visual-regexp ()
   (use-package visual-regexp
     :bind (([remap query-replace] . vr/query-replace))))
@@ -180,7 +200,7 @@
 (defun misc/init-wakatime-mode ()
   (use-package wakatime-mode
     :defer (spacemacs/defer)
-    :spacediminish (wakatime-mode " " " [T]")
+    :spacediminish (wakatime-mode "")
     :commands (global-wakatime-mode spacemacs/wakatime-dashboard)
     :init
     (spacemacs/set-leader-keys

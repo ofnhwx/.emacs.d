@@ -22,24 +22,25 @@
   :hook (lsp-completion-mode-hook . e:setup-lsp-completion-config)
   :config
   (defun e:setup-lsp-completion-config ()
-    (cl-case major-mode
-      ;; for Ruby
-      ((enh-ruby-mode ruby-mode)
-       (e:setup-company-backends '(company-capf company-robe :with company-tabnine)))
-      )))
+    (let ((backends (cl-case major-mode
+                      ((enh-ruby-mode ruby-mode)
+                       '(company-capf company-robe :with company-tabnine)))))
+      (if backends
+          (setq-local company-backends (-concat (list backends) spacemacs-default-company-backends))))))
 
 (leaf lsp-diagnostics
   :after lsp-mode
   :hook (lsp-diagnostics-mode-hook . e:setup-lsp-diagnostics-config)
   :config
   (defun e:setup-lsp-diagnostics-config ()
-    (cl-case major-mode
-      ;; for Ruby
-      ((enh-ruby-mode ruby-mode)
-       (when (flycheck-may-enable-checker 'ruby-rubocop)
-         (flycheck-select-checker 'ruby-rubocop)))
-      ;; for Others
-      (t (flycheck-select-checker 'lsp)))))
+    (let ((checker (cl-case major-mode
+                     ((enh-ruby-mode ruby-mode)
+                      'ruby-rubocop)
+                     (t
+                      'lsp))))
+      (and checker
+           (flycheck-may-enable-checker checker)
+           (flycheck-select-checker checker)))))
 
 
 

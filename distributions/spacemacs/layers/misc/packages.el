@@ -9,6 +9,7 @@
     company-prescient
     company-tabnine
     company-try-hard
+    consult
     corfu
     cov
     ddskk-posframe
@@ -38,9 +39,7 @@
       "fz" 'affe-find
       "fg" 'affe-grep)
     :config
-    (set-variable 'affe-find-command (or (executable-find "fd") affe-find-command))
-    (set-variable 'affe-regexp-function 'orderless-pattern-compiler)
-    (set-variable 'affe-highlight-function 'orderless--highlight)))
+    (set-variable 'affe-find-command (or (executable-find "fd") affe-find-command))))
 
 (defun misc/init-atomic-chrome ()
   (use-package atomic-chrome
@@ -77,6 +76,12 @@
     :bind (("C-z" . company-try-hard)
            :map company-active-map
            ("C-z" . company-try-hard))))
+
+(defun misc/init-consult ()
+  (use-package consult
+    :defer (spacemacs/defer)
+    :config
+    (set-variable 'consult-project-root-function 'kllib:project-root)))
 
 (defun misc/init-corfu ()
   (use-package corfu

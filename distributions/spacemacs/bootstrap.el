@@ -10,7 +10,7 @@
           (syntax-checking :variables syntax-checking-enable-tooltips nil)
           ;; +completion
           (auto-completion :variables auto-completion-enable-help-tooltip t auto-completion-use-company-box t)
-          compleseus
+          helm
           ;; +emacs
           (org :variables org-enable-roam-support t)
           ;; +filetree
@@ -79,6 +79,8 @@
           dired-quick-sort
           ;; +spacemacs/spacemacs-evil
           evil-escape
+          ;; +completion/helm
+          helm-flx
           ;; +intl/japanese
           pangu-spacing
           )))

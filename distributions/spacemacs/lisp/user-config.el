@@ -273,7 +273,9 @@
     :post-config
     (e:variable! company-box-backends-colors
                  '((company-capf    . (:candidate "#90ee90"))
-                   (company-tabnine . (:candidate "#696969"))))))
+                   (company-tabnine . (:candidate "#696969"))))
+    (e:variable! company-box-icon-right-margin 0.5)
+    (e:variable! company-box-icons-alist 'company-box-icons-images)))
 
 (leaf dired
   :bind ((:dired-mode-map

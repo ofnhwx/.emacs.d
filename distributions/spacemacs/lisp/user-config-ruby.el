@@ -6,11 +6,18 @@
 (leaf projectile-rails
   :defer-config
   (e:variable! projectile-rails-component-dir "app/javascript/")
+  (defun projectile-rails-find-graphql ()
+    "Find a GraphQL."
+    (interactive)
+    (projectile-rails-find-resource
+     "graphql: "
+     '(("app/graphql/" "\\(.+\\)\\.rb$"))
+     "app/graphql/${filename}"))
   (spacemacs/set-leader-keys-for-minor-mode 'projectile-rails-mode
+    "ffg" 'projectile-rails-find-graphql
     "ffC" 'projectile-rails-find-component
     "ffS" 'projectile-rails-find-serializer
-    "ffV" 'projectile-rails-find-validator
-    "fgS" 'projectile-rails-find-serializer))
+    "ffV" 'projectile-rails-find-validator))
 
 (leaf ruby-mode
   :hook (ruby-mode-hook . e:setup-flycheck-rubocop)

@@ -7,6 +7,7 @@
   (e:variable! lsp-enable-file-watchers nil)
   (e:variable! lsp-file-watch-threshold 100000)
   (e:variable! lsp-headerline-breadcrumb-enable nil)
+  (e:variable! lsp-modeline-code-actions-enable nil)
   (e:variable! lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
 
 (e:after! lsp-ui-doc
@@ -35,9 +36,7 @@
   (defun e:setup-lsp-diagnostics-config ()
     (let ((checker (cl-case major-mode
                      ((enh-ruby-mode ruby-mode)
-                      'ruby-rubocop)
-                     (t
-                      'lsp))))
+                      'ruby-rubocop))))
       (and checker
            (flycheck-may-enable-checker checker)
            (flycheck-select-checker checker)))))

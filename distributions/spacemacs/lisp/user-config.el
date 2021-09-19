@@ -264,18 +264,20 @@
   :bind (:company-active-map
          :package company
          ("C-g" . company-abort)
-         ("<escape>" . company-abort))
-  :config
-  (spacemacs|diminish company-mode)
-  (spacemacs|diminish company-box-mode)
-  (e:variable! company-transformers '(company-prescient-transformer))
+         ("<escape>" . company-abort)
+         ("<backspace>" . company-abort))
+  :init
   (spacemacs|use-package-add-hook company-box
     :post-config
     (e:variable! company-box-backends-colors
                  '((company-capf    . (:candidate "#90ee90"))
                    (company-tabnine . (:candidate "#696969"))))
     (e:variable! company-box-icon-right-margin 0.5)
-    (e:variable! company-box-icons-alist 'company-box-icons-images)))
+    (e:variable! company-box-icons-alist 'company-box-icons-images))
+  :config
+  (spacemacs|diminish company-mode)
+  (spacemacs|diminish company-box-mode)
+  (e:variable! company-transformers '(company-prescient-transformer)))
 
 (leaf dired
   :bind ((:dired-mode-map

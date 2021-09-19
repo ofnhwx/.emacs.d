@@ -17,8 +17,8 @@
     dired-toggle-sudo
     elisp-demos
     edit-indirect
+    flycheck-posframe
     grugru
-    helm-descbinds
     helpful
     highlight-indent-guides
     leaf
@@ -124,17 +124,15 @@
     :defer (spacemacs/defer)
     :spacediminish (edit-indirect--overlay "[INDIRECT]")))
 
+(defun misc/init-flycheck-posframe ()
+  (use-package flycheck-posframe
+    :hook (flycheck-mode . flycheck-posframe-mode)))
+
 (defun misc/init-grugru ()
   (use-package grugru
     :defer t
     :init
     (spacemacs/set-leader-keys "xgg" #'grugru)))
-
-(defun misc/init-helm-descbinds ()
-  (use-package helm-descbinds
-    :defer (spacemacs/defer)
-    :init
-    (spacemacs/defer-until-after-user-config #'helm-descbinds-mode)))
 
 (defun misc/init-helpful ()
   (use-package helpful

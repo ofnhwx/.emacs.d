@@ -151,9 +151,9 @@
   (e:variable! aw-scope 'frame))
 
 (e:after! avy
-  (e:variable! avy-keys (number-sequence ?a ?z))
   (e:variable! avy-all-windows nil)
-  (e:variable! avy-all-windows-alt t))
+  (e:variable! avy-all-windows-alt t)
+  (e:variable! avy-style 'de-bruijn))
 
 (e:after! codic
   (e:variable! codic-api-token (e:auth-source-get :token :host "emacs" :user "codic")))

@@ -8,6 +8,7 @@
         '(
           ;; +checkers
           (syntax-checking :variables syntax-checking-enable-tooltips nil)
+          spell-checking
           ;; +completion
           (auto-completion :variables auto-completion-enable-help-tooltip t auto-completion-use-company-box t)
           helm

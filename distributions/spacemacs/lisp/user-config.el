@@ -181,6 +181,10 @@
   (e:variable! google-translate-default-source-language "en")
   (e:variable! google-translate-default-target-language "ja"))
 
+(e:after! ispell
+  (setq ispell-program-name (executable-find "aspell"))
+  (setq ispell-extra-args '("--sug-mode=ultra" "--camel-case" "--lang=en_US" "--run-together" "--run-together-limit=16")))
+
 (e:after! markdown-mode
   (e:variable! markdown-command "pandoc")
   (remove-hook 'markdown-mode-hook 'orgtbl-mode))
@@ -454,6 +458,16 @@
   (defun eww-open-current-url-with-default-browser ()
     (interactive)
     (browse-url-default-browser (eww-current-url))))
+
+(leaf flycheck
+  :if (executable-find "cspell")
+  :defer-config
+  (flycheck-define-checker cspell
+    "cspell"
+    :command ("cspell" "lint" "--no-color" source-inplace)
+    :error-patterns ((info line-start (file-name) ":" line ":" column " - " (message) line-end))
+    :modes (lisp-interaction-mode))
+  (add-to-list 'flycheck-checkers 'cspell t))
 
 (leaf helm
   :bind (([remap eval-expression] . helm-eval-expression-with-eldoc))

@@ -32,7 +32,9 @@
     (when (e:bundle-exists "rubocop")
       (setq-local flycheck-command-wrapper-function
                   (lambda (command)
-                    (append '("bundle" "exec") command))))))
+                    (if (s-ends-with? "rubocop" (car command))
+                        (append '("bundle" "exec") command)
+                      command))))))
 
 (leaf ruby-mode
   :after grugru

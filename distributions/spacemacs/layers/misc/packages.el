@@ -150,7 +150,8 @@
       "hhv" 'helpful-variable)
     :config
     (evil-define-key 'normal helpful-mode-map (kbd "gr") 'helpful-update)
-    (evil-define-key 'normal helpful-mode-map (kbd "q") 'quit-window)))
+    (evil-define-key 'normal helpful-mode-map (kbd "q") 'quit-window)
+    (push '(helpful-mode :dedicated t :stick t) popwin:special-display-config)))
 
 (defun misc/init-highlight-indent-guides ()
   (use-package highlight-indent-guides

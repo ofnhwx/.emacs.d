@@ -79,8 +79,7 @@
     "&" 'async-shell-command
     ":" 'popwin:daily-report
     "^" 'ace-window
-    "|" 'shell-command-on-region
-    "gvh" 'vc-region-history)
+    "|" 'shell-command-on-region)
   (bind-keys*
    :map global-map
    ("C-:" . popwin:daily-report)
@@ -147,7 +146,7 @@
       (display-warning :warning err))))
 
 (e:after! ace-window
-  (e:variable! aw-keys (number-sequence 49 57))
+  (e:variable! aw-keys (number-sequence ?1 ?9))
   (e:variable! aw-scope 'frame))
 
 (e:after! avy
@@ -182,8 +181,8 @@
   (e:variable! google-translate-default-target-language "ja"))
 
 (e:after! ispell
-  (setq ispell-program-name (executable-find "aspell"))
-  (setq ispell-extra-args '("--sug-mode=ultra" "--camel-case" "--lang=en_US" "--run-together" "--run-together-limit=16")))
+  (e:variable! ispell-program-name (executable-find "aspell"))
+  (e:variable! ispell-extra-args '("--sug-mode=ultra" "--camel-case" "--lang=en_US" "--run-together" "--run-together-limit=16")))
 
 (e:after! markdown-mode
   (e:variable! markdown-command "pandoc")
@@ -205,7 +204,6 @@
   (e:variable! persp-kill-foreign-buffer-behaviour nil))
 
 (e:after! popwin
-  (push '(helpful-mode :dedicated t :stick t)             popwin:special-display-config)
   (push '("*Warnings*" :dedicated t :stick t :noselect t) popwin:special-display-config))
 
 (e:after! shell-pop
@@ -516,27 +514,27 @@
                  (->> (kllib:shell-command-to-list "ghq root --all")
                       (--map (cons it 5))))))
 
-(leaf orderless
-  :if (executable-find "cmigemo")
-  :commands (orderless-migemo)
-  :config
-  (e:variable! orderless-matching-styles '(orderless-literal orderless-regexp orderless-migemo))
-  (defun orderless-migemo (component)
-    (let ((pattern (migemo-get-pattern component)))
-      (condition-case nil
-          (progn (string-match-p pattern "") pattern)
-        (invalid-regexp nil)))))
-
 (leaf org
   :config
+  (e:variable! org-agenda-current-time-string "← now")
   (e:variable! org-agenda-entry-text-leaders (s-concat (s-repeat 25 " ") "│ "))
   (e:variable! org-agenda-entry-text-maxlines 20)
+  (e:variable! org-agenda-files (list (f-expand "~/org/daily/")))
   (e:variable! org-agenda-span 'day)
+  (e:variable! org-default-notes-file (f-expand "~/org/index.org"))
+  (e:variable! org-directory (f-expand "~/org/"))
+  (e:variable! org-edit-src-content-indentation 0)
+  (e:variable! org-indent-indentation-per-level 2)
+  (e:variable! org-indent-mode-turns-on-hiding-stars nil)
+  (e:variable! org-refile-targets '((org-agenda-files :maxlevel . 3)))
+  (e:variable! org-src-window-setup 'split-window-below)
+  (e:variable! org-startup-folded nil)
+  (e:variable! org-startup-indented t)
+  (e:variable! org-tags-column -110)
   (e:variable! org-agenda-time-grid '((daily today require-timed)
                                       (800 1000 1200 1400 1600 1800 2000)
                                       "      "
                                       "────────────────"))
-  (e:variable! org-agenda-current-time-string "← now")
   (e:variable! org-capture-templates `(("t" "TODO" entry
                                         (file+olp org-support/daily-file "TASKS" "INBOX")
                                         (file "template/todo.org")
@@ -546,21 +544,11 @@
                                         (file "template/meet.org")
                                         :prepend t :jump-to-captured t :clock-in t :clock-resume t)
                                        ))
-  (e:variable! org-directory (expand-file-name "~/org/"))
-  (e:variable! org-edit-src-content-indentation 0)
-  (e:variable! org-indent-indentation-per-level 2)
-  (e:variable! org-indent-mode-turns-on-hiding-stars nil)
-  (e:variable! org-src-window-setup 'split-window-below)
-  (e:variable! org-startup-folded nil)
-  (e:variable! org-startup-indented t)
-  (e:variable! org-tags-column -110)
-  (e:variable! org-todo-keyword-faces '(("TODO" . org-warning) ("WAITING" . org-done) ("HOLD" . org-done)))
+  (e:variable! org-todo-keyword-faces '(("TODO" . org-warning)
+                                        ("WAITING" . org-done)
+                                        ("HOLD" . org-done)))
   (e:variable! org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
                                    (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
-  (when (f-directory? org-directory)
-    (e:variable! org-agenda-files `(,org-directory ,(f-expand "daily" org-directory)))
-    (e:variable! org-default-notes-file (f-expand "index.org" org-directory))
-    (e:variable! org-refile-targets '((org-agenda-files :maxlevel . 3))))
   (set-face-attribute 'org-done nil :foreground "#696969")
   (set-face-attribute 'org-todo nil :foreground "#00ff00")
   (set-face-attribute 'org-headline-done nil :foreground "#696969")
@@ -660,8 +648,8 @@
     (spacemacs/defer-until-after-user-config  'e:prodigy:google-ime-skk)))
 
 (leaf so-long
-  :config
-  (global-so-long-mode 1))
+  :init
+  (spacemacs/defer-until-after-user-config 'global-so-long-mode))
 
 (leaf recentf
   :defer-config
@@ -690,6 +678,11 @@
           (let ((new-functions (-union (tramp-get-completion-function it) functions)))
             (tramp-set-completion-function it new-functions))))))
   (spacemacs/defer-until-after-user-config 'e:setup-tramp-completion))
+
+(leaf vc
+  :config
+  (spacemacs/set-leader-keys
+    "gvh" 'vc-region-history))
 
 (leaf vterm
   :bind (:vterm-mode-map
@@ -736,6 +729,14 @@
     (set-face-attribute 'whitespace-tab      nil :foreground color :strike-through t)
     (set-face-attribute 'whitespace-space    nil :foreground color)
     (set-face-attribute 'whitespace-newline  nil :foreground color)))
+
+(leaf yarn
+  :commands (yarn-install
+             yarn-self-update
+             yarn-update
+             yarn-upgrade)
+  :defer-config
+  (push '(yarn-compilation-mode :dedicated t :stick t :noselect t) popwin:special-display-config))
 
 (leaf yasnippet
   :defer-config

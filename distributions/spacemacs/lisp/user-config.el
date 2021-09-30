@@ -267,7 +267,7 @@
          :package company
          ("C-g" . company-abort)
          ("<escape>" . company-abort)
-         ("<backspace>" . company-abort))
+         ("<backspace>" . delete-backward-char-and-company-abort))
   :init
   (spacemacs|use-package-add-hook company-box
     :post-config
@@ -279,7 +279,11 @@
   :config
   (spacemacs|diminish company-mode)
   (spacemacs|diminish company-box-mode)
-  (e:variable! company-transformers '(company-prescient-transformer)))
+  (e:variable! company-transformers '(company-prescient-transformer))
+  (defun delete-backward-char-and-company-abort ()
+    (interactive)
+    (delete-backward-char 1)
+    (company-abort)))
 
 (leaf dired
   :bind ((:dired-mode-map

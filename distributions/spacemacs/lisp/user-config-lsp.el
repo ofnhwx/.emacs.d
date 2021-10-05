@@ -47,46 +47,7 @@
   (setf (lsp--client-activation-fn (ht-get lsp-clients 'graphql-lsp)) nil))
 
 (e:after! web-mode
-  (require 'lsp-mode)
-  (lsp-dependency 'volar-server
-                  '(:system "volar-server")
-                  '(:npm :package "@volar/server" :path "volar-server"))
-  (defun lsp-volar--make-init-options ()
-    (ht ("typescript" (ht ("serverPath" (f-expand "node_modules/typescript/lib/tsserverlibrary.js" (lsp-workspace-root)))))
-        ("languageFeatures" (ht ("callHierarchy" t)
-                                ("codeAction" t)
-                                ("codeLens" t)
-                                ("completion" (ht ("defaultTagNameCase" "both")
-                                                  ("defaultAttrNameCase" "kebabCase")))
-                                ("definition" t)
-                                ("diagnostics" t)
-                                ("documentHighlight" t)
-                                ("documentLink" t)
-                                ("hover" t)
-                                ("references" t)
-                                ("rename" t)
-                                ("renameFileRefactoring" t)
-                                ("schemaRequestService" t)
-                                ("semanticTokens" t)
-                                ("signatureHelp" t)
-                                ("typeDefinition" t)))
-        ("documentFeatures" (ht ("documentColor" t)
-                                ("selectionRange" t)
-                                ("foldingRange" t)
-                                ("linkedEditingRange" t)
-                                ("documentSymbol" t)
-                                ("documentFormatting" (ht ("defaultPrintWidth" 100)))))))
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection
-                                     (lambda ()
-                                       (cons (lsp-package-path 'volar-server)
-                                             '("--stdio"))))
-                    :major-modes '(vue-mode)
-                    :initialization-options 'lsp-volar--make-init-options
-                    :server-id 'volar
-                    :download-server-fn (lambda (_client callback error-callback _update?)
-                                          (lsp-package-ensure 'volar-server
-                                                              callback error-callback)))))
+  (require 'lsp-volar))
 
 
 

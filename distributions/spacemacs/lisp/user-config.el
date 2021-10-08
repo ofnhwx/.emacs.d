@@ -282,7 +282,7 @@
   (e:variable! company-transformers '(company-prescient-transformer))
   (defun delete-backward-char-and-company-abort ()
     (interactive)
-    (delete-backward-char 1)
+    (delete-char -1)
     (company-abort)))
 
 (leaf dired

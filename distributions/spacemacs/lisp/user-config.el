@@ -170,6 +170,7 @@
 (e:after! flycheck
   (e:variable! flycheck-idle-buffer-switch-delay 3.0)
   (e:variable! flycheck-idle-change-delay 3.0)
+  (e:variable! flycheck-temp-prefix ".flycheck")
   (define-advice flycheck-buffer (:before (&rest _) after-clear)
     (flycheck-clear)))
 
@@ -470,6 +471,10 @@
     :error-patterns ((info line-start (file-name) ":" line ":" column " - " (message) line-end))
     :modes (lisp-interaction-mode))
   (add-to-list 'flycheck-checkers 'cspell t))
+
+(leaf flyspell
+  :bind (:flyspell-mode-map
+         ("C-;" . nil)))
 
 (leaf helm
   :bind (([remap eval-expression] . helm-eval-expression-with-eldoc))

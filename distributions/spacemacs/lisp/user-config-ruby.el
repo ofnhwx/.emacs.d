@@ -13,6 +13,13 @@
      "graphql: "
      '(("app/graphql/" "\\(.+\\)\\.rb$"))
      "app/graphql/${filename}"))
+  (define-advice projectile-rails-find-component (:override ())
+    (interactive)
+    (projectile-rails-find-resource
+     "component: "
+     (->> '("app/frontend/" "app/javascript")
+          (--filter (f-exists? (f-expand it (projectile-rails-root))))
+          (--map (list it "\\(.+\\.[^.]+\\)$")))))
   (spacemacs/set-leader-keys-for-minor-mode 'projectile-rails-mode
     "ffg" 'projectile-rails-find-graphql
     "ffC" 'projectile-rails-find-component

@@ -172,7 +172,15 @@
   (e:variable! flycheck-idle-change-delay 3.0)
   (e:variable! flycheck-temp-prefix ".flycheck")
   (define-advice flycheck-buffer (:before (&rest _) after-clear)
-    (flycheck-clear)))
+    (flycheck-clear))
+  (define-advice flycheck-error-list-refresh (:after (&rest _) fix-error-id)
+    (--map (let ((id (flycheck-error-id it)))
+             (when (ht? id)
+               (when-let* ((value (ht-get id "value"))
+                           (target (ht-get id "target")))
+                 (setf (flycheck-error-id it)
+                       (format "%s(%s)" value target)))))
+           (flycheck-overlay-errors-in (point-min) (point-max)))))
 
 (e:after! ggtags
   (spacemacs|diminish ggtags-navigation-mode))

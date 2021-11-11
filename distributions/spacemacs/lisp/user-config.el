@@ -177,9 +177,9 @@
     (--map (let ((id (flycheck-error-id it)))
              (when (ht? id)
                (when-let* ((value (ht-get id "value"))
-                           (target (ht-get id "target")))
+                           (_target (ht-get id "target")))
                  (setf (flycheck-error-id it)
-                       (format "%s(%s)" value target)))))
+                       (format "%s" value)))))
            (flycheck-overlay-errors-in (point-min) (point-max)))))
 
 (e:after! ggtags

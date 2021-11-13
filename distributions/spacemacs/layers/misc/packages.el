@@ -2,7 +2,6 @@
 
 (defvar misc-packages
   '(
-    affe
     atomic-chrome
     codic
     company-org-block
@@ -30,16 +29,6 @@
     vlf
     wakatime-mode
     ))
-
-(defun misc/init-affe ()
-  (use-package affe
-    :defer (spacemacs/defer)
-    :init
-    (spacemacs/set-leader-keys
-      "fz" 'affe-find
-      "fg" 'affe-grep)
-    :config
-    (set-variable 'affe-find-command (or (executable-find "fd") affe-find-command))))
 
 (defun misc/init-atomic-chrome ()
   (use-package atomic-chrome

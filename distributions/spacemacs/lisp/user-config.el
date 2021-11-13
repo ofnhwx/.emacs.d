@@ -493,6 +493,14 @@
     (spacemacs|diminish helm-migemo-mode)
     (helm-migemo-mode)))
 
+(leaf helm-fzf
+  :init
+  (spacemacs/set-leader-keys
+    "fz" 'helm-fzf
+    "pz" 'helm-fzf-project-root)
+  :defer-config
+  (e:variable! helm-fzf-args '("--tac")))
+
 (leaf key-chord
   :init
   (spacemacs/defer-until-after-user-config 'key-chord-mode)

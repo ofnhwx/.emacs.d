@@ -23,6 +23,7 @@
     leaf
     magit-libgit
     ob-typescript
+    rails-routes
     tree-sitter
     tree-sitter-langs
     visual-regexp
@@ -170,6 +171,13 @@
     (use-package ob-typescript
       :init
       (add-to-list 'org-babel-load-languages '(typescript . t)))))
+
+(defun misc/init-rails-routes ()
+  (use-package rails-routes
+    :defer (spacemacs/defer)
+    :diminish rails-routes-global-mode
+    :init
+    (spacemacs/defer-until-after-user-config #'rails-routes-global-mode)))
 
 (defun misc/init-tree-sitter ()
   (use-package tree-sitter

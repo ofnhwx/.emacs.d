@@ -11,8 +11,9 @@
   (e:variable! lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
 
 (e:after! lsp-ui-doc
+  (e:variable! lsp-ui-doc-delay 2.0)
   (e:variable! lsp-ui-doc-position 'at-point)
-  (e:variable! lsp-ui-doc-delay 2.0))
+  (e:variable! lsp-ui-doc-show-with-cursor t))
 
 (e:after! dap-mode
   (e:cache! dap-breakpoints-file "dap/breakpoints")

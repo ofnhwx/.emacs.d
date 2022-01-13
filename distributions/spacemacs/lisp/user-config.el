@@ -194,8 +194,7 @@
   (e:variable! ispell-extra-args '("--sug-mode=ultra" "--camel-case" "--lang=en_US" "--run-together" "--run-together-limit=16")))
 
 (e:after! markdown-mode
-  (e:variable! markdown-command "pandoc")
-  (remove-hook 'markdown-mode-hook 'orgtbl-mode))
+  (e:variable! markdown-command "pandoc"))
 
 (e:after! open-junk-file
   (e:variable! open-junk-file-format (f-expand "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))

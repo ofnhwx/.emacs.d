@@ -179,10 +179,7 @@
 
 (defun misc/init-rails-routes ()
   (use-package rails-routes
-    :defer (spacemacs/defer)
-    :diminish rails-routes-global-mode
-    :init
-    (spacemacs/defer-until-after-user-config #'rails-routes-global-mode)))
+    :no-require t))
 
 (defun misc/init-tree-sitter ()
   (use-package tree-sitter

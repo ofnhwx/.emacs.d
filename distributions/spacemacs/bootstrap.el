@@ -42,7 +42,7 @@
           dtrt-indent
           multiple-cursors
           ;; +source-control
-          (git :variables git-enable-magit-gitflow-plugin t git-magit-status-fullscreen t)
+          (git :variables git-enable-magit-gitflow-plugin t git-enable-magit-todos-plugin t git-magit-status-fullscreen t)
           (version-control :variables version-control-diff-tool 'diff-hl)
           github
           ;; +spacemacs

@@ -588,7 +588,7 @@
   :config
   (defun org-support/daily-file ()
     (let* ((daily-dir (f-expand "daily" org-directory)))
-      (f-short (f-expand (format-time-string "%Y-%m.org") daily-dir))))
+      (f-short (f-expand (format-time-string "%Y.org") daily-dir))))
   (defun popwin:daily-report ()
     (interactive)
     (popwin:popup-buffer (find-file-noselect (org-support/daily-file)) :height 30 :dedicated t :stick t)))

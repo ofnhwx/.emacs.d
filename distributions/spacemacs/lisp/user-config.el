@@ -500,20 +500,6 @@
   :defer-config
   (e:variable! helm-fzf-args '("--tac")))
 
-(leaf key-chord
-  :init
-  (spacemacs/defer-until-after-user-config 'key-chord-mode)
-  :defer-config
-  (key-chord-define-global " 1" "!")
-  (key-chord-define-global " 2" "\"")
-  (key-chord-define-global " 3" "#")
-  (key-chord-define-global " 4" "$")
-  (key-chord-define-global " 5" "%")
-  (key-chord-define-global " 6" "&")
-  (key-chord-define-global " 7" "'")
-  (key-chord-define-global " 8" "(")
-  (key-chord-define-global " 9" ")"))
-
 (leaf magit
   :defer-config
   (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore)

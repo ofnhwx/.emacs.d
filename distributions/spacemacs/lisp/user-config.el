@@ -711,7 +711,7 @@
       (with-no-warnings (vterm-send-string input)))))
 
 (leaf wakatime-mode
-  :if (and (executable-find "wakatime")
+  :if (and (executable-find "wakatime-cli")
            (bound-and-true-p wakatime-api-key))
   :init
   (e:variable! wakatime-cli-path (executable-find "wakatime"))

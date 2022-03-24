@@ -235,6 +235,9 @@
   (e:cache! treemacs-persist-file "treemacs/persist")
   (e:cache! treemacs-last-error-persist-file "treemacs/persist-at-last-error"))
 
+(e:after! undo-tree
+  (e:variable! undo-tree-history-directory-alist `((".*" . ,temporary-file-directory))))
+
 (e:after! url-cache
   (e:cache! url-cache-directory "url/cache"))
 

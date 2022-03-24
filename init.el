@@ -9,7 +9,7 @@
 ;;(package-initialize)
 
 ;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1614558372038400
-(when (string-equal emacs-version "28.0.91")
+(when (string-equal emacs-version "28.0.92")
   (set-variable 'warning-suppress-log-types '((comp)))
   (set-variable 'warning-suppress-types '((comp))))
 

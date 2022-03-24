@@ -193,6 +193,9 @@
   (e:variable! ispell-program-name (executable-find "aspell"))
   (e:variable! ispell-extra-args '("--sug-mode=ultra" "--camel-case" "--lang=en_US" "--run-together" "--run-together-limit=16")))
 
+(e:after! magit-todos
+  (e:variable! magit-todos-auto-group-items 100))
+
 (e:after! markdown-mode
   (e:variable! markdown-command "pandoc"))
 

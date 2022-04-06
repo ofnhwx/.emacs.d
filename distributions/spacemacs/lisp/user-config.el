@@ -305,6 +305,7 @@
   :config
   (e:cache! image-dired-dir "dired/images")
   (e:variable! dired-dwim-target t)
+  (e:variable! dired-kill-when-opening-new-dired-buffer t)
   (e:variable! dired-listing-switches "-Ahl")
   (e:variable! dired-omit-files (rx (or (seq bol (? ".") "#")
                                         (seq bol (or "." "..") eol)

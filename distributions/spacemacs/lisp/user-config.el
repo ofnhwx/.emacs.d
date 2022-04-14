@@ -548,7 +548,7 @@
   (e:variable! org-src-window-setup 'split-window-below)
   (e:variable! org-startup-folded nil)
   (e:variable! org-startup-indented t)
-  (e:variable! org-tags-column -110)
+  (e:variable! org-tags-column 0)
   (e:variable! org-agenda-time-grid '((daily today require-timed)
                                       (800 1000 1200 1400 1600 1800 2000)
                                       "      "

@@ -82,7 +82,7 @@
   (use-package corfu
     :defer (spacemacs/defer)
     :init
-    (spacemacs/defer-until-after-user-config #'corfu-global-mode)))
+    (spacemacs/defer-until-after-user-config #'global-corfu-mode)))
 
 (defun misc/init-cov ()
   (use-package cov

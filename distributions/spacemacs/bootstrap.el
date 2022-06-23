@@ -32,9 +32,11 @@
           emacs-lisp
           graphql
           html
+          kotlin
           markdown
           shell-scripts
           sql
+          swift
           vimscript
           yaml
           ;; +misc
@@ -96,6 +98,7 @@
     (setq dotspacemacs-default-font '("Cica" :size 12.0))))
   (setq dotspacemacs-editing-style 'hybrid)
   (setq dotspacemacs-enable-server t)
+  (setq dotspacemacs-evil-show-empty-line-indicators nil)
   (setq dotspacemacs-mode-line-theme '(spacemacs :separator bar))
   (setq dotspacemacs-new-empty-buffer-major-mode 'fundamental-mode)
   (setq dotspacemacs-scratch-buffer-persistent t)

@@ -21,18 +21,6 @@
                       (--reject (eq (second it) :null))))))
           coverage)))
 
-(defun buffer-indent-offset ()
-  (let ((indentation nil))
-    (save-excursion
-      (goto-char (point-min))
-      (while (< (point) (point-max))
-        (unless (string-empty-p (s-trim (thing-at-point 'line)))
-          (if (or (null indentation)
-                  (< (current-indentation) indentation))
-              (setq indentation (current-indentation))))
-        (forward-line 1)))
-    (or indentation 0)))
-
 (defun at-point-string-p (&optional point)
   (let ((point (or point (point))))
     (and (>= point (point-min))

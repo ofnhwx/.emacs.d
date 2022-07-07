@@ -3,7 +3,6 @@
 (defvar misc-packages
   '(
     atomic-chrome
-    code-review
     codic
     company-org-block
     company-prescient
@@ -37,10 +36,6 @@
     :defer (spacemacs/defer)
     :init
     (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server)))
-
-(defun misc/init-code-review ()
-  (use-package code-review
-    :no-require t))
 
 (defun misc/init-codic ()
   (use-package codic

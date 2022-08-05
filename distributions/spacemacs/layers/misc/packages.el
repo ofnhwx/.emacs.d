@@ -174,7 +174,9 @@
 
 (defun misc/init-rails-routes ()
   (use-package rails-routes
-    :no-require t))
+    :defer (spacemacs/defer)
+    :config
+    (set-variable 'rails-routes-cache-path (expand-file-name "rails-routes" spacemacs-cache-directory))))
 
 (defun misc/init-tree-sitter ()
   (use-package tree-sitter

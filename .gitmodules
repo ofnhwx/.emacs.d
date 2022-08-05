@@ -4,9 +4,6 @@
 [submodule "external/doom"]
 	path = external/doom
 	url = https://github.com/hlissner/doom-emacs.git
-[submodule "external/libegit2"]
-	path = external/libegit2
-	url = https://github.com/magit/libegit2.git
 [submodule "external/nsmacs"]
 	path = external/nsmacs
 	url = https://github.com/ofnhwx/nsmacs.git

@@ -167,12 +167,6 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
 
-   ;; If non-nil, show vim-like empty line indicators at the end of files.
-   ;; Takes effect only if `spacemacs-evil' layer is enabled.
-   ;; NOTICE: `spacemacs-evil' is included in `spacemacs' distribution.
-   ;; See `dotspacemacs-distribution'.
-   dotspacemacs-evil-show-empty-line-indicators t
-
    ;; If non-nil show the version string in the Spacemacs buffer. It will
    ;; appear as (spacemacs version)@(emacs version)
    ;; (default t)
@@ -492,7 +486,9 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
 
-   ;; Show trailing whitespace (default t)
+   ;; Color highlight trailing whitespace in all prog-mode and text-mode derived
+   ;; modes such as c++-mode, python-mode, emacs-lisp, html-mode, rst-mode etc.
+   ;; (default t)
    dotspacemacs-show-trailing-whitespace t
 
    ;; Delete whitespace while saving buffer. Possible values are `all'

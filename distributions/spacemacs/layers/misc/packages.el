@@ -4,12 +4,6 @@
   '(
     atomic-chrome
     codic
-    company-org-block
-    company-prescient
-    company-tabnine
-    company-try-hard
-    consult
-    corfu
     cov
     ddskk-posframe
     dired-filter
@@ -39,44 +33,6 @@
 (defun misc/init-codic ()
   (use-package codic
     :no-require t))
-
-(defun misc/init-company-org-block ()
-  (use-package company-org-block
-    :after (company org)
-    :config
-    (set-variable 'company-org-block-edit-style 'inline)
-    (with-no-warnings (spacemacs|add-company-backends :backends company-org-block :modes org-mode))))
-
-(defun misc/init-company-prescient ()
-  (use-package company-prescient
-    :after (company)
-    :config
-    (company-prescient-mode 1)))
-
-(defun misc/init-company-tabnine ()
-  (use-package company-tabnine
-    :defer (spacemacs/defer)
-    :config
-    (set-variable 'company-tabnine-binaries-folder
-                  (expand-file-name "tabnine" spacemacs-cache-directory))))
-
-(defun misc/init-company-try-hard ()
-  (use-package company-try-hard
-    :bind (("C-z" . company-try-hard)
-           :map company-active-map
-           ("C-z" . company-try-hard))))
-
-(defun misc/init-consult ()
-  (use-package consult
-    :defer (spacemacs/defer)
-    :config
-    (set-variable 'consult-project-root-function 'kllib:project-root)))
-
-(defun misc/init-corfu ()
-  (use-package corfu
-    :defer (spacemacs/defer)
-    :init
-    (spacemacs/defer-until-after-user-config #'global-corfu-mode)))
 
 (defun misc/init-cov ()
   (use-package cov

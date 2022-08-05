@@ -66,6 +66,7 @@
           ;; +web-services
           search-engine
           ;; +private
+          completions
           misc
           ))
   (setq dotspacemacs-additional-packages

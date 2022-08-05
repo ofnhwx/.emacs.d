@@ -338,45 +338,6 @@
   :init
   (spacemacs/defer-until-after-user-config 'eaw-fullwidth))
 
-(leaf edit-indirect
-  :commands (e:string-edit-indirect-dwim e:edit-indirect-guess-mode)
-  :init
-  (spacemacs/set-leader-keys
-    "xE" 'e:string-edit-indirect-dwim)
-  :config
-  (e:variable! edit-indirect-guess-mode-function 'e:edit-indirect-guess-mode)
-  :doc "バッファを保存せずに閉じる"
-  :config
-  (define-advice edit-indirect--clean-up (:before (&rest _) without-save)
-    (set-buffer-modified-p nil))
-  :doc "文字列を何のモードで編集するかの判定"
-  :config
-  (defun e:edit-indirect-guess-mode (parent beg end)
-    (cl-case (e:current-string-type parent beg)
-      (gql
-       (e:local! buffer-file-name (concat (with-current-buffer parent (buffer-file-name)) ".graphql"))
-       (graphql-mode))
-      (t
-       (normal-mode))))
-  (defun e:current-string-type (buffer point)
-    (with-current-buffer buffer
-      (while (at-point-string-p point)
-        (cl-decf point))
-      (save-excursion
-        (goto-char point)
-        (symbol-at-point))))
-  :doc "文字列の範囲をいい感じに選択して編集する"
-  :config
-  (defun e:string-edit-indirect-dwim (s e)
-    (interactive "r")
-    (unless (region-active-p)
-      (when-let ((range (string-range-at-point)))
-        (setq s (1+ (nth 0 range)))
-        (setq e (1- (nth 1 range)))))
-    (if (and s e)
-        (edit-indirect-region s e t)
-      (user-error "Not in string"))))
-
 (leaf emacs-lock
   :config
   (dolist (buffer '("*scratch*" "*Messages*"))

@@ -15,7 +15,6 @@
     dired-filter
     dired-toggle-sudo
     elisp-demos
-    edit-indirect
     flycheck-posframe
     grugru
     helpful
@@ -108,11 +107,6 @@
     :init
     (advice-add 'describe-function-1 :after #'elisp-demos-advice-describe-function-1)
     (advice-add 'helpful-update      :after #'elisp-demos-advice-helpful-update)))
-
-(defun misc/init-edit-indirect ()
-  (use-package edit-indirect
-    :defer (spacemacs/defer)
-    :spacediminish (edit-indirect--overlay "[INDIRECT]")))
 
 (defun misc/init-flycheck-posframe ()
   (use-package flycheck-posframe

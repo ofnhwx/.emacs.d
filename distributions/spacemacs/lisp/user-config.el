@@ -253,7 +253,8 @@
   (e:default! web-mode-markup-indent-offset 2)
   (e:default! web-mode-css-indent-offset    2)
   (e:default! web-mode-code-indent-offset   2)
-  (e:default! web-mode-attr-indent-offset   2))
+  (e:default! web-mode-attr-indent-offset   2)
+  (e:default! web-mode-enable-auto-indentation nil))
 
 (e:after! which-key
   (spacemacs|diminish which-key-mode)

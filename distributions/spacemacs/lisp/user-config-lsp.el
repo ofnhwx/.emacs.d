@@ -1,21 +1,23 @@
 ;;; user-config-lsp.el
 
-(e:after! lsp-mode
+(leaf lsp-mode
+  :defer-config
   (e:cache! lsp-intelephense-storage-path "lsp/cache")
   (e:cache! lsp-server-install-dir "lsp/server")
   (e:cache! lsp-session-file "lsp/session.v1")
   (e:variable! lsp-enable-file-watchers nil)
   (e:variable! lsp-file-watch-threshold 100000)
   (e:variable! lsp-headerline-breadcrumb-enable nil)
-  (e:variable! lsp-modeline-code-actions-enable nil)
-  (e:variable! lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
+  (e:variable! lsp-modeline-code-actions-enable nil))
 
-(e:after! lsp-ui-doc
+(leaf lsp-ui-doc
+  :defer-config
   (e:variable! lsp-ui-doc-delay 2.0)
   (e:variable! lsp-ui-doc-position 'at-point)
   (e:variable! lsp-ui-doc-show-with-cursor t))
 
-(e:after! dap-mode
+(leaf dap-mode
+  :defer-config
   (e:cache! dap-breakpoints-file "dap/breakpoints")
   (e:cache! dap-utils-extension-path "dap/extensions"))
 
@@ -44,10 +46,16 @@
 
 
 
-(e:after! lsp-graphql
+(leaf lsp-solargraph
+  :defer-config
+  (e:variable! lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
+
+(leaf lsp-graphql
+  :defer-config
   (setf (lsp--client-activation-fn (ht-get lsp-clients 'graphql-lsp)) nil))
 
-(e:after! web-mode
+(leaf web-mode
+  :defer-config
   (require 'lsp-volar))
 
 

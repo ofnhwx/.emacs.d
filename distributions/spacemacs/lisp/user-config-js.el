@@ -1,17 +1,19 @@
 ;;; user-config-js.el
 
 (leaf web-mode ;; typescript-tsx-mode, vue-mode
-  :hook ((typescript-tsx-mode-hook . setup-typescript-tsx-mode)
+  :hook ((typescript-tsx-mode-hook . setup-web-mode)
          (vue-mode-hook . setup-vue-mode))
   :config
-  (defun setup-typescript-tsx-mode ()
-    (e:variable! web-mode-code-indent-offset   2)
-    (e:variable! web-mode-css-indent-offset    2)
-    (e:variable! web-mode-markup-indent-offset 2)
-    (e:variable! web-mode-sql-indent-offset    2))
+  (defun setup-web-mode ()
+    (e:default! web-mode-markup-indent-offset 2)
+    (e:default! web-mode-css-indent-offset    2)
+    (e:default! web-mode-code-indent-offset   2)
+    (e:default! web-mode-attr-indent-offset   2)
+    (e:default! web-mode-enable-auto-indentation nil))
   (defun setup-vue-mode ()
     (with-eval-after-load 'lsp-mode
-      (lsp-flycheck-add-mode 'vue-mode))))
+      (lsp-flycheck-add-mode 'vue-mode)))
+  (setup-web-mode))
 
 (leaf graphql-mode
   :hook (graphql-mode-hook . setup-graphql-mode)

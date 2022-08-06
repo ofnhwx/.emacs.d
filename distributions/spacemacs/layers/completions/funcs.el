@@ -12,6 +12,10 @@
   (setq-local completion-at-point-functions
               (e:capf-functions (car completion-at-point-functions))))
 
+(defun e:setup-capf/org ()
+  (setq-local completion-at-point-functions
+              (e:capf-functions (cape-company-to-capf #'company-org-block))))
+
 (defun e:setup-capf/lsp ()
   (setq-local completion-at-point-functions
               (e:capf-functions #'lsp-completion-at-point)))

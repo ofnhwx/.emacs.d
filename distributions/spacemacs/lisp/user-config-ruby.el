@@ -1,6 +1,7 @@
 ;;; user-config-ruby.el
 
-(e:after! ruby-refactor
+(leaf ruby-refactor
+  :defer-config
   (spacemacs|diminish ruby-refactor-mode))
 
 (leaf projectile-rails

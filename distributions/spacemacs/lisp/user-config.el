@@ -145,120 +145,10 @@
         (load private-config)
       (display-warning :warning err))))
 
-(e:after! ace-window
+(leaf ace-window
+  :defer-config
   (e:variable! aw-keys (number-sequence ?1 ?9))
   (e:variable! aw-scope 'frame))
-
-(e:after! avy
-  (e:variable! avy-all-windows nil)
-  (e:variable! avy-all-windows-alt t)
-  (e:variable! avy-style 'de-bruijn))
-
-(e:after! codic
-  (e:variable! codic-api-token (e:auth-source-get :token :host "emacs" :user "codic")))
-
-(e:after! epg-config
-  (e:variable! epg-pinentry-mode 'loopback))
-
-(e:after! eshell
-  (e:variable! eshell-history-size 100000))
-
-(e:after! files
-  (e:variable! mode-require-final-newline nil)
-  (e:variable! require-final-newline nil))
-
-(e:after! flycheck
-  (e:variable! flycheck-idle-buffer-switch-delay 3.0)
-  (e:variable! flycheck-idle-change-delay 3.0)
-  (e:variable! flycheck-temp-prefix ".flycheck")
-  (define-advice flycheck-buffer (:before (&rest _) after-clear)
-    (flycheck-clear))
-  (define-advice flycheck-error-list-refresh (:after (&rest _) fix-error-id)
-    (--map (let ((id (flycheck-error-id it)))
-             (when (ht? id)
-               (when-let* ((value (ht-get id "value"))
-                           (_target (ht-get id "target")))
-                 (setf (flycheck-error-id it)
-                       (format "%s" value)))))
-           (flycheck-overlay-errors-in (point-min) (point-max)))))
-
-(e:after! ggtags
-  (spacemacs|diminish ggtags-navigation-mode))
-
-(e:after! google-translate-default-ui
-  (e:variable! google-translate-default-source-language "en")
-  (e:variable! google-translate-default-target-language "ja"))
-
-(e:after! ispell
-  (e:variable! ispell-program-name (executable-find "aspell"))
-  (e:variable! ispell-extra-args '("--sug-mode=ultra" "--camel-case" "--lang=en_US" "--run-together" "--run-together-limit=16")))
-
-(e:after! magit-todos
-  (e:variable! magit-todos-auto-group-items 100))
-
-(e:after! markdown-mode
-  (e:variable! markdown-command "pandoc"))
-
-(e:after! open-junk-file
-  (e:variable! open-junk-file-format (f-expand "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))
-
-(e:after! paradox-github
-  (e:variable! paradox-column-width-package 30)
-  (e:variable! paradox-column-width-version 13)
-  (e:variable! paradox-column-width-star 5)
-  (e:variable! paradox-github-token (e:auth-source-get :token :host "github.com" :user "paradox")))
-
-(e:after! password-cache
-  (e:variable! password-cache-expiry 3600))
-
-(e:after! persp-mode
-  (e:variable! persp-kill-foreign-buffer-behaviour nil))
-
-(e:after! popwin
-  (push '("*Warnings*" :dedicated t :stick t :noselect t) popwin:special-display-config))
-
-(e:after! shell-pop
-  (e:variable! shell-pop-autocd-to-working-dir nil))
-
-(e:after! shr
-  (e:variable! shr-use-fonts nil)
-  (e:variable! shr-use-colors nil)
-  (e:variable! shr-max-image-proportion 0.6))
-
-(e:after! simple
-  (e:variable! set-mark-command-repeat-pop t))
-
-(e:after! smartparens
-  (spacemacs|diminish smartparens-mode))
-
-(e:after! treemacs
-  (e:cache! treemacs-persist-file "treemacs/persist")
-  (e:cache! treemacs-last-error-persist-file "treemacs/persist-at-last-error"))
-
-(e:after! undo-tree
-  (e:variable! undo-tree-auto-save-history nil)
-  (e:variable! undo-tree-history-directory-alist `((".*" . ,temporary-file-directory))))
-
-(e:after! url-cache
-  (e:cache! url-cache-directory "url/cache"))
-
-(e:after! url-cookie
-  (e:cache! url-cookie-file "url/cookies"))
-
-(e:after! vertico
-  (e:variable! vertico-count 20)
-  (e:variable! vertico-cycle t))
-
-(e:after! web-mode
-  (e:default! web-mode-markup-indent-offset 2)
-  (e:default! web-mode-css-indent-offset    2)
-  (e:default! web-mode-code-indent-offset   2)
-  (e:default! web-mode-attr-indent-offset   2)
-  (e:default! web-mode-enable-auto-indentation nil))
-
-(e:after! which-key
-  (spacemacs|diminish which-key-mode)
-  (e:variable! which-key-sort-order 'which-key-key-order-alpha))
 
 (leaf auth-source
   :commands (e:auth-source-get)
@@ -266,6 +156,12 @@
   (e:variable! auth-sources '("~/.authinfo.json.gpg"))
   (defun e:auth-source-get (prop &rest spec)
     (plist-get (car (apply 'auth-source-search spec)) prop)))
+
+(leaf avy
+  :defer-config
+  (e:variable! avy-all-windows nil)
+  (e:variable! avy-all-windows-alt t)
+  (e:variable! avy-style 'de-bruijn))
 
 (leaf browse-url
   :commands (browse-url-by-choosen)
@@ -277,6 +173,10 @@
       (when browse-url-generic-program
         (add-to-list 'browsers 'browse-url-generic t))
       (funcall (intern (completing-read "Choose Browser: " browsers)) url new-window))))
+
+(leaf codic
+  :defer-config
+  (e:variable! codic-api-token (e:auth-source-get :token :host "emacs" :user "codic")))
 
 (leaf company
   :bind (:company-active-map
@@ -350,6 +250,14 @@
          ("<C-return>" . nil)
          ("C-c C-j" . emmet-expand-line)
          ("C-j" . nil)))
+
+(leaf epg-config
+  :defer-config
+  (e:variable! epg-pinentry-mode 'loopback))
+
+(leaf eshell
+  :defer-config
+  (e:variable! eshell-history-size 100000))
 
 (leaf evil
   :require t
@@ -439,25 +347,42 @@
     (interactive)
     (browse-url-default-browser (eww-current-url))))
 
-(leaf flycheck
-  :if (executable-find "cspell")
+(leaf files
   :defer-config
-  (flycheck-define-checker cspell
-    "cspell"
-    :command ("cspell" "lint" "--no-color" source-inplace)
-    :error-patterns ((info line-start (file-name) ":" line ":" column " - " (message) line-end))
-    :modes (lisp-interaction-mode))
-  (add-to-list 'flycheck-checkers 'cspell t))
+  (e:variable! mode-require-final-newline nil)
+  (e:variable! require-final-newline nil))
 
-(leaf flyspell
-  :bind (:flyspell-mode-map
-         ("C-;" . nil)))
+(leaf flycheck
+  :defer-config
+  (e:variable! flycheck-idle-buffer-switch-delay 3.0)
+  (e:variable! flycheck-idle-change-delay 3.0)
+  (e:variable! flycheck-temp-prefix ".flycheck")
+  (define-advice flycheck-buffer (:before (&rest _) after-clear)
+    (flycheck-clear))
+  (define-advice flycheck-error-list-refresh (:after (&rest _) fix-error-id)
+    (--map (let ((id (flycheck-error-id it)))
+             (when (ht? id)
+               (when-let* ((value (ht-get id "value"))
+                           (_target (ht-get id "target")))
+                 (setf (flycheck-error-id it)
+                       (format "%s" value)))))
+           (flycheck-overlay-errors-in (point-min) (point-max)))))
+
+(leaf ggtags
+  :defer-config
+  (spacemacs|diminish ggtags-navigation-mode))
+
+(leaf google-translate-default-ui
+  :defer-config
+  (e:variable! google-translate-default-source-language "en")
+  (e:variable! google-translate-default-target-language "ja"))
 
 (leaf helm
   :bind (([remap eval-expression] . helm-eval-expression-with-eldoc))
   :config
   (spacemacs|diminish helm-gtags-mode)
   (e:variable! helm-buffer-max-length nil)
+  (e:variable! helm-completion-style 'emacs)
   (when (executable-find "cmigemo")
     (spacemacs|diminish helm-migemo-mode)
     (helm-migemo-mode)))
@@ -494,6 +419,14 @@
                  (->> (kllib:shell-command-to-list "ghq root --all")
                       (--map (cons it 5))))))
 
+(leaf magit-todos
+  :defer-config
+  (e:variable! magit-todos-auto-group-items 100))
+
+(leaf markdown-mode
+  :defer-config
+  (e:variable! markdown-command "pandoc"))
+
 (leaf org
   :config
   (e:variable! org-agenda-current-time-string "← now")
@@ -515,15 +448,6 @@
                                       (800 1000 1200 1400 1600 1800 2000)
                                       "      "
                                       "────────────────"))
-  (e:variable! org-capture-templates `(("t" "TODO" entry
-                                        (file+olp org-support/daily-file "TASKS" "INBOX")
-                                        (file "template/todo.org")
-                                        :prepend t :jump-to-captured t)
-                                       ("m" "雑談" entry
-                                        (file+olp org-support/daily-file "SCHEDULES / EVENTS")
-                                        (file "template/meet.org")
-                                        :prepend t :jump-to-captured t :clock-in t :clock-resume t)
-                                       ))
   (e:variable! org-todo-keyword-faces '(("TODO" . org-warning)
                                         ("WAITING" . org-done)
                                         ("HOLD" . org-done)))
@@ -549,6 +473,21 @@
     (interactive)
     (popwin:popup-buffer (find-file-noselect (org-support/daily-file)) :height 30 :dedicated t :stick t)))
 
+(leaf open-junk-file
+  :defer-config
+  (e:variable! open-junk-file-format (f-expand "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))
+
+(leaf paradox-github
+  :defer-config
+  (e:variable! paradox-column-width-package 30)
+  (e:variable! paradox-column-width-version 13)
+  (e:variable! paradox-column-width-star 5)
+  (e:variable! paradox-github-token (e:auth-source-get :token :host "github.com" :user "paradox")))
+
+(leaf password-cache
+  :defer-config
+  (e:variable! password-cache-expiry 3600))
+
 (leaf persistent-scratch
   :defer-config
   (define-advice persistent-scratch-save (:after (&rest _) saved)
@@ -558,6 +497,14 @@
           (when (called-interactively-p 'any)
             (e:evil-force-normal-state))
           (set-buffer-modified-p nil))))))
+
+(leaf persp-mode
+  :defer-config
+  (e:variable! persp-kill-foreign-buffer-behaviour nil))
+
+(leaf popwin
+  :defer-config
+  (push '("*Warnings*" :dedicated t :stick t :noselect t) popwin:special-display-config))
 
 (leaf prodigy
   :commands (e:prodigy-start-service)
@@ -580,6 +527,20 @@
                  (-sort 's-less?)
                  (-distinct)))))
   (spacemacs/defer-until-after-user-config 'e:setup-projectile-known-projects))
+
+(leaf shell-pop
+  :defer-config
+  (e:variable! shell-pop-autocd-to-working-dir nil))
+
+(leaf shr
+  :defer-config
+  (e:variable! shr-use-fonts nil)
+  (e:variable! shr-use-colors nil)
+  (e:variable! shr-max-image-proportion 0.6))
+
+(leaf simple
+  :defer-config
+  (e:variable! set-mark-command-repeat-pop t))
 
 (leaf skk
   :hook ((evil-hybrid-state-entry-hook . spacemacs/toggle-skk-mode-on)
@@ -631,6 +592,10 @@
   :init
   (spacemacs/defer-until-after-user-config 'global-so-long-mode))
 
+(leaf smartparens
+  :defer-config
+  (spacemacs|diminish smartparens-mode))
+
 (leaf recentf
   :defer-config
   (e:variable! recentf-filename-handlers '(abbreviate-file-name))
@@ -659,6 +624,24 @@
             (tramp-set-completion-function it new-functions))))))
   (spacemacs/defer-until-after-user-config 'e:setup-tramp-completion))
 
+(leaf treemacs
+  :defer-config
+  (e:cache! treemacs-persist-file "treemacs/persist")
+  (e:cache! treemacs-last-error-persist-file "treemacs/persist-at-last-error"))
+
+(leaf undo-tree
+  :defer-config
+  (e:variable! undo-tree-auto-save-history nil)
+  (e:variable! undo-tree-history-directory-alist `((".*" . ,temporary-file-directory))))
+
+(leaf url-cache
+  :defer-config
+  (e:cache! url-cache-directory "url/cache"))
+
+(leaf url-cookie
+  :defer-config
+  (e:cache! url-cookie-file "url/cookies"))
+
 (leaf vc
   :config
   (spacemacs/set-leader-keys
@@ -686,6 +669,11 @@
   :init
   (e:variable! wakatime-cli-path (executable-find "wakatime"))
   (spacemacs/defer-until-after-user-config 'global-wakatime-mode))
+
+(leaf which-key
+  :defer-config
+  (spacemacs|diminish which-key-mode)
+  (e:variable! which-key-sort-order 'which-key-key-order-alpha))
 
 (leaf whitespace
   :hook ((find-file-hook . spacemacs/toggle-whitespace-on)

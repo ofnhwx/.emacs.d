@@ -44,6 +44,7 @@
     :bind (:map corfu-map
                 ("<escape>" . corfu-quit))
     :hook ((prog-mode . e:setup-capf/default)
+           (org-mode  . e:setup-capf/org)
            (lsp-completion-mode . e:setup-capf/lsp))
     :init
     (set-variable 'corfu-auto t)
@@ -66,9 +67,7 @@
     :config
     (set-variable 'fussy-filter-fn 'fussy-filter-orderless)
     (set-variable 'fussy-score-fn 'fussy-fzf-native-score)
-    (set-variable 'fussy-max-candidate-limit 5000)
-    (set-variable 'fussy-default-regex-fn 'fussy-pattern-first-letter)
-    (set-variable 'fussy-prefer-prefix nil)))
+    (set-variable 'fussy-max-candidate-limit 5000)))
 
 (defun completions/init-fzf-native ()
   (use-package fzf-native

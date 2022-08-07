@@ -126,17 +126,20 @@
 (defun misc/init-rails-routes ()
   (use-package rails-routes
     :defer (spacemacs/defer)
-    :init
-    (spacemacs/defer-until-after-user-config #'global-spell-fu-mode)
     :config
     (set-variable 'rails-routes-cache-path (expand-file-name "rails-routes" spacemacs-cache-directory))))
 
 (defun misc/init-spell-fu ()
   (use-package spell-fu
     :defer (spacemacs/defer)
+    :hook (spell-fu-mode . setup-spell-fu-mode)
+    :init
+    (spacemacs/defer-until-after-user-config #'global-spell-fu-mode)
     :config
     (set-variable 'spell-fu-directory (expand-file-name "spell-fu" spacemacs-cache-directory))
-    (spell-fu-dictionary-add (spell-fu-get-ispell-dictionary "en"))))
+    (set-variable 'spell-fu-ignore-modes '(dired-mode))
+    (defun setup-spell-fu-mode ()
+      (spell-fu-dictionary-add (spell-fu-get-ispell-dictionary "en")))))
 
 (defun misc/init-tree-sitter ()
   (use-package tree-sitter

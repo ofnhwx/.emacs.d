@@ -4,7 +4,10 @@
   :hook ((typescript-tsx-mode-hook . setup-web-mode)
          (vue-mode-hook . setup-vue-mode))
   :config
+  (with-eval-after-load 'lsp-mode
+    (add-to-list 'lsp--formatting-indent-alist '(typescript-tsx-mode . typescript-indent-level)))
   (defun setup-web-mode ()
+    (e:default! typescript-indent-level       2)
     (e:default! web-mode-markup-indent-offset 2)
     (e:default! web-mode-css-indent-offset    2)
     (e:default! web-mode-code-indent-offset   2)

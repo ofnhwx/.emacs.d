@@ -132,12 +132,11 @@
 (defun misc/init-spell-fu ()
   (use-package spell-fu
     :defer (spacemacs/defer)
-    :hook (spell-fu-mode . setup-spell-fu-mode)
-    :init
-    (spacemacs/defer-until-after-user-config #'global-spell-fu-mode)
+    :hook ((spell-fu-mode . setup-spell-fu-mode)
+           (prog-mode . spell-fu-mode)
+           (text-mode . spell-fu-mode))
     :config
     (set-variable 'spell-fu-directory (expand-file-name "spell-fu" spacemacs-cache-directory))
-    (set-variable 'spell-fu-ignore-modes '(dired-mode))
     (defun setup-spell-fu-mode ()
       (spell-fu-dictionary-add (spell-fu-get-ispell-dictionary "en")))))
 

@@ -2,6 +2,8 @@
 
 (defvar completions-packages
   '(
+    (fzf-native :location (recipe :fetcher github :repo "dangduc/fzf-native" :files (:defaults "bin")))
+    (copilot    :location (recipe :fetcher github :repo "zerolfx/copilot.el" :files (:defaults "dist")))
     cape
     company-org-block
     company-prescient
@@ -9,7 +11,6 @@
     corfu
     corfu-doc
     fussy
-    (fzf-native :location (recipe :fetcher github :repo "dangduc/fzf-native" :files (:defaults "bin")))
     kind-icon
     orderless
     ))
@@ -38,6 +39,15 @@
     (set-variable 'company-tabnine-binaries-folder
                   (expand-file-name "tabnine" spacemacs-cache-directory))))
 
+(defun completions/init-copilot ()
+  (use-package copilot
+    :diminish (copilot-mode  "")
+    :hook (prog-mode . copilot-mode)
+    :config
+    (with-eval-after-load 'corfu
+      (advice-add 'corfu-complete :before-until 'copilot-accept-completion))
+    (advice-add 'indent-for-tab-command :before-until 'copilot-accept-completion)))
+
 (defun completions/init-corfu ()
   (use-package corfu
     :defer (spacemacs/defer)
@@ -64,6 +74,8 @@
   (use-package fussy
     :init
     (setq completion-styles '(fussy))
+    (setq completion-category-defaults nil)
+    (setq completion-category-overrides nil)
     :config
     (set-variable 'fussy-filter-fn 'fussy-filter-orderless)
     (set-variable 'fussy-score-fn 'fussy-fzf-native-score)

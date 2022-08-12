@@ -395,6 +395,10 @@
   :defer-config
   (e:variable! helm-fzf-args '("--tac")))
 
+(leaf indent
+  :defer-config
+  (e:variable! standard-indent 2))
+
 (leaf magit
   :defer-config
   (evil-define-key 'normal magit-mode-map (kbd "<escape>") 'ignore)
@@ -595,6 +599,10 @@
 (leaf smartparens
   :defer-config
   (spacemacs|diminish smartparens-mode))
+
+(leaf svg-lib
+  :defer-config
+  (e:cache! svg-lib-icons-dir "svg-lib"))
 
 (leaf recentf
   :defer-config

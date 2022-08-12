@@ -120,7 +120,7 @@
     (set-variable 'org-roam-v2-ack t)
     ;; recentf
     (when (require 'recentf)
-      (set-variable 'recentf-save-file (expand-file-name "recntf" spacemacs-cache-directory))
+      (set-variable 'recentf-save-file (expand-file-name "recentf" spacemacs-cache-directory))
       (recentf-mode 1))
     ;; others
     (set-variable 'custom-file (make-temp-file "emacs-custom-" nil ".el"))

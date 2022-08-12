@@ -16,11 +16,6 @@
   (e:variable! lsp-ui-doc-position 'at-point)
   (e:variable! lsp-ui-doc-show-with-cursor t))
 
-(leaf dap-mode
-  :defer-config
-  (e:cache! dap-breakpoints-file "dap/breakpoints")
-  (e:cache! dap-utils-extension-path "dap/extensions"))
-
 (leaf lsp-completion
   :after lsp-mode
   :hook (lsp-completion-mode-hook . e:setup-lsp-completion-config)
@@ -39,15 +34,23 @@
   (defun e:setup-lsp-diagnostics-config ()
     (let ((checker (cl-case major-mode
                      ((enh-ruby-mode ruby-mode)
-                      'ruby-rubocop))))
+                      (unless (e:bundle-exists "solargraph")
+                        'ruby-rubocop)))))
       (and checker
            (flycheck-may-enable-checker checker)
            (flycheck-select-checker checker)))))
+
+(leaf dap-mode
+  :defer-config
+  (e:cache! dap-breakpoints-file "dap/breakpoints")
+  (e:cache! dap-utils-extension-path "dap/extensions"))
 
 
 
 (leaf lsp-solargraph
   :defer-config
+  (define-advice lsp-solargraph--build-command (:before () auto-detect)
+    (setq-local lsp-solargraph-use-bundler (e:bundle-exists "solargraph")))
   (e:variable! lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
 
 (leaf lsp-graphql

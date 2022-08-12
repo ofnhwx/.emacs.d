@@ -561,6 +561,7 @@
   (e:variable! skk-show-annotation t)
   (e:variable! skk-sticky-key ";")
   (e:variable! skk-use-jisx0201-input-method t)
+  (e:variable! skk-server-prog (executable-find "yaskkserv2"))
   :config
   (spacemacs|add-toggle skk-mode
     :status skk-mode
@@ -574,19 +575,22 @@
           (skk-latin-mode-on)
         (let ((skk-mode-hook (-union skk-mode-hook '(skk-latin-mode-on))))
           (skk-mode)))))
-  (when (executable-find "google-ime-skk")
-    (e:variable! skk-server-prog (executable-find "google-ime-skk"))
+  (when skk-server-prog
+    (e:variable! skk-large-jisyo nil)
+    (e:variable! skk-server-prog (executable-find "yaskkserv2"))
     (e:variable! skk-server-inhibit-startup-server t)
     (e:variable! skk-server-host "127.0.0.1")
-    (e:variable! skk-server-portnum 55100)
+    (e:variable! skk-server-portnum 1178)
     (defun e:prodigy:google-ime-skk ()
       (interactive)
       (when (require 'prodigy nil t)
-        (let ((service "google-ime-skk"))
+        (let ((service "yaskkserv2"))
           (unless (prodigy-find-service service)
             (prodigy-define-service
               :name service
-              :command "google-ime-skk"
+              :command skk-server-prog
+              :args '("--no-daemonize" "--google-suggest" "dic-mirror/dictionary.yaskkserv2")
+              :cwd e:external-directory
               :tags '(general)
               :kill-signal 'sigkill))
           (e:prodigy-start-service service))))

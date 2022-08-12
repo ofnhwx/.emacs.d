@@ -118,6 +118,10 @@
     (set-variable 'org-roam-directory (expand-file-name "~/org/roam"))
     (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" spacemacs-cache-directory))
     (set-variable 'org-roam-v2-ack t)
+    ;; recentf
+    (when (require 'recentf)
+      (set-variable 'recentf-save-file (expand-file-name "recntf" spacemacs-cache-directory))
+      (recentf-mode 1))
     ;; others
     (set-variable 'custom-file (make-temp-file "emacs-custom-" nil ".el"))
     (set-variable 'package-gnupghome-dir (expand-file-name "gnupg" spacemacs-cache-directory))

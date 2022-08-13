@@ -143,7 +143,7 @@
 (defun misc/init-tree-sitter ()
   (use-package tree-sitter
     :defer (spacemacs/defer)
-    :diminish (tree-sitter-mode  "")
+    :diminish (tree-sitter-mode "")
     :hook (tree-sitter-after-on . tree-sitter-hl-mode)
     :init (spacemacs/defer-until-after-user-config #'global-tree-sitter-mode)))
 

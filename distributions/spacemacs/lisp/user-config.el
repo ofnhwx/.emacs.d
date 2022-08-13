@@ -513,6 +513,9 @@
 (leaf prodigy
   :commands (e:prodigy-start-service)
   :config
+  (prodigy-define-tag
+    :name 'rails
+    :ready-message "Use Ctrl-C to stop")
   (defun e:prodigy-start-service (name)
     (let ((service (prodigy-find-service name)))
       (when service
@@ -592,7 +595,7 @@
               :args '("--no-daemonize" "--google-suggest" "dic-mirror/dictionary.yaskkserv2")
               :cwd e:external-directory
               :tags '(general)
-              :kill-signal 'sigkill))
+              :stop-signal 'int))
           (e:prodigy-start-service service))))
     (spacemacs/defer-until-after-user-config  'e:prodigy:google-ime-skk)))
 

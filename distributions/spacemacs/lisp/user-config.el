@@ -431,6 +431,51 @@
   :defer-config
   (e:variable! markdown-command "pandoc"))
 
+(leaf notmuch
+  :defun (notmuch-bury-or-kill-this-buffer@kill-layout)
+  :init
+  (setenv "XAPIAN_CJK_NGRAM" "1")
+  :defer-config
+  (define-advice notmuch-bury-or-kill-this-buffer (:around (fn) kill-layout)
+    (let ((kill (derived-mode-p 'notmuch-hello-mode)))
+      (prog1
+          (funcall fn)
+        (if kill
+            (persp-kill notmuch-spacemacs-layout-name)))))
+  (setq-default notmuch-search-oldest-first nil)
+  (e:variable! notmuch-archive-tags '("-inbox" "-unread"))
+  (e:variable! notmuch-message-deleted-tags '("+trash" "-inbox"))
+  (e:variable! notmuch-column-control 1.0)
+  (e:variable! notmuch-hello-thousands-separator ",")
+  (e:variable! notmuch-show-empty-saved-searches nil)
+  (e:variable! notmuch-show-logo nil)
+  (e:variable! notmuch-hello-hide-tags
+               '(;; -------------------------
+                 "drafts"    ;; +下書き
+                 "flagged"   ;; +スター付き
+                 "important" ;; +重要
+                 "inbox"     ;; +受信トレイ
+                 "sent"      ;; +送信済み
+                 "spam"      ;; +迷惑メール
+                 "trash"     ;; +ごみ箱
+                 "unread"    ;; +未読
+                 ;; -------------------------
+                 "encrypted" ;; -暗号
+                 "new"       ;; -新規(notmuch)
+                 "signed"    ;; -署名
+                 ;; -------------------------
+                 ))
+  (e:variable! notmuch-saved-searches
+               '((:name "すべて"     :query "*"             :key "a")
+                 (:name "受信トレイ" :query "tag:inbox"     :key "i")
+                 (:name "未読"       :query "tag:unread"    :key "u")
+                 (:name "スター付き" :query "tag:flagged"   :key "s")
+                 (:name "重要"       :query "tag:important" :key "m")
+                 (:name "送信済み"   :query "tag:sent"      :key "t")
+                 (:name "下書き"     :query "tag:draft"     :key "d")
+                 (:name "ごみ箱"     :query "tag:trash")
+                 (:name "迷惑メール" :query "tag:spam"))))
+
 (leaf org
   :config
   (e:variable! org-agenda-current-time-string "← now")
@@ -508,7 +553,8 @@
 
 (leaf popwin
   :defer-config
-  (push '("*Warnings*" :dedicated t :stick t :noselect t) popwin:special-display-config))
+  (--each '("*Async Shell Command*" "*Warnings*")
+    (push (list it :dedicated t :position 'bottom :stick t :noselect t) popwin:special-display-config)))
 
 (leaf prodigy
   :commands (e:prodigy-start-service)
@@ -614,8 +660,6 @@
 (leaf recentf
   :defer-config
   (e:variable! recentf-filename-handlers '(abbreviate-file-name))
-  (e:variable! recentf-max-menu-items 20)
-  (e:variable! recentf-max-saved-items 3000)
   (define-advice recentf-save-list (:before (&rest _) cleanup)
     "存在しないファイルを履歴から削除する"
     (setq recentf-list (->> recentf-list

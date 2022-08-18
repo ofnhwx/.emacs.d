@@ -13,6 +13,8 @@
           helm
           ;; +emacs
           (org :variables org-enable-roam-support t)
+          ;; +email
+          notmuch
           ;; +filetree
           treemacs
           ;; +frameworks
@@ -76,6 +78,7 @@
           (ls-lisp-extension    :location (recipe :fetcher github :repo "ofnhwx/ls-lisp-extension"))
           (lsp-volar            :location (recipe :fetcher github :repo "ofnhwx/lsp-volar"))
           (yarn                 :location (recipe :fetcher github :repo "jmfirth/yarn.el"))
+          ol-notmuch
           ))
   (setq dotspacemacs-excluded-packages
         '(
@@ -121,6 +124,7 @@
     ;; recentf
     (when (require 'recentf)
       (set-variable 'recentf-save-file (expand-file-name "recentf" spacemacs-cache-directory))
+      (set-variable 'recentf-max-saved-items 3000)
       (recentf-mode 1))
     ;; others
     (set-variable 'custom-file (make-temp-file "emacs-custom-" nil ".el"))

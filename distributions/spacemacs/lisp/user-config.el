@@ -559,6 +559,8 @@
 (leaf prodigy
   :commands (e:prodigy-start-service)
   :config
+  (e:variable! prodigy-view-buffer-maximum-size 2048)
+  (e:variable! prodigy-view-truncate-by-default t)
   (prodigy-define-tag
     :name 'rails
     :ready-message "Use Ctrl-C to stop")

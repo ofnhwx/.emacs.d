@@ -43,7 +43,12 @@
   (use-package copilot
     :diminish (copilot-mode  "")
     :hook (prog-mode . copilot-mode)
+    :bind (:map copilot-mode-map
+                ("C-z" . copilot-complete)
+                :map copilot-completion-map
+                ("<escape>" . copilot-clear-overlay))
     :config
+    (add-to-list 'copilot-enable-predicates 'ignore)
     (with-eval-after-load 'corfu
       (advice-add 'corfu-complete :before-until 'copilot-accept-completion))
     (advice-add 'indent-for-tab-command :before-until 'copilot-accept-completion)))

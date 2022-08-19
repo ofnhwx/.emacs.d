@@ -382,7 +382,6 @@
   :config
   (spacemacs|diminish helm-gtags-mode)
   (e:variable! helm-buffer-max-length nil)
-  (e:variable! helm-completion-style 'emacs)
   (when (executable-find "cmigemo")
     (spacemacs|diminish helm-migemo-mode)
     (helm-migemo-mode)))

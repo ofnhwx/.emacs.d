@@ -46,12 +46,15 @@
     :bind (:map copilot-mode-map
                 ("C-z" . copilot-complete)
                 :map copilot-completion-map
-                ("<escape>" . copilot-clear-overlay))
+                ("<escape>" . copilot-clear-overlay)
+                ("C-n" . copilot-next-completion)
+                ("C-p" . copilot-previous-completion))
     :config
     (add-to-list 'copilot-enable-predicates 'ignore)
+    (defalias 'copilot-accept-completion-func #'copilot-accept-completion-by-word)
     (with-eval-after-load 'corfu
-      (advice-add 'corfu-complete :before-until 'copilot-accept-completion))
-    (advice-add 'indent-for-tab-command :before-until 'copilot-accept-completion)))
+      (advice-add 'corfu-complete :before-until 'copilot-accept-completion-func))
+    (advice-add 'indent-for-tab-command :before-until 'copilot-accept-completion-func)))
 
 (defun completions/init-corfu ()
   (use-package corfu

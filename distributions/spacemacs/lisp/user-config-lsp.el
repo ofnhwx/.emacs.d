@@ -53,14 +53,6 @@
     (setq-local lsp-solargraph-use-bundler (e:bundle-exists "solargraph")))
   (e:variable! lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
 
-(leaf lsp-graphql
-  :defer-config
-  (setf (lsp--client-activation-fn (ht-get lsp-clients 'graphql-lsp)) nil))
-
-(leaf web-mode
-  :defer-config
-  (require 'lsp-volar))
-
 
 
 (provide 'user-config-lsp)

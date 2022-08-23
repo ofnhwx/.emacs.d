@@ -51,7 +51,8 @@
                 ("C-p" . copilot-previous-completion))
     :config
     (add-to-list 'copilot-enable-predicates 'ignore)
-    (defalias 'copilot-accept-completion-func #'copilot-accept-completion-by-word)
+    (defun copilot-accept-completion-func (&rest _)
+      (copilot-accept-completion-by-word 1))
     (with-eval-after-load 'corfu
       (advice-add 'corfu-complete :before-until 'copilot-accept-completion-func))
     (advice-add 'indent-for-tab-command :before-until 'copilot-accept-completion-func)))

@@ -35,9 +35,11 @@
           html
           kotlin
           markdown
+          rust
           shell-scripts
           sql
           swift
+          toml
           vimscript
           yaml
           ;; +misc

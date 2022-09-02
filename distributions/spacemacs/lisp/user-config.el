@@ -169,7 +169,7 @@
   (e:variable! browse-url-browser-function 'browse-url-by-choosen)
   (defun browse-url-by-choosen (url &optional new-window)
     "選択したブラウザで URL を開く."
-    (let ((browsers '(eww-browse-url browse-url-default-browser)))
+    (let ((browsers '(eww-browse-url browse-url-default-browser xwidget-webkit-browse-url)))
       (when browse-url-generic-program
         (add-to-list 'browsers 'browse-url-generic t))
       (funcall (intern (completing-read "Choose Browser: " browsers)) url new-window))))
@@ -393,6 +393,10 @@
     "pz" 'helm-fzf-project-root)
   :defer-config
   (e:variable! helm-fzf-args '("--tac")))
+
+(leaf highlight-indent-guide
+  :config
+  (spacemacs|diminish highlight-indent-guides-mode))
 
 (leaf indent
   :defer-config

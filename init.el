@@ -8,11 +8,6 @@
 ;; You may delete these explanatory comments.
 ;;(package-initialize)
 
-;; https://emacs-jp.slack.com/archives/C1B5WTJLQ/p1614558372038400
-(when (string-equal emacs-version "28.1.91")
-  (set-variable 'warning-suppress-log-types '((comp)))
-  (set-variable 'warning-suppress-types '((comp))))
-
 (let ((base (file-name-directory (or load-file-name buffer-file-name))))
   (require 'bootstrap (expand-file-name "bootstrap.el" base)))
 

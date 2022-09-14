@@ -40,7 +40,8 @@
   :doc "タイトル表示"
   :config
   (defun custom-frame-title-format ()
-    (if (org-clocking-p)
+    (if (and (fboundp 'org-clocking-p)
+             (org-clocking-p))
         org-mode-line-string
       (spacemacs/title-prepare dotspacemacs-frame-title-format)))
   (e:variable! frame-title-format '(:eval (custom-frame-title-format)))

@@ -479,7 +479,6 @@
                  (:name "下書き"     :query "tag:draft"     :key "d")
                  (:name "ごみ箱"     :query "tag:trash")
                  (:name "迷惑メール" :query "tag:spam"))))
-
 (leaf org
   :config
   (e:variable! org-agenda-current-time-string "← now")
@@ -506,25 +505,32 @@
                                         ("HOLD" . org-done)))
   (e:variable! org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
                                    (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
-  (set-face-attribute 'org-done nil :foreground "#696969")
-  (set-face-attribute 'org-todo nil :foreground "#00ff00")
-  (set-face-attribute 'org-headline-done nil :foreground "#696969")
-  (set-face-attribute 'org-headline-todo nil :foreground "#00ff00")
-  (set-face-attribute 'org-level-1 nil :height 1.0)
-  (set-face-attribute 'org-level-2 nil :height 1.0)
-  (set-face-attribute 'org-level-3 nil :height 1.0)
-  :doc "経過時間の保存"
-  :config
+  (with-eval-after-load 'org-face
+    (set-face-attribute 'org-done nil :foreground "#696969")
+    (set-face-attribute 'org-todo nil :foreground "#00ff00")
+    (set-face-attribute 'org-headline-done nil :foreground "#696969")
+    (set-face-attribute 'org-headline-todo nil :foreground "#00ff00")
+    (set-face-attribute 'org-level-1 nil :height 1.0)
+    (set-face-attribute 'org-level-2 nil :height 1.0)
+    (set-face-attribute 'org-level-3 nil :height 1.0))
+  ;; 経過時間の保存
   (e:variable! org-clock-persist t)
   (org-clock-persistence-insinuate)
-  :doc "日報用(暫定)"
-  :config
+  ;; 日報用(暫定)
   (defun org-support/daily-file ()
     (let* ((daily-dir (f-expand "daily" org-directory)))
       (f-short (f-expand (format-time-string "%Y.org") daily-dir))))
   (defun popwin:daily-report ()
     (interactive)
     (popwin:popup-buffer (find-file-noselect (org-support/daily-file)) :height 30 :dedicated t :stick t)))
+
+;; FIXME: 消すと正常に起動しなくなる(どこかに変な依存があるかも)
+(leaf org-roam
+  :config
+  (set-variable 'org-roam-directory (expand-file-name "~/org/roam"))
+  (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" spacemacs-cache-directory))
+  (set-variable 'org-roam-v2-ack t)
+  (org-roam-db-autosync-enable))
 
 (leaf open-junk-file
   :defer-config
@@ -732,7 +738,7 @@
   :if (and (executable-find "wakatime-cli")
            (bound-and-true-p wakatime-api-key))
   :init
-  (e:variable! wakatime-cli-path (executable-find "wakatime"))
+  (e:variable! wakatime-cli-path (executable-find "wakatime-cli"))
   (spacemacs/defer-until-after-user-config 'global-wakatime-mode))
 
 (leaf which-key

@@ -117,10 +117,6 @@
     (set-variable 'vim-style-remap-Y-to-y$ t)
     (set-variable 'which-key-enable-extended-define-key t)
     (set-variable 'which-key-show-early-on-C-h t)
-    ;; +emacs/org
-    (set-variable 'org-roam-directory (expand-file-name "~/org/roam"))
-    (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" spacemacs-cache-directory))
-    (set-variable 'org-roam-v2-ack t)
     ;; recentf
     (when (require 'recentf)
       (set-variable 'recentf-save-file (expand-file-name "recentf" spacemacs-cache-directory))

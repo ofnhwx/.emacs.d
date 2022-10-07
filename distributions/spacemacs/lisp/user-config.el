@@ -505,9 +505,9 @@
                                         ("HOLD" . org-done)))
   (e:variable! org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
                                    (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
-  (with-eval-after-load 'org-face
-    (set-face-attribute 'org-done nil :foreground "#696969")
+  (with-eval-after-load 'org-faces
     (set-face-attribute 'org-todo nil :foreground "#00ff00")
+    (set-face-attribute 'org-done nil :foreground "#696969")
     (set-face-attribute 'org-headline-done nil :foreground "#696969")
     (set-face-attribute 'org-headline-todo nil :foreground "#00ff00")
     (set-face-attribute 'org-level-1 nil :height 1.0)

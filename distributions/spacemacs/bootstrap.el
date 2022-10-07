@@ -9,7 +9,7 @@
           ;; +checkers
           (syntax-checking :variables syntax-checking-enable-tooltips nil)
           ;; +completion
-          (auto-completion :variables auto-completion-enable-help-tooltip t auto-completion-use-company-box t)
+          auto-completion
           helm
           ;; +emacs
           (org :variables org-enable-roam-support t)
@@ -46,7 +46,7 @@
           dtrt-indent
           multiple-cursors
           ;; +source-control
-          (git :variables git-enable-magit-delta-plugin t git-magit-status-fullscreen t)
+          (git :variables git-magit-status-fullscreen t)
           (version-control :variables version-control-diff-tool 'diff-hl)
           ;; +spacemacs
           (spacemacs-completion :variables helm-use-fuzzy nil)
@@ -56,7 +56,7 @@
           colors
           ;; +tools
           (lsp :variables lsp-ui-sideline-enable nil)
-          (shell :variables shell-default-position 'full shell-default-height 60 shell-default-shell 'vterm)
+          (shell :variables shell-default-position 'full shell-default-shell 'vterm)
           dap
           docker
           nginx

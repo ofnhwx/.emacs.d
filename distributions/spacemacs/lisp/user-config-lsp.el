@@ -55,7 +55,7 @@
 
 (leaf lsp-volar
   :defer-config
-  (e:variable! lsp-typescript-tsdk (f-dirname (lsp-volar-get-typescript-server-path))))
+  (setq lsp-typescript-tsdk (f-dirname (lsp-volar-get-typescript-server-path))))
 
 
 

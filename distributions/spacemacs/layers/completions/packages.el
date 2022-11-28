@@ -9,7 +9,6 @@
     company-prescient
     company-tabnine
     corfu
-    corfu-doc
     fussy
     kind-icon
     orderless
@@ -61,10 +60,13 @@
   (use-package corfu
     :defer (spacemacs/defer)
     :bind (:map corfu-map
-                ("<escape>" . corfu-quit))
+                ("<escape>" . corfu-quit)
+                ("C-q" . corfu-quick-complete))
     :hook ((prog-mode . e:setup-capf/default)
            (org-mode  . e:setup-capf/org)
-           (lsp-completion-mode . e:setup-capf/lsp))
+           (lsp-completion-mode . e:setup-capf/lsp)
+           (corfu-mode . corfu-echo-mode)
+           (corfu-mode . corfu-popupinfo-mode))
     :init
     (set-variable 'corfu-auto t)
     (spacemacs/defer-until-after-user-config #'global-corfu-mode)
@@ -74,10 +76,6 @@
       (evil-make-overriding-map corfu-map)
       (advice-add 'corfu--setup :after 'evil-normalize-keymaps)
       (advice-add 'corfu--teardown :after 'evil-normalize-keymaps))))
-
-(defun completions/init-corfu-doc ()
-  (use-package corfu-doc
-    :hook (corfu-mode . corfu-doc-mode)))
 
 (defun completions/init-fussy ()
   (use-package fussy

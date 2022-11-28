@@ -53,10 +53,6 @@
     (setq-local lsp-solargraph-use-bundler (e:bundle-exists "solargraph")))
   (e:variable! lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
 
-(leaf lsp-volar
-  :defer-config
-  (setq lsp-typescript-tsdk (f-dirname (lsp-volar-get-typescript-server-path))))
-
 
 
 (provide 'user-config-lsp)

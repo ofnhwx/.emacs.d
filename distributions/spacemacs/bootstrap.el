@@ -62,6 +62,7 @@
           nginx
           prodigy
           restclient
+          tree-sitter
           vagrant
           ;; +web
           eww
@@ -99,8 +100,13 @@
     (setq dotspacemacs-default-font '("Cica" :size 16.0)))
    (t
     (setq dotspacemacs-default-font '("Cica" :size 12.0))))
+  (setq dotspacemacs-ask-for-lazy-installation t)
   (setq dotspacemacs-editing-style 'hybrid)
+  (setq dotspacemacs-enable-paste-transient-state t)
   (setq dotspacemacs-enable-server t)
+  (setq dotspacemacs-highlight-delimiters 'any)
+  (setq dotspacemacs-large-file-size 10)
+  (setq dotspacemacs-loading-progress-bar nil)
   (setq dotspacemacs-mode-line-theme '(spacemacs :separator bar))
   (setq dotspacemacs-new-empty-buffer-major-mode 'fundamental-mode)
   (setq dotspacemacs-scratch-buffer-persistent t)

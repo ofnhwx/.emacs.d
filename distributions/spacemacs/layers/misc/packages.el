@@ -18,8 +18,6 @@
     ob-typescript
     rails-routes
     spell-fu
-    tree-sitter
-    tree-sitter-langs
     visual-regexp
     vlf
     wakatime-mode
@@ -139,17 +137,6 @@
     (set-variable 'spell-fu-directory (expand-file-name "spell-fu" spacemacs-cache-directory))
     (defun setup-spell-fu-mode ()
       (spell-fu-dictionary-add (spell-fu-get-ispell-dictionary "en")))))
-
-(defun misc/init-tree-sitter ()
-  (use-package tree-sitter
-    :defer (spacemacs/defer)
-    :diminish (tree-sitter-mode "")
-    :hook (tree-sitter-after-on . tree-sitter-hl-mode)
-    :init (spacemacs/defer-until-after-user-config #'global-tree-sitter-mode)))
-
-(defun misc/init-tree-sitter-langs ()
-  (use-package tree-sitter-langs
-    :no-require t))
 
 (defun misc/init-visual-regexp ()
   (use-package visual-regexp

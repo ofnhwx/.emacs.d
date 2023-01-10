@@ -5,8 +5,22 @@
   (spacemacs|diminish ruby-refactor-mode))
 
 (leaf projectile-rails
+  :init
+  (let ((exts '("html" "erb" "haml" "slim"
+                "js" "coffee" "ts"
+                "css" "scss" "sass" "less"
+                "json" "builder" "jbuilder" "rabl"
+                "csb" "axlsx")))
+    (e:variable! projectile-rails-views-re (concat "\\." (regexp-opt exts))))
   :defer-config
-  (e:variable! projectile-rails-component-dir "app/javascript/")
+  (defun projectile-rails-find-view-components ()
+    "Find a View component."
+    (interactive)
+    (projectile-rails-find-resource
+     "components: "
+     `(("app/components/" "\\(.+\\)\\.rb$")
+       ("app/components/" ,(concat "\\(.+\\)" projectile-rails-views-re)))
+     "app/components/${filename}"))
   (defun projectile-rails-find-graphql ()
     "Find a GraphQL."
     (interactive)
@@ -22,20 +36,27 @@
           (--filter (f-exists? (f-expand it (projectile-rails-root))))
           (--map (list it "\\(.+\\.[^.]+\\)$")))))
   (spacemacs/set-leader-keys-for-minor-mode 'projectile-rails-mode
+    "fff" 'projectile-rails-find-component
     "ffg" 'projectile-rails-find-graphql
-    "ffC" 'projectile-rails-find-component
+    "ffC" 'projectile-rails-find-view-components
+    "ffF" 'projectile-rails-find-feature
     "ffS" 'projectile-rails-find-serializer
-    "ffV" 'projectile-rails-find-validator))
+    "ffV" 'projectile-rails-find-validator
+    ))
 
 (leaf ruby-mode
   :hook (ruby-mode-hook . e:setup-flycheck-rubocop)
-  :mode "\\.\\(jb\\)\\'"
+  :mode `(,(concat "\\." (regexp-opt '("simplecov" "jb" "csb" "axlsx")) "\\'"))
   :config
   (e:variable! ruby-insert-encoding-magic-comment nil)
   
-  (defun e:bundle-exists (name)
-    (and (executable-find "bundle")
-         (zerop (call-process-shell-command (format "bundle info %s" name)))))
+  (progn
+    (defvar e:bundle-exists-cache (make-hash-table :test 'equal))
+    (defun e:bundle-exists (name)
+      (let ((key (format "%s@%s" name (or (kllib:project-root) (buffer-name)))))
+        (unless (gethash key e:bundle-exists-cache)
+          (puthash key (call-process-shell-command (format "bundle info %s" name)) e:bundle-exists-cache))
+        (zerop (gethash key e:bundle-exists-cache)))))
   (defun e:setup-flycheck-rubocop ()
     (when (e:bundle-exists "rubocop")
       (setq-local flycheck-command-wrapper-function

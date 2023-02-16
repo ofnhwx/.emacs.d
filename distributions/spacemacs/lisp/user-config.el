@@ -358,6 +358,16 @@
   (e:variable! flycheck-idle-buffer-switch-delay 3.0)
   (e:variable! flycheck-idle-change-delay 3.0)
   (e:variable! flycheck-temp-prefix ".flycheck")
+  (spacemacs/set-leader-keys
+    "eY" 'e:flycheck-copy-error-ids)
+  (defun e:flycheck-copy-error-ids ()
+    (interactive)
+    (let ((messages (->> (flycheck-overlay-errors-at (point))
+                         (-map #'flycheck-error-id)
+                         (-non-nil))))
+      (when messages
+        (kill-new (string-join messages ", "))
+        (message (string-join messages ", ")))))
   (define-advice flycheck-buffer (:before (&rest _) after-clear)
     (flycheck-clear))
   (define-advice flycheck-error-list-refresh (:after (&rest _) fix-error-id)

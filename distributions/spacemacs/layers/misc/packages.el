@@ -18,6 +18,7 @@
     ob-typescript
     rails-routes
     spell-fu
+    super-save
     visual-regexp
     vlf
     wakatime-mode
@@ -137,6 +138,15 @@
     (set-variable 'spell-fu-directory (expand-file-name "spell-fu" spacemacs-cache-directory))
     (defun setup-spell-fu-mode ()
       (spell-fu-dictionary-add (spell-fu-get-ispell-dictionary "en")))))
+
+(defun misc/init-super-save ()
+  (use-package super-save
+    :spacediminish (super-save-mode "💾")
+    :init
+    (spacemacs/defer-until-after-user-config #'super-save-mode)
+    :config
+    (set-variable 'super-save-remote-files nil)
+    (set-variable 'auto-save-default nil)))
 
 (defun misc/init-visual-regexp ()
   (use-package visual-regexp

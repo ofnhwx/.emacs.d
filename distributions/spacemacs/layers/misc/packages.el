@@ -2,6 +2,7 @@
 
 (defvar misc-packages
   '(
+    (chatgpt :location (recipe :fetcher github :repo "joshcho/ChatGPT.el"))
     atomic-chrome
     codic
     cov
@@ -29,6 +30,14 @@
     :defer (spacemacs/defer)
     :init
     (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server)))
+
+(defun misc/init-chatgpt ()
+  (use-package chatgpt
+    :no-require t
+    :init
+    (require 'python)
+    (e:variable! python-interpreter python-shell-interpreter)
+    (e:variable! chatgpt-repo-path (expand-file-name "chatgpt/" quelpa-build-dir))))
 
 (defun misc/init-codic ()
   (use-package codic

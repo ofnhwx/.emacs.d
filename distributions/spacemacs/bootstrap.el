@@ -56,7 +56,7 @@
           colors
           ;; +tools
           (lsp :variables lsp-ui-sideline-enable nil)
-          (shell :variables shell-default-position 'full shell-default-shell 'vterm)
+          (shell :variables shell-default-shell 'vterm)
           dap
           docker
           nginx

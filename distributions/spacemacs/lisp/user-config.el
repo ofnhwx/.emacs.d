@@ -84,6 +84,7 @@
   (bind-keys*
    :map global-map
    ("C-:" . popwin:daily-report)
+   ("C-*" . popwin:note)
    ("C-;" . spacemacs/default-pop-shell)
    ("C-<" . evil-jump-backward)
    ("C->" . evil-jump-forward)
@@ -530,6 +531,9 @@
   (defun org-support/daily-file ()
     (let* ((daily-dir (f-expand "daily" org-directory)))
       (f-short (f-expand (format-time-string "%Y.org") daily-dir))))
+  (defun popwin:note ()
+    (interactive)
+    (popwin:popup-buffer (find-file-noselect (f-expand "note.org" org-directory)) :height 30 :dedicated t :stick t))
   (defun popwin:daily-report ()
     (interactive)
     (popwin:popup-buffer (find-file-noselect (org-support/daily-file)) :height 30 :dedicated t :stick t)))

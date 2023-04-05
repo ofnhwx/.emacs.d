@@ -6,6 +6,7 @@
     atomic-chrome
     codic
     cov
+    devdocs-browser
     ddskk-posframe
     dired-filter
     dired-toggle-sudo
@@ -50,6 +51,11 @@
     :config
     (set-variable 'cov-coverage-file-paths '(cov--locate-simplecov))
     (set-variable 'cov-coverage-mode t)))
+
+(defun misc/init-devdocs-browser ()
+  (use-package devdocs-browser
+    :init
+    (set-variable 'devdocs-data-dir (expand-file-name "devdocs" spacemacs-cache-directory))))
 
 (defun misc/init-ddskk-posframe ()
   (use-package ddskk-posframe

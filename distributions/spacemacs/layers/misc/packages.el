@@ -16,7 +16,6 @@
     helpful
     highlight-indent-guides
     leaf
-    magit-libgit
     ob-typescript
     rails-routes
     spell-fu
@@ -123,12 +122,6 @@
 (defun misc/init-leaf ()
   (use-package leaf
     :no-require t))
-
-(defun misc/init-magit-libgit ()
-  (use-package magit-libgit
-    :after (magit)
-    :config
-    (libgit-load)))
 
 (defun misc/init-ob-typescript ()
   (spacemacs|use-package-add-hook org

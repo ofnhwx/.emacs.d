@@ -36,8 +36,8 @@
     :no-require t
     :init
     (require 'python)
-    (e:variable! python-interpreter python-shell-interpreter)
-    (e:variable! chatgpt-repo-path (expand-file-name "chatgpt/" quelpa-build-dir))))
+    (set-variable 'python-interpreter python-shell-interpreter)
+    (set-variable 'chatgpt-repo-path (expand-file-name "chatgpt/" quelpa-build-dir))))
 
 (defun misc/init-codic ()
   (use-package codic

@@ -637,6 +637,7 @@
   (e:variable! skk-sticky-key ";")
   (e:variable! skk-use-jisx0201-input-method t)
   (e:variable! skk-server-prog (executable-find "yaskkserv2"))
+  (e:variable! yaskkserv2-dictionary (f-expand "~/sync/share/dictionary.yaskkserv2"))
   :config
   (spacemacs|add-toggle skk-mode
     :status skk-mode
@@ -650,13 +651,13 @@
           (skk-latin-mode-on)
         (let ((skk-mode-hook (-union skk-mode-hook '(skk-latin-mode-on))))
           (skk-mode)))))
-  (when skk-server-prog
+  (when (and skk-server-prog
+             (f-exists? yaskkserv2-dictionary))
     (e:variable! skk-large-jisyo nil)
-    (e:variable! skk-server-prog (executable-find "yaskkserv2"))
     (e:variable! skk-server-inhibit-startup-server t)
     (e:variable! skk-server-host "127.0.0.1")
     (e:variable! skk-server-portnum 1178)
-    (defun e:prodigy:google-ime-skk ()
+    (defun e:prodigy:yaskkserv2 ()
       (interactive)
       (when (require 'prodigy nil t)
         (let ((service "yaskkserv2"))
@@ -664,12 +665,11 @@
             (prodigy-define-service
               :name service
               :command skk-server-prog
-              :args '("--no-daemonize" "--google-suggest" "dic-mirror/dictionary.yaskkserv2")
-              :cwd e:external-directory
+              :args `("--no-daemonize" "--google-suggest" ,yaskkserv2-dictionary)
               :tags '(general)
               :stop-signal 'int))
           (e:prodigy-start-service service))))
-    (spacemacs/defer-until-after-user-config  'e:prodigy:google-ime-skk)))
+    (spacemacs/defer-until-after-user-config  'e:prodigy:yaskkserv2)))
 
 (leaf so-long
   :init

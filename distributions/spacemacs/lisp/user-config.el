@@ -203,6 +203,20 @@
     (delete-char -1)
     (company-abort)))
 
+(leaf devdocs
+  :config
+  (set-variable 'devdocs-data-dir (expand-file-name "devdocs" spacemacs-cache-directory))
+  (spacemacs/declare-prefix "hdd" "devdocs")
+  (spacemacs/set-leader-keys
+    "hddd" 'devdocs-lookup
+    "hddi" 'devdocs-install
+    "hddl" 'devdocs-lookup
+    "hddp" 'devdocs-peruse
+    "hddq" 'devdocs-lookup
+    "hdds" 'devdocs-search
+    "hddu" 'devdocs-update-all
+    ))
+
 (leaf dired
   :bind ((:dired-mode-map
           ("C-c C-e" . wdired-change-to-wdired-mode)))

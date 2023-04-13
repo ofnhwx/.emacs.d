@@ -52,6 +52,9 @@
   
   (progn
     (defvar e:bundle-exists-cache (make-hash-table :test 'equal))
+    (defun e:clear-bundle-exists-cache ()
+      (interactive)
+      (clrhash e:bundle-exists-cache))
     (defun e:bundle-exists (name)
       (let ((key (format "%s@%s" name (or (kllib:project-root) (buffer-name)))))
         (unless (gethash key e:bundle-exists-cache)

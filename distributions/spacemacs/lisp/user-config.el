@@ -722,6 +722,10 @@
             (tramp-set-completion-function it new-functions))))))
   (spacemacs/defer-until-after-user-config 'e:setup-tramp-completion))
 
+(leaf tree-sitter
+  :defer-config
+  (spacemacs|diminish tree-sitter-mode ""))
+
 (leaf treemacs
   :defer-config
   (e:cache! treemacs-persist-file "treemacs/persist")

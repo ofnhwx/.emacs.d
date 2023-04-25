@@ -16,6 +16,7 @@
     highlight-indent-guides
     leaf
     ob-typescript
+    pacfiles-mode
     rails-routes
     spell-fu
     super-save
@@ -123,6 +124,10 @@
     (use-package ob-typescript
       :init
       (add-to-list 'org-babel-load-languages '(typescript . t)))))
+
+(defun misc/init-pacfiles-mode ()
+  (use-package pacfiles-mode
+    :no-require t))
 
 (defun misc/init-rails-routes ()
   (use-package rails-routes

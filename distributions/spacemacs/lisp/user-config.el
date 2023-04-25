@@ -503,6 +503,7 @@
                  (:name "下書き"     :query "tag:draft"     :key "d")
                  (:name "ごみ箱"     :query "tag:trash")
                  (:name "迷惑メール" :query "tag:spam"))))
+
 (leaf org
   :config
   (e:variable! org-agenda-current-time-string "← now")

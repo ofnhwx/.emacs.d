@@ -552,14 +552,6 @@
     (interactive)
     (popwin:popup-buffer (find-file-noselect (org-support/daily-file)) :height 30 :dedicated t :stick t)))
 
-;; FIXME: 消すと正常に起動しなくなる(どこかに変な依存があるかも)
-(leaf org-roam
-  :config
-  (set-variable 'org-roam-directory (expand-file-name "~/org/roam"))
-  (set-variable 'org-roam-db-location (expand-file-name "org-roam.db" spacemacs-cache-directory))
-  (set-variable 'org-roam-v2-ack t)
-  (org-roam-db-autosync-enable))
-
 (leaf open-junk-file
   :defer-config
   (e:variable! open-junk-file-format (f-expand "junk/%Y/%Y%m%d-%H%M%S." e:private-directory)))

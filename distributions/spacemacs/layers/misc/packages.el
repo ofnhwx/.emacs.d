@@ -3,6 +3,7 @@
 (defvar misc-packages
   '(
     (chatgpt :location (recipe :fetcher github :repo "joshcho/ChatGPT.el"))
+    apheleia
     atomic-chrome
     codic
     cov
@@ -19,11 +20,28 @@
     ob-typescript
     pacfiles-mode
     rails-routes
-    super-save
+    separedit
     visual-regexp
     vlf
     wakatime-mode
     ))
+
+(defun misc/init-apheleia ()
+  (use-package apheleia
+    :hook ((ruby-mode . apheleia-mode))
+    :spacediminish (apheleia-mode "")
+    :config
+    (setf (alist-get 'rubocop apheleia-formatters)
+          '((if (e:bundle-exists "rubocop")
+                '("bundle" "exec" "rubocop")
+              "bundle")
+            file
+            "--autocorrect"
+            "--stderr"
+            "--format" "quiet"
+            "--fail-level" "fatal"))
+    (setf (alist-get 'ruby-mode apheleia-mode-alist)
+          '(rubocop))))
 
 (defun misc/init-atomic-chrome ()
   (use-package atomic-chrome
@@ -139,14 +157,12 @@
     :config
     (set-variable 'rails-routes-cache-path (expand-file-name "rails-routes" spacemacs-cache-directory))))
 
-(defun misc/init-super-save ()
-  (use-package super-save
-    :spacediminish (super-save-mode "💾")
-    :init
-    (spacemacs/defer-until-after-user-config #'super-save-mode)
+(defun misc/init-separedit ()
+  (use-package separedit
+    :bind (:map prog-mode-map
+                ("C-c '" . separedit))
     :config
-    (set-variable 'super-save-remote-files nil)
-    (set-variable 'auto-save-default nil)))
+    (set-variable 'separedit-preserve-string-indentation t)))
 
 (defun misc/init-visual-regexp ()
   (use-package visual-regexp

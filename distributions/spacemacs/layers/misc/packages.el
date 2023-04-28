@@ -14,11 +14,11 @@
     grugru
     helpful
     highlight-indent-guides
+    jinx
     leaf
     ob-typescript
     pacfiles-mode
     rails-routes
-    spell-fu
     super-save
     visual-regexp
     vlf
@@ -114,6 +114,10 @@
       :on  (highlight-indent-guides-mode 1)
       :off (highlight-indent-guides-mode 0))))
 
+(defun misc/init-jinx ()
+  (use-package jinx
+    :no-require t))
+
 (defun misc/init-leaf ()
   (use-package leaf
     :no-require t))
@@ -134,17 +138,6 @@
     :defer (spacemacs/defer)
     :config
     (set-variable 'rails-routes-cache-path (expand-file-name "rails-routes" spacemacs-cache-directory))))
-
-(defun misc/init-spell-fu ()
-  (use-package spell-fu
-    :defer (spacemacs/defer)
-    :hook ((spell-fu-mode . setup-spell-fu-mode)
-           (prog-mode . spell-fu-mode)
-           (text-mode . spell-fu-mode))
-    :config
-    (set-variable 'spell-fu-directory (expand-file-name "spell-fu" spacemacs-cache-directory))
-    (defun setup-spell-fu-mode ()
-      (spell-fu-dictionary-add (spell-fu-get-ispell-dictionary "en")))))
 
 (defun misc/init-super-save ()
   (use-package super-save

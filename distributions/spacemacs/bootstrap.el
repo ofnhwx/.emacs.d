@@ -62,6 +62,7 @@
           nginx
           prodigy
           restclient
+          systemd
           tree-sitter
           vagrant
           ;; +web

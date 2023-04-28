@@ -12,33 +12,33 @@
           auto-completion
           helm
           ;; +emacs
-          (org :variables org-enable-roam-support t)
+          org
           ;; +email
           notmuch
           ;; +filetree
           treemacs
           ;; +frameworks
-          (vue :variables vue-backend 'lsp)
           react
           ruby-on-rails
+          vue
           ;; +fun
           emoji
           ;; +intl
           japanese
           ;; +lang
-          (javascript :variables javascript-backend 'lsp)
-          (ruby       :variables ruby-backend       'lsp ruby-test-runner 'rspec)
-          (typescript :variables typescript-backend 'lsp)
+          (ruby :variables ruby-test-runner 'rspec)
           csv
           emacs-lisp
           graphql
           html
+          javascript
           kotlin
           markdown
           rust
           shell-scripts
           sql
           swift
+          typescript
           vimscript
           yaml
           ;; +misc
@@ -47,7 +47,7 @@
           multiple-cursors
           ;; +source-control
           (git :variables git-magit-status-fullscreen t)
-          (version-control :variables version-control-diff-tool 'diff-hl)
+          version-control
           ;; +spacemacs
           (spacemacs-completion :variables helm-use-fuzzy nil)
           ;; +tags
@@ -108,6 +108,7 @@
   (setq dotspacemacs-highlight-delimiters 'any)
   (setq dotspacemacs-large-file-size 10)
   (setq dotspacemacs-loading-progress-bar nil)
+  (setq dotspacemacs-maximized-at-startup nil)
   (setq dotspacemacs-mode-line-theme '(spacemacs :separator bar))
   (setq dotspacemacs-new-empty-buffer-major-mode 'fundamental-mode)
   (setq dotspacemacs-scratch-buffer-persistent t)

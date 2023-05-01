@@ -47,7 +47,7 @@
           multiple-cursors
           ;; +source-control
           (git :variables git-magit-status-fullscreen t)
-          version-control
+          (version-control :variables version-control-diff-side 'left)
           ;; +spacemacs
           (spacemacs-completion :variables helm-use-fuzzy nil)
           ;; +tags

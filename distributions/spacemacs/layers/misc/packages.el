@@ -137,7 +137,11 @@
 
 (defun misc/init-jinx ()
   (use-package jinx
-    :no-require t))
+    :hook (prog-mode . jinx-mode)
+    :spacediminish (jinx-mode "")
+    :config
+    ;; libenchant, aspell aspell-en
+    (set-variable 'jinx-languages "en_US")))
 
 (defun misc/init-leaf ()
   (use-package leaf

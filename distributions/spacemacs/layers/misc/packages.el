@@ -3,6 +3,7 @@
 (defvar misc-packages
   '(
     (chatgpt :location (recipe :fetcher github :repo "joshcho/ChatGPT.el"))
+    (el-easydraw :location (recipe :fetcher github :repo "misohena/el-easydraw"))
     apheleia
     atomic-chrome
     codic
@@ -21,6 +22,7 @@
     pacfiles-mode
     rails-routes
     separedit
+    sqlite3
     visual-regexp
     vlf
     wakatime-mode
@@ -86,6 +88,12 @@
 (defun misc/init-dired-toggle-sudo ()
   (use-package dired-toggle-sudo
     :no-require t))
+
+(defun misc/init-el-easydraw ()
+  (use-package el-easydraw
+    :after org-mode
+    :config
+    (edraw-org-setup-default)))
 
 (defun misc/init-elisp-demos ()
   (use-package elisp-demos
@@ -170,6 +178,10 @@
                 ("C-c '" . separedit))
     :config
     (set-variable 'separedit-preserve-string-indentation t)))
+
+(defun misc/init-sqlite3 ()
+  (use-package sqlite3
+    :no-require t))
 
 (defun misc/init-visual-regexp ()
   (use-package visual-regexp

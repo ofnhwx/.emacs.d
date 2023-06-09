@@ -30,12 +30,8 @@
 
 (defun misc/init-apheleia ()
   (use-package apheleia
-    :hook ((ruby-mode . setup-apheleia-mode))
     :spacediminish (apheleia-mode "")
     :config
-    (defun setup-apheleia-mode ()
-      (unless (s-ends-with? "/db/schema.rb" buffer-file-name)
-        (apheleia-mode)))
     (setf (alist-get 'rubocop apheleia-formatters)
           '((if (e:bundle-exists "rubocop")
                 '("bundle" "exec" "rubocop")

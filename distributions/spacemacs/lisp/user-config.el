@@ -140,6 +140,18 @@
       (e:variable! browse-url-generic-program cmd-exe)
       (e:variable! browse-url-generic-args    cmd-args))))
 
+(leaf setup:autoformat
+  :config
+  (add-hook 'prog-mode-hook 'el:autoformat-setup)
+  (defun el:autoformat-setup ()
+    (add-hook 'before-save-hook 'el:autoformat-process nil t))
+  (defun el:autoformat-process ()
+    (and (not (and (fboundp 'lsp-format-buffer)
+                   (ignore-errors (lsp-format-buffer))))
+         (not (bound-and-true-p apheleia-mode))
+         (apheleia-mode-maybe)
+         (apheleia-mode))))
+
 (leaf setup:private-config
   :config
   (let ((private-config (f-expand "config" e:private-directory)))

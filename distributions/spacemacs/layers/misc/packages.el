@@ -30,23 +30,26 @@
 
 (defun misc/init-apheleia ()
   (use-package apheleia
-    :hook ((ruby-mode . setup-apheleia-mode))
     :spacediminish (apheleia-mode "")
+    :defer (spacemacs/defer)
+    :init
+    (spacemacs/defer-until-after-user-config #'apheleia-global-mode)
     :config
-    (defun setup-apheleia-mode ()
-      (unless (s-ends-with? "/db/schema.rb" buffer-file-name)
-        (apheleia-mode)))
+    (defun apheleia-inhibit-whitout-prog-mode ()
+      (not (derived-mode-p 'prog-mode)))
+    (defun apheleia-inhibit-rubocop-excludes ()
+      (or (s-ends-with? "/db/schema.rb" buffer-file-name)))
+    (set-variable 'apheleia-inhibit-functions
+                  '(apheleia-inhibit-whitout-prog-mode
+                    apheleia-inhibit-rubocop-excludes))
+    ;; formatters
     (setf (alist-get 'rubocop apheleia-formatters)
           '((if (e:bundle-exists "rubocop")
                 '("bundle" "exec" "rubocop")
               "rubocop")
-            file
-            "--autocorrect"
-            "--stderr"
-            "--format" "quiet"
-            "--fail-level" "fatal"))
-    (setf (alist-get 'ruby-mode apheleia-mode-alist)
-          '(rubocop))))
+            file "--autocorrect" "--stderr" "--format" "quiet" "--fail-level" "fatal"))
+    ;; mode-alist
+    (setf (alist-get 'ruby-mode apheleia-mode-alist) '(rubocop))))
 
 (defun misc/init-atomic-chrome ()
   (use-package atomic-chrome

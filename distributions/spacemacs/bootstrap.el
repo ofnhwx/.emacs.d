@@ -121,6 +121,10 @@
 (define-advice dotspacemacs/user-init (:after (&rest _) custom)
   "Customize `dotspacemacs/user-init'."
   (prog1 "spacemacs より先に設定しておきたいもの"
+    ;; ssh-agent
+    (let ((sock (expand-file-name "gcr/ssh" (getenv "XDG_RUNTIME_DIR"))))
+      (when (file-exists-p sock)
+        (setenv "SSH_AUTH_SOCK" sock)))
     ;; +distributions/spacemacs-bootstrap
     (set-variable 'vim-style-remap-Y-to-y$ t)
     (set-variable 'which-key-enable-extended-define-key t)

@@ -83,8 +83,8 @@
     "|" 'shell-command-on-region)
   (bind-keys*
    :map global-map
-   ("C-:" . popwin:daily-report)
-   ("C-*" . popwin:note)
+   ("C-:" . org-support/popwin:tasks)
+   ("C-*" . org-support/popwin:note)
    ("C-;" . spacemacs/default-pop-shell)
    ("C-<" . evil-jump-backward)
    ("C->" . evil-jump-forward)
@@ -436,6 +436,7 @@
   (e:variable! magit-log-margin '(t "%Y-%m-%d %H:%M" magit-log-margin-width t 15))
   (e:variable! smerge-refine-ignore-whitespace nil)
   (e:variable! transient-default-level 7)
+  (e:variable! transient-values-file (f-expand "transient-values.el" e:private-directory))
   (--each '(magit-insert-skip-worktree-files magit-insert-modules-overview)
     (magit-add-section-hook 'magit-status-sections-hook it 'magit-insert-unpulled-from-upstream t))
   :doc "リポジトリの一覧表示にパスをつける"
@@ -503,54 +504,6 @@
                  (:name "下書き"     :query "tag:draft"     :key "d")
                  (:name "ごみ箱"     :query "tag:trash")
                  (:name "迷惑メール" :query "tag:spam"))))
-
-(leaf org
-  :config
-  (e:variable! org-agenda-current-time-string "← now")
-  (e:variable! org-agenda-entry-text-leaders (s-concat (s-repeat 25 " ") "│ "))
-  (e:variable! org-agenda-entry-text-maxlines 20)
-  (e:variable! org-agenda-files (list (f-expand "~/org/daily/")))
-  (e:variable! org-agenda-span 'day)
-  (e:variable! org-default-notes-file (f-expand "~/org/index.org"))
-  (e:variable! org-directory (f-expand "~/org/"))
-  (e:variable! org-edit-src-content-indentation 0)
-  (e:variable! org-indent-indentation-per-level 2)
-  (e:variable! org-indent-mode-turns-on-hiding-stars nil)
-  (e:variable! org-refile-targets '((org-agenda-files :maxlevel . 3)))
-  (e:variable! org-src-window-setup 'split-window-below)
-  (e:variable! org-startup-folded nil)
-  (e:variable! org-startup-indented t)
-  (e:variable! org-tags-column 0)
-  (e:variable! org-agenda-time-grid '((daily today require-timed)
-                                      (800 1000 1200 1400 1600 1800 2000)
-                                      "      "
-                                      "────────────────"))
-  (e:variable! org-todo-keyword-faces '(("TODO" . org-warning)
-                                        ("WAITING" . org-done)
-                                        ("HOLD" . org-done)))
-  (e:variable! org-todo-keywords '((sequence "TODO(t)" "STARTED(s)" "|" "DONE(d)")
-                                   (sequence "WAITING(w)" "HOLD(h)" "|" "CANCELLED(c)")))
-  (with-eval-after-load 'org-faces
-    (set-face-attribute 'org-todo nil :foreground "#00ff00")
-    (set-face-attribute 'org-done nil :foreground "#696969")
-    (set-face-attribute 'org-headline-done nil :foreground "#696969")
-    (set-face-attribute 'org-headline-todo nil :foreground "#00ff00")
-    (set-face-attribute 'org-level-1 nil :height 1.0)
-    (set-face-attribute 'org-level-2 nil :height 1.0)
-    (set-face-attribute 'org-level-3 nil :height 1.0))
-  ;; 経過時間の保存
-  (e:variable! org-clock-persist t)
-  (org-clock-persistence-insinuate)
-  ;; 日報用(暫定)
-  (defun org-support/daily-file ()
-    (let* ((daily-dir (f-expand "daily" org-directory)))
-      (f-short (f-expand (format-time-string "%Y.org") daily-dir))))
-  (defun popwin:note ()
-    (interactive)
-    (popwin:popup-buffer (find-file-noselect (f-expand "note.org" org-directory)) :height 30 :dedicated t :stick t))
-  (defun popwin:daily-report ()
-    (interactive)
-    (popwin:popup-buffer (find-file-noselect (org-support/daily-file)) :height 30 :dedicated t :stick t)))
 
 (leaf open-junk-file
   :defer-config
@@ -807,6 +760,7 @@
 
 
 
+(require 'user-config-org)
 (require 'user-config-lsp)
 (require 'user-config-js)
 (require 'user-config-ruby)

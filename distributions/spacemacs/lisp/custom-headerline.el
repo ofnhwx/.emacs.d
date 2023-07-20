@@ -96,7 +96,7 @@
       (and filename
            (f-short filename))))
   (defun chl--refname ()
-    (or (and vc-mode (s-trim (kllib:unpropertize vc-mode)))
+    (or (and vc-mode (s-trim (substring-no-properties vc-mode)))
         (bound-and-true-p magit-buffer-refname)
         (bound-and-true-p gist-id))))
 

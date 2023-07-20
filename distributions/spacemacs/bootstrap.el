@@ -112,7 +112,7 @@
   (setq dotspacemacs-mode-line-theme '(spacemacs :separator bar))
   (setq dotspacemacs-new-empty-buffer-major-mode 'fundamental-mode)
   (setq dotspacemacs-scratch-buffer-persistent t)
-  (setq dotspacemacs-scratch-mode 'lisp-interaction-mode)
+  (setq dotspacemacs-scratch-mode 'org-mode)
   (setq dotspacemacs-scroll-bar-while-scrolling nil)
   (setq dotspacemacs-startup-lists nil)
   (setq dotspacemacs-themes '(modus-vivendi modus-operandi))

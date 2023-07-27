@@ -550,7 +550,19 @@
   (defun e:prodigy-start-service (name)
     (let ((service (prodigy-find-service name)))
       (when service
-        (prodigy-start-service service)))))
+        (prodigy-start-service service))))
+  ;; prodigy のサービスを vterm で起動する
+  (defun start-process-with-vterm (name buffer program &rest args)
+    (let* ((command (s-join " " (cons program args)))
+           (vterm-buffer-name (format "*vterm-%s*" name))
+           (vterm-shell (format "zsh -c '%s'" command)))
+      (with-current-buffer (vterm--internal #'ignore)
+        vterm--process)))
+  (define-advice prodigy-start-service (:around (func &rest args) with-vterm)
+    (when (require 'vterm nil t)
+      (advice-add 'start-process :override #'start-process-with-vterm))
+    (prog1 (apply func args)
+      (advice-remove 'start-process #'start-process-with-vterm))))
 
 (leaf projectile
   :defer-config

@@ -2,8 +2,6 @@
 
 (defvar misc-packages
   '(
-    (chatgpt :location (recipe :fetcher github :repo "joshcho/ChatGPT.el"))
-    (el-easydraw :location (recipe :fetcher github :repo "misohena/el-easydraw"))
     apheleia
     atomic-chrome
     codic
@@ -57,14 +55,6 @@
     :init
     (spacemacs/defer-until-after-user-config #'atomic-chrome-start-server)))
 
-(defun misc/init-chatgpt ()
-  (use-package chatgpt
-    :no-require t
-    :init
-    (require 'python)
-    (set-variable 'python-interpreter python-shell-interpreter)
-    (set-variable 'chatgpt-repo-path (expand-file-name "chatgpt/" quelpa-build-dir))))
-
 (defun misc/init-codic ()
   (use-package codic
     :no-require t))
@@ -91,12 +81,6 @@
 (defun misc/init-dired-toggle-sudo ()
   (use-package dired-toggle-sudo
     :no-require t))
-
-(defun misc/init-el-easydraw ()
-  (use-package el-easydraw
-    :after org-mode
-    :config
-    (edraw-org-setup-default)))
 
 (defun misc/init-elisp-demos ()
   (use-package elisp-demos

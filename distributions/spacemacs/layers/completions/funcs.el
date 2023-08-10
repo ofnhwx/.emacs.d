@@ -5,12 +5,13 @@
     (defalias 'e:cape-tabnine
       (cape-company-to-capf #'company-tabnine))
     (defalias default-capf-with-tabnine
-      (cape-super-capf
-       default-capf
-       #'e:cape-tabnine))
+      (cape-capf-nonexclusive
+       (cape-capf-buster
+        (cape-super-capf default-capf
+                         #'e:cape-tabnine
+                         #'cape-dabbrev))))
     (list #'cape-file
-          default-capf-with-tabnine
-          #'cape-dabbrev)))
+          default-capf-with-tabnine)))
 
 (defun e:setup-capf/default ()
   (setq-local completion-at-point-functions

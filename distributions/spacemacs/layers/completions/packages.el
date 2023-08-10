@@ -6,9 +6,9 @@
     (copilot    :location (recipe :fetcher github :repo "zerolfx/copilot.el" :files (:defaults "dist")))
     cape
     company-org-block
-    company-prescient
     company-tabnine
     corfu
+    corfu-prescient
     fussy
     kind-icon
     orderless
@@ -25,18 +25,9 @@
     (set-variable 'company-org-block-edit-style 'inline)
     (with-no-warnings (spacemacs|add-company-backends :backends company-org-block :modes org-mode))))
 
-(defun completions/init-company-prescient ()
-  (use-package company-prescient
-    :after (company)
-    :config
-    (company-prescient-mode 1)))
-
 (defun completions/init-company-tabnine ()
   (use-package company-tabnine
-    :defer (spacemacs/defer)
-    :config
-    (set-variable 'company-tabnine-binaries-folder
-                  (expand-file-name "tabnine" spacemacs-cache-directory))))
+    :defer (spacemacs/defer)))
 
 (defun completions/init-copilot ()
   (use-package copilot
@@ -69,6 +60,7 @@
            (corfu-mode . corfu-popupinfo-mode))
     :init
     (set-variable 'corfu-auto t)
+    (set-variable 'corfu-auto-prefix 1)
     (spacemacs/defer-until-after-user-config #'global-corfu-mode)
     :config
     (e:disable-company t)
@@ -76,6 +68,16 @@
       (evil-make-overriding-map corfu-map)
       (advice-add 'corfu--setup :after 'evil-normalize-keymaps)
       (advice-add 'corfu--teardown :after 'evil-normalize-keymaps))))
+
+(defun completions/init-corfu-prescient ()
+  (use-package corfu-prescient
+    :defer (spacemacs/defer)
+    :hook ((corfu-prescient-mode . prescient-persist-mode))
+    :init
+    (set-variable 'prescient-save-file (expand-file-name "prescient-save.el" spacemacs-cache-directory))
+    (set-variable 'prescient-aggressive-file-save t)
+    (set-variable 'corfu-prescient-completion-styles '(fussy))
+    (spacemacs/defer-until-after-user-config #'corfu-prescient-mode)))
 
 (defun completions/init-fussy ()
   (use-package fussy
@@ -97,6 +99,7 @@
   (use-package kind-icon
     :after (corfu)
     :config
+    (set-variable 'kind-icon-default-face 'corfu-default)
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
 
 (defun completions/init-orderless ()

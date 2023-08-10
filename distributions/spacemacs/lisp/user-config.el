@@ -180,29 +180,6 @@
   :defer-config
   (e:variable! codic-api-token (e:auth-source-get :token :host "emacs" :user "codic")))
 
-(leaf company
-  :bind (:company-active-map
-         :package company
-         ("C-g" . company-abort)
-         ("<escape>" . company-abort)
-         ("<backspace>" . delete-backward-char-and-company-abort))
-  :init
-  (spacemacs|use-package-add-hook company-box
-    :post-config
-    (e:variable! company-box-backends-colors
-                 '((company-capf    . (:candidate "#90ee90"))
-                   (company-tabnine . (:candidate "#696969"))))
-    (e:variable! company-box-icon-right-margin 0.5)
-    (e:variable! company-box-icons-alist 'company-box-icons-images))
-  :config
-  (spacemacs|diminish company-mode)
-  (spacemacs|diminish company-box-mode)
-  (e:variable! company-transformers '(company-prescient-transformer))
-  (defun delete-backward-char-and-company-abort ()
-    (interactive)
-    (delete-char -1)
-    (company-abort)))
-
 (leaf devdocs
   :config
   (set-variable 'devdocs-data-dir (expand-file-name "devdocs" spacemacs-cache-directory))

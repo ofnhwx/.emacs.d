@@ -45,6 +45,8 @@
           copy-as-format
           dtrt-indent
           multiple-cursors
+          ;; +readers
+          pdf
           ;; +source-control
           (git :variables git-magit-status-fullscreen t)
           (version-control :variables version-control-diff-side 'left)

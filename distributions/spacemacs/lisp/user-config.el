@@ -396,10 +396,6 @@
   :defer-config
   (e:variable! helm-fzf-args '("--tac")))
 
-(leaf highlight-indent-guide
-  :config
-  (spacemacs|diminish highlight-indent-guides-mode))
-
 (leaf indent
   :defer-config
   (e:variable! standard-indent 2))

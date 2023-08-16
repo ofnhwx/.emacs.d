@@ -120,10 +120,11 @@
 
 (defun misc/init-highlight-indent-guides ()
   (use-package highlight-indent-guides
+    :spacediminish highlight-indent-guides-mode
     :hook ((haml-mode . spacemacs/toggle-highlight-indent-guides-mode-on)
            (yaml-mode . spacemacs/toggle-highlight-indent-guides-mode-on))
     :config
-    (e:variable! highlight-indent-guides-method 'character)
+    (e:variable! highlight-indent-guides-method 'bitmap)
     (e:variable! highlight-indent-guides-responsive 'top)
     (spacemacs|add-toggle highlight-indent-guides-mode
       :status highlight-indent-guides-mode

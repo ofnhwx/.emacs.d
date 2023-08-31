@@ -33,9 +33,7 @@
   :config
   (defun e:setup-lsp-diagnostics-config ()
     (let ((checker (cl-case major-mode
-                     ((enh-ruby-mode ruby-mode)
-                      (unless (e:bundle-exists "solargraph")
-                        'ruby-rubocop)))))
+                     ((enh-ruby-mode ruby-mode) 'lsp))))
       (and checker
            (flycheck-may-enable-checker checker)
            (flycheck-select-checker checker)))))
@@ -52,6 +50,17 @@
   (define-advice lsp-solargraph--build-command (:before () auto-detect)
     (setq-local lsp-solargraph-use-bundler (e:bundle-exists "solargraph")))
   (e:variable! lsp-solargraph-library-directories '("~/.asdf/installs/ruby")))
+
+(leaf lsp-rubocop
+  :init
+  (defun setup-lsp-rubocop ()
+    (dont-compile
+      (let ((rubocop-ls (gethash 'rubocop-ls lsp-clients)))
+        (setf (lsp--client-add-on? rubocop-ls) t))))
+  :defer-config
+  (setup-lsp-rubocop)
+  (define-advice lsp-rubocop--build-command (:before () auto-detect)
+    (setq-local lsp-rubocop-use-bundler (e:bundle-exists "rubocop"))))
 
 
 

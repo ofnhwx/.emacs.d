@@ -355,6 +355,7 @@
     (interactive)
     (let ((messages (->> (flycheck-overlay-errors-at (point))
                          (-map #'flycheck-error-id)
+                         (-uniq)
                          (-non-nil))))
       (when messages
         (kill-new (string-join messages ", "))

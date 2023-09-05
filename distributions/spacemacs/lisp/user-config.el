@@ -413,6 +413,9 @@
   (e:variable! transient-values-file (f-expand "transient-values.el" e:private-directory))
   (--each '(magit-insert-skip-worktree-files magit-insert-modules-overview)
     (magit-add-section-hook 'magit-status-sections-hook it 'magit-insert-unpulled-from-upstream t))
+  (let ((argments '("--graph" "-n256" "--decorate" "--date-order" "--show-signature")))
+    (put 'magit-log-mode 'magit-log-default-arguments argments)
+    (put 'magit-log-select-mode 'magit-log-default-arguments argments))
   :doc "リポジトリの一覧表示にパスをつける"
   :defer-config
   (define-advice magit-repos-alist (:override (&rest _) override)

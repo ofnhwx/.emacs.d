@@ -58,7 +58,7 @@
       (let ((rubocop-ls (gethash 'rubocop-ls lsp-clients)))
         (setf (lsp--client-activation-fn rubocop-ls)
               (lambda (&rest args)
-                (and (lsp-activate-on "ruby")
+                (and (s-equals? "ruby" (lsp-buffer-language))
                      (not (e:bundle-exists "solargraph")))))
         (setf (lsp--client-add-on? rubocop-ls) t))))
   :defer-config

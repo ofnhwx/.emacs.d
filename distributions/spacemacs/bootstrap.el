@@ -13,8 +13,6 @@
           helm
           ;; +emacs
           org
-          ;; +email
-          notmuch
           ;; +filetree
           treemacs
           ;; +frameworks
@@ -82,7 +80,6 @@
           (locale-eaw           :location (recipe :fetcher github :repo "hamano/locale-eaw"))
           (ls-lisp-extension    :location (recipe :fetcher github :repo "ofnhwx/ls-lisp-extension"))
           (yarn                 :location (recipe :fetcher github :repo "jmfirth/yarn.el"))
-          ol-notmuch
           ))
   (setq dotspacemacs-excluded-packages
         '(

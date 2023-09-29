@@ -70,8 +70,9 @@
           ;; +web-services
           search-engine
           ;; +private
-          completions
-          misc
+          custom-completions
+          custom-misc
+          custom-tree-sitter
           ))
   (setq dotspacemacs-additional-packages
         '(
@@ -79,7 +80,6 @@
           (komunan-lisp-library :location (recipe :fetcher github :repo "ofnhwx/komunan-lisp-library"))
           (locale-eaw           :location (recipe :fetcher github :repo "hamano/locale-eaw"))
           (ls-lisp-extension    :location (recipe :fetcher github :repo "ofnhwx/ls-lisp-extension"))
-          (yarn                 :location (recipe :fetcher github :repo "jmfirth/yarn.el"))
           ))
   (setq dotspacemacs-excluded-packages
         '(

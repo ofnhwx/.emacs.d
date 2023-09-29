@@ -1,6 +1,6 @@
 ;;; packages.el
 
-(defvar completions-packages
+(defvar custom-completions-packages
   '(
     (fzf-native :location (recipe :fetcher github :repo "dangduc/fzf-native" :files (:defaults "bin")))
     (copilot    :location (recipe :fetcher github :repo "zerolfx/copilot.el" :files (:defaults "dist")))
@@ -14,22 +14,22 @@
     orderless
     ))
 
-(defun completions/init-cape ()
+(defun custom-completions/init-cape ()
   (use-package cape
     :defer (spacemacs/defer)))
 
-(defun completions/init-company-org-block ()
+(defun custom-completions/init-company-org-block ()
   (use-package company-org-block
     :after (company org)
     :config
     (set-variable 'company-org-block-edit-style 'inline)
     (with-no-warnings (spacemacs|add-company-backends :backends company-org-block :modes org-mode))))
 
-(defun completions/init-company-tabnine ()
+(defun custom-completions/init-company-tabnine ()
   (use-package company-tabnine
     :defer (spacemacs/defer)))
 
-(defun completions/init-copilot ()
+(defun custom-completions/init-copilot ()
   (use-package copilot
     :diminish (copilot-mode  "")
     :hook (prog-mode . copilot-mode)
@@ -48,7 +48,7 @@
       (advice-add 'corfu-complete :before-until 'copilot-accept-completion-func))
     (advice-add 'indent-for-tab-command :before-until 'copilot-accept-completion-func)))
 
-(defun completions/init-corfu ()
+(defun custom-completions/init-corfu ()
   (use-package corfu
     :defer (spacemacs/defer)
     :bind (:map corfu-map
@@ -70,7 +70,7 @@
       (advice-add 'corfu--setup :after 'evil-normalize-keymaps)
       (advice-add 'corfu--teardown :after 'evil-normalize-keymaps))))
 
-(defun completions/init-corfu-prescient ()
+(defun custom-completions/init-corfu-prescient ()
   (use-package corfu-prescient
     :defer (spacemacs/defer)
     :hook ((corfu-prescient-mode . prescient-persist-mode))
@@ -80,7 +80,7 @@
     (set-variable 'corfu-prescient-completion-styles '(fussy))
     (spacemacs/defer-until-after-user-config #'corfu-prescient-mode)))
 
-(defun completions/init-fussy ()
+(defun custom-completions/init-fussy ()
   (use-package fussy
     :init
     (setq completion-styles '(fussy))
@@ -91,18 +91,18 @@
     (set-variable 'fussy-score-fn 'fussy-fzf-native-score)
     (set-variable 'fussy-max-candidate-limit 5000)))
 
-(defun completions/init-fzf-native ()
+(defun custom-completions/init-fzf-native ()
   (use-package fzf-native
     :config
     (fzf-native-load-dyn)))
 
-(defun completions/init-kind-icon ()
+(defun custom-completions/init-kind-icon ()
   (use-package kind-icon
     :after (corfu)
     :config
     (set-variable 'kind-icon-default-face 'corfu-default)
     (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter)))
 
-(defun completions/init-orderless ()
+(defun custom-completions/init-orderless ()
   (use-package orderless
     :defer (spacemacs/defer)))

@@ -46,7 +46,7 @@
           ;; +readers
           pdf
           ;; +source-control
-          (git :variables git-magit-status-fullscreen t)
+          (git :variables git-magit-status-fullscreen t git-enable-magit-delta-plugin t)
           (version-control :variables version-control-diff-side 'left)
           ;; +spacemacs
           (spacemacs-completion :variables helm-use-fuzzy nil)

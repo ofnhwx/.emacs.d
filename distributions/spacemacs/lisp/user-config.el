@@ -429,6 +429,20 @@
                  (->> (kllib:shell-command-to-list "ghq root --all")
                       (--map (cons it 5))))))
 
+(leaf magit-delta
+  :defer-config
+  ;; https://github.com/dandavison/magit-delta/issues/9#issuecomment-795435781
+  (defvar nth/magit-delta-point-max 50000)
+  (define-advice magit-delta-call-delta-and-convert-ansi-escape-sequences (:around (fn &rest args) auto-disable)
+    (if (<= (point-max) nth/magit-delta-point-max)
+        (apply fn args)
+      (magit-delta-mode -1)))
+  (add-hook 'magit-post-refresh-hook
+            (defun nth/magit-delta-auto-enable (&rest _)
+              (when (and (not magit-delta-mode)
+                         (<= (point-max) nth/magit-delta-point-max))
+                (magit-delta-mode +1)))))
+
 (leaf magit-todos
   :defer-config
   (e:variable! magit-todos-auto-group-items 100))

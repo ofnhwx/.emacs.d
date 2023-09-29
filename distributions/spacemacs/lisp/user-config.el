@@ -70,8 +70,7 @@
 
 (leaf setup:custom-aliases
   :config
-  (defalias 'exit 'save-buffers-kill-terminal)
-  (defalias 'yes-or-no-p 'y-or-n-p))
+  (defalias 'exit 'save-buffers-kill-terminal))
 
 (leaf setup:custom-keybindings
   :config
@@ -105,6 +104,7 @@
   (e:variable! shell-file-name "zsh")
   (e:variable! system-time-locale "C")
   (e:variable! truncate-partial-width-windows nil)
+  (e:variable! use-short-answers t)
   (e:variable! window-resize-pixelwise t)
   (spacemacs|add-toggle indent-tabs-mode
     :status indent-tabs-mode

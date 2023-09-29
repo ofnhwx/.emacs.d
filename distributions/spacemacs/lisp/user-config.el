@@ -668,7 +668,11 @@
   :config
   (evil-define-key 'hybrid vterm-mode-map (kbd "<escape>") 'vterm-send-escape)
   (e:variable! vterm-max-scrollback 20000)
-  (e:variable! vterm-shell "tmux new -A -s emacs")
+  (e:variable! vterm-shell "tmux new -A -s emacs-default")
+  (define-advice spacemacs/shell-pop-vterm (:around (func &rest args) auto-session-name)
+    (let* ((identifier (downcase (safe-persp-name (get-current-persp))))
+           (vterm-shell (format "tmux new -A -s emacs-%s" identifier)))
+      (apply func args)))
   (defun e:vterm-input-something ()
     (interactive)
     (let ((input (read-string "input: ")))

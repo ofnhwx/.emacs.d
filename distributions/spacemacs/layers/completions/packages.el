@@ -41,7 +41,7 @@
                 ("C-n" . copilot-next-completion)
                 ("C-p" . copilot-previous-completion))
     :config
-    (add-to-list 'copilot-enable-predicates 'ignore)
+    ;; (add-to-list 'copilot-enable-predicates 'ignore)
     (defun copilot-accept-completion-func (&rest _)
       (copilot-accept-completion))
     (with-eval-after-load 'corfu

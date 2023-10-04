@@ -22,7 +22,6 @@
     rails-routes
     separedit
     sqlite3
-    treesit-auto
     visual-regexp
     vlf
     wakatime-mode
@@ -161,13 +160,6 @@
                 ("C-c '" . separedit))
     :config
     (set-variable 'separedit-preserve-string-indentation t)))
-
-(defun custom-misc/init-treesit-auto ()
-  (use-package treesit-auto
-    :config
-    (set-variable 'treesit-font-lock-level 4)
-    (set-variable 'treesit-auto-install t)
-    (global-treesit-auto-mode)))
 
 (defun custom-misc/init-visual-regexp ()
   (use-package visual-regexp

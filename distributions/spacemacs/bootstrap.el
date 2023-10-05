@@ -72,7 +72,6 @@
           ;; +private
           custom-completions
           custom-misc
-          custom-tree-sitter
           ))
   (setq dotspacemacs-additional-packages
         '(

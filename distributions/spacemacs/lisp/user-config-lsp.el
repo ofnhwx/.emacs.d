@@ -53,16 +53,14 @@
 
 (leaf lsp-rubocop
   :init
-  (defun setup-lsp-rubocop ()
-    (dont-compile
-      (let ((rubocop-ls (gethash 'rubocop-ls lsp-clients)))
-        (setf (lsp--client-activation-fn rubocop-ls)
-              (lambda (&rest args)
-                (and (s-equals? "ruby" (lsp-buffer-language))
-                     (not (e:bundle-exists "solargraph")))))
-        (setf (lsp--client-add-on? rubocop-ls) t))))
   :defer-config
-  (setup-lsp-rubocop)
+  (dont-compile
+    (let ((rubocop-ls (gethash 'rubocop-ls lsp-clients)))
+      ;; (setf (lsp--client-activation-fn rubocop-ls)
+      ;;       (lambda (&rest args)
+      ;;         (and (s-equals? "ruby" (lsp-buffer-language))
+      ;;              (not (e:bundle-exists "solargraph")))))
+      (setf (lsp--client-add-on? rubocop-ls) t)))
   (define-advice lsp-rubocop--build-command (:before () auto-detect)
     (setq-local lsp-rubocop-use-bundler (e:bundle-exists "rubocop"))))
 

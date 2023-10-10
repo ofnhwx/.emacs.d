@@ -125,7 +125,6 @@
         (setenv "SSH_AUTH_SOCK" sock)))
     ;; +distributions/spacemacs-bootstrap
     (set-variable 'vim-style-remap-Y-to-y$ t)
-    (set-variable 'which-key-enable-extended-define-key t)
     (set-variable 'which-key-show-early-on-C-h t)
     ;; recentf
     (when (require 'recentf)
